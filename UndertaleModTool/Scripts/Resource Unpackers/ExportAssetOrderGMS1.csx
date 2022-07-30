@@ -79,52 +79,66 @@ using (StreamWriter writer = new StreamWriter(outputPath))
     writer.WriteLine("  </scripts>");
 
     // Write Fonts.
-    writer.WriteLine("@@fonts@@");
+    writer.WriteLine("  <fonts name=\"fonts\">");
     if (Data.Fonts.Count > 0) 
     {
         foreach (UndertaleFont font in Data.Fonts)
-            writer.WriteLine(font.Name.Content);
+            writer.WriteLine("    <font>fonts\\" + font.Name.Content + "</font>");
     }
+    writer.WriteLine("  </fonts>");
 
     // Write Objects.
-    writer.WriteLine("@@objects@@");
+    writer.WriteLine("  <objects name=\"objects\">");
     if (Data.GameObjects.Count > 0) 
     {
         foreach (UndertaleGameObject gameObject in Data.GameObjects)
-            writer.WriteLine(gameObject.Name.Content);
+            writer.WriteLine("    <object>objects\\" + gameObject.Name.Content + "</object>");
     }
-    
-    // Write Timelines.
-    writer.WriteLine("@@timelines@@");
-    if (Data.Timelines.Count > 0)
-    {
-        foreach (UndertaleTimeline timeline in Data.Timelines)
-            writer.WriteLine(timeline.Name.Content);
-    }
+    writer.WriteLine("  </objects>");
+
+    //// Write Timelines.
+    //writer.WriteLine("@@timelines@@");
+    //if (Data.Timelines.Count > 0)
+    //{
+    //    foreach (UndertaleTimeline timeline in Data.Timelines)
+    //        writer.WriteLine(timeline.Name.Content);
+    //}
 
     // Write Rooms.
-    writer.WriteLine("@@rooms@@");
+    writer.WriteLine("  <rooms name=\"rooms\">");
     if (Data.Rooms.Count > 0)
     {
         foreach (UndertaleRoom room in Data.Rooms)
-            writer.WriteLine(room.Name.Content);
+            writer.WriteLine("    <room>rooms\\" + room.Name.Content + "</room>");
     }
+    writer.WriteLine("  </rooms>");
 
-    // Write Shaders.
-    writer.WriteLine("@@shaders@@");
-    if (Data.Shaders.Count > 0)
-    {
-        foreach (UndertaleShader shader in Data.Shaders)
-            writer.WriteLine(shader.Name.Content);
-    }
+    //// Write Shaders.
+    //writer.WriteLine("@@shaders@@");
+    //if (Data.Shaders.Count > 0)
+    //{
+    //    foreach (UndertaleShader shader in Data.Shaders)
+    //        writer.WriteLine(shader.Name.Content);
+    //}
 
-    // Write Extensions.
-    writer.WriteLine("@@extensions@@");
-    if (Data.Extensions.Count > 0) 
-    {
-        foreach (UndertaleExtension extension in Data.Extensions)
-            writer.WriteLine(extension.Name.Content);
-    }
+    //// Write Extensions.
+    //writer.WriteLine("@@extensions@@");
+    //if (Data.Extensions.Count > 0) 
+    //{
+    //    foreach (UndertaleExtension extension in Data.Extensions)
+    //        writer.WriteLine(extension.Name.Content);
+    //}
+
+    // Footer
+    writer.WriteLine("  <help>");
+    writer.WriteLine("    <rtf>help.rtf</rtf>");
+    writer.WriteLine("  </help>");
+    writer.WriteLine("  <TutorialState>");
+    writer.WriteLine("    <IsTutorial>0</IsTutorial>");
+    writer.WriteLine("    <TutorialName></TutorialName>");
+    writer.WriteLine("    <TutorialPage>0</TutorialPage>");
+    writer.WriteLine("  </TutorialState>");
+    writer.WriteLine("</assets>");
 
     // TODO: Perhaps detect GMS2.3, export those asset names as well.
 }
