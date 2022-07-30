@@ -19,6 +19,7 @@
       <None Remove="Resources\tabs_left_button.png" />
       <None Remove="Resources\tabs_right_button.png" />
       <None Remove="Resources\X_Down.png" />
+      <None Remove="Scripts\Resource Unpackers\ExportAssetOrderGMS1.csx" />
       <None Remove="X.png" />
     </ItemGroup>
     <ItemGroup>
@@ -140,7 +141,6 @@
         <TrimmerRootAssembly Include="System.Diagnostics.PerformanceCounter" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Scripts" />
         <Content Include="Scripts/**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
