@@ -61,21 +61,23 @@ using (StreamWriter writer = new StreamWriter(outputPath))
     writer.WriteLine("  </backgrounds>");
 
     // Write Paths.
-    writer.WriteLine("@@paths@@");
+    writer.WriteLine("  <paths name=\"paths\">");
     if (Data.Paths.Count > 0) 
     {
         foreach (UndertalePath path in Data.Paths)
-            writer.WriteLine(path.Name.Content);
+            writer.WriteLine("    <path>paths\\" + path.Name.Content + "</path>");
     }
-    
+    writer.WriteLine("  </paths>");
+
     // Write Scripts.
-    writer.WriteLine("@@scripts@@");
+    writer.WriteLine("  <scripts name=\"scripts\">");
     if (Data.Scripts.Count > 0) 
     {
         foreach (UndertaleScript script in Data.Scripts)
-            writer.WriteLine(script.Name.Content);
+            writer.WriteLine("    <script>scripts\\" + script.Name.Content + ".gml</script>");
     }
-    
+    writer.WriteLine("  </scripts>");
+
     // Write Fonts.
     writer.WriteLine("@@fonts@@");
     if (Data.Fonts.Count > 0) 
