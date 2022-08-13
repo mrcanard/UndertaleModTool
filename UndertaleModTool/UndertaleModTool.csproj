@@ -21,6 +21,7 @@
       <None Remove="Resources\X_Down.png" />
       <None Remove="Scripts\Resource Unpackers\ExportAssetOrderGMS1.csx" />
       <None Remove="Scripts\Resource Unpackers\ExportFontDataGMS1.csx" />
+      <None Remove="Scripts\Resource Unpackers\ExportPathDataGMS1.csx" />
       <None Remove="X.png" />
     </ItemGroup>
     <ItemGroup>
