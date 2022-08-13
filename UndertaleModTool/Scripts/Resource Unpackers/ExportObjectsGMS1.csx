@@ -95,6 +95,35 @@ void DumpGameObject(UndertaleGameObject game_object)
             writer.WriteLine("  <maskName>&lt;undefined&gt;</maskName>");
         }
         writer.WriteLine("  <events>");
+        var i = 0;
+        foreach (var e1 in game_object.Events)
+        {
+            foreach (var e2 in e1)
+            {
+                writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
+                foreach (var a in e2.Actions)
+                {
+                    writer.WriteLine("      <action>");
+                    writer.WriteLine("        <libid>"+ a.LibID + "</libid>");
+                    writer.WriteLine("        <id>"+ a.ID + "</id>");
+                    writer.WriteLine("        <kind>"+ a.Kind + "</kind>");
+                    writer.WriteLine("        <userelative>"+ (a.UseRelative ? -1 : 0) + "</userelative>");
+                    writer.WriteLine("        <isquestion>"+ (a.IsQuestion ? -1 : 0) + "</isquestion>");
+                    writer.WriteLine("        <useapplyto>"+ (a.UseApplyTo ? -1 : 0) + "</useapplyto>");
+                    writer.WriteLine("        <exetype>"+ a.ExeType + "</exetype>");
+                    writer.WriteLine("        <functionname></functionname>");
+                    writer.WriteLine("        <codestring></codestring>");
+                    writer.WriteLine("        <whoName>"+ (a.Who == -1 ? "self" : "") + "</whoName>");
+                    writer.WriteLine("        <relative>" + (a.Relative ? -1 : 0) + "</relative>");
+                    writer.WriteLine("        <isnot>"+ (a.IsNot ? -1 : 0) + "</isnot>");
+                    writer.WriteLine("        <arguments>");
+                    writer.WriteLine("        </arguments>");
+                    writer.WriteLine("      </action>");
+                }
+                writer.WriteLine("    </event>");
+            }
+            i++;
+        }
         writer.WriteLine("  </events>");
         writer.WriteLine("  <PhysicsObject>" + (game_object.UsesPhysics ? -1 : 0) + "</PhysicsObject>");
         writer.WriteLine("  <PhysicsObjectSensor>" + (game_object.IsSensor ? -1 : 0) + "</PhysicsObjectSensor>");
