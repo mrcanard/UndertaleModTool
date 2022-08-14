@@ -117,6 +117,10 @@ void DumpGameObject(UndertaleGameObject game_object)
                     writer.WriteLine("        <relative>" + (a.Relative ? -1 : 0) + "</relative>");
                     writer.WriteLine("        <isnot>"+ (a.IsNot ? -1 : 0) + "</isnot>");
                     writer.WriteLine("        <arguments>");
+                    writer.WriteLine("          <argument>");
+                    writer.WriteLine("            <kind>" + a.ArgumentCount + "</kind>");
+                    writer.WriteLine("            <string>" + (a.CodeId != null ? Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value) : "") + "</string>");
+                    writer.WriteLine("          </argument>");
                     writer.WriteLine("        </arguments>");
                     writer.WriteLine("      </action>");
                 }
