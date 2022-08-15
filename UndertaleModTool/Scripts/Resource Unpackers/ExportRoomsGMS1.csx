@@ -100,32 +100,60 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("  <backgrounds>");
         foreach (var b in room.Backgrounds)
         {
-
-            writer.WriteLine("    <background visible=\"" + (b.Enabled ? -1 : 0) + "\" foreground=\"" + (b.Foreground ? -1 : 0) + "\" name=\"" + (b.BackgroundDefinition == null ? "" : b.BackgroundDefinition.Name.Content) + "\" x=\"" + b.X + "\" y=\"" + b.Y + "\" htiled=\"" + (b.TiledHorizontally ? -1 : 0) + "\" vtiled=\"" + (b.TiledVertically ? -1 : 0) + "\" hspeed=\"" + b.SpeedX + "\" vspeed=\"" + b.SpeedY + "\" stretch=\""+ (b.Stretch ? -1 : 0) + "\"/>");
-
-            //writer.WriteLine("    <background>");
-            //writer.WriteLine("Enabled = " + b.Enabled);
-            //writer.WriteLine("Foreground = " + b.Foreground);
-            //if(b.BackgroundDefinition == null)
-            //{
-            //    writer.WriteLine("BackgroundDefinition.Name = null");
-            //} else
-            //{
-            //    writer.WriteLine("BackgroundDefinition.Name = " + b.BackgroundDefinition.Name.Content);
-            //}
-            //writer.WriteLine("X = " + b.X);
-            //writer.WriteLine("Y = " + b.Y);
-            //writer.WriteLine("SpeedX = " + b.SpeedX);
-            //writer.WriteLine("SpeedY = " + b.SpeedY);
-            //writer.WriteLine("Stretch = " + b.Stretch);
-            //writer.WriteLine("TiledHorizontally = " + b.TiledHorizontally);
-            //writer.WriteLine("TiledVertically = " + b.TiledVertically);
-            //writer.WriteLine("XOffset = " + b.XOffset);
-            //writer.WriteLine("YOffset = " + b.YOffset);
-
-
+            writer.WriteLine("    <background visible=\"" + (b.Enabled ? -1 : 0) + 
+                "\" foreground=\"" + (b.Foreground ? -1 : 0) + 
+                "\" name=\"" + (b.BackgroundDefinition == null ? "" : b.BackgroundDefinition.Name.Content) + 
+                "\" x=\"" + b.X + 
+                "\" y=\"" + b.Y + 
+                "\" htiled=\"" + (b.TiledHorizontally ? -1 : 0) + 
+                "\" vtiled=\"" + (b.TiledVertically ? -1 : 0) + 
+                "\" hspeed=\"" + b.SpeedX + 
+                "\" vspeed=\"" + b.SpeedY + 
+                "\" stretch=\""+ (b.Stretch ? -1 : 0) + 
+                "\"/>");
         }
         writer.WriteLine("  </backgrounds>");
+        writer.WriteLine("  <views>");
+        foreach (var v in room.Views)
+        {
+            writer.WriteLine("    <view visible=\"" + (v.Enabled ? -1 : 0) +
+                "\" objName=\"" + "" +
+                "\" xview=\"" + "" +
+                "\" yview=\"" + "" +
+                "\" wview=\"" + "" +
+                "\" hview=\"" + "" +
+                "\" xport=\"" + "" +
+                "\" yport=\"" + "" +
+                "\" wport=\"" + "" +
+                "\" hport=\"" + "" +
+                "\" hborder=\"" + "" +
+                "\" vborder=\"" + "" +
+                "\" hspeed=\"" + "" +
+                "\" vspeed=\"" + "" +
+                "\"/>");
+
+            writer.WriteLine("Enabled = " + v.Enabled);
+            writer.WriteLine("ViewX = " + v.ViewX);
+            writer.WriteLine("ViewY = " + v.ViewY);
+            writer.WriteLine("ViewWidth = " + v.ViewWidth);
+            writer.WriteLine("ViewHeight = " + v.ViewHeight);
+            writer.WriteLine("PortX = " + v.PortX);
+            writer.WriteLine("PortY = " + v.PortY);
+            writer.WriteLine("PortWidth = " + v.PortWidth);
+            writer.WriteLine("PortHeight = " + v.PortHeight);
+            writer.WriteLine("BorderX = " + v.BorderX);
+            writer.WriteLine("BorderY = " + v.BorderY);
+            writer.WriteLine("SpeedX = " + v.SpeedX);
+            writer.WriteLine("SpeedY = " + v.SpeedY);
+            if(v.ObjectId == null)
+            {
+                writer.WriteLine("ObjectName = null");
+            } else
+            {
+                writer.WriteLine("ObjectName = " + v.ObjectId.Name.Content);
+            }
+        }
+        writer.WriteLine("  </views>");
         writer.WriteLine("</room>");
 
         writer.WriteLine("Caption = " + room.Caption.Content);
