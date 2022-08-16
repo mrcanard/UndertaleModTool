@@ -117,43 +117,63 @@ void DumpRoom(UndertaleRoom room)
         foreach (var v in room.Views)
         {
             writer.WriteLine("    <view visible=\"" + (v.Enabled ? -1 : 0) +
-                "\" objName=\"" + "" +
-                "\" xview=\"" + "" +
-                "\" yview=\"" + "" +
-                "\" wview=\"" + "" +
-                "\" hview=\"" + "" +
-                "\" xport=\"" + "" +
-                "\" yport=\"" + "" +
-                "\" wport=\"" + "" +
-                "\" hport=\"" + "" +
-                "\" hborder=\"" + "" +
-                "\" vborder=\"" + "" +
-                "\" hspeed=\"" + "" +
-                "\" vspeed=\"" + "" +
+                "\" objName=\"" + (v.ObjectId == null ? "&lt;undefined&gt;" : v.ObjectId.Name.Content) +
+                "\" xview=\"" + v.ViewX +
+                "\" yview=\"" + v.ViewY +
+                "\" wview=\"" + v.ViewWidth +
+                "\" hview=\"" + v.ViewHeight +
+                "\" xport=\"" + v.PortX +
+                "\" yport=\"" + v.PortY +
+                "\" wport=\"" + v.PortWidth +
+                "\" hport=\"" + v.PortHeight +
+                "\" hborder=\"" + v.BorderX +
+                "\" vborder=\"" + v.BorderY +
+                "\" hspeed=\"" + v.SpeedX +
+                "\" vspeed=\"" + v.SpeedY +
                 "\"/>");
 
-            writer.WriteLine("Enabled = " + v.Enabled);
-            writer.WriteLine("ViewX = " + v.ViewX);
-            writer.WriteLine("ViewY = " + v.ViewY);
-            writer.WriteLine("ViewWidth = " + v.ViewWidth);
-            writer.WriteLine("ViewHeight = " + v.ViewHeight);
-            writer.WriteLine("PortX = " + v.PortX);
-            writer.WriteLine("PortY = " + v.PortY);
-            writer.WriteLine("PortWidth = " + v.PortWidth);
-            writer.WriteLine("PortHeight = " + v.PortHeight);
-            writer.WriteLine("BorderX = " + v.BorderX);
-            writer.WriteLine("BorderY = " + v.BorderY);
-            writer.WriteLine("SpeedX = " + v.SpeedX);
-            writer.WriteLine("SpeedY = " + v.SpeedY);
-            if(v.ObjectId == null)
-            {
-                writer.WriteLine("ObjectName = null");
-            } else
-            {
-                writer.WriteLine("ObjectName = " + v.ObjectId.Name.Content);
-            }
+            //writer.WriteLine("Enabled = " + v.Enabled);
+            //writer.WriteLine("ViewX = " + v.ViewX);
+            //writer.WriteLine("ViewY = " + v.ViewY);
+            //writer.WriteLine("ViewWidth = " + v.ViewWidth);
+            //writer.WriteLine("ViewHeight = " + v.ViewHeight);
+            //writer.WriteLine("PortX = " + v.PortX);
+            //writer.WriteLine("PortY = " + v.PortY);
+            //writer.WriteLine("PortWidth = " + v.PortWidth);
+            //writer.WriteLine("PortHeight = " + v.PortHeight);
+            //writer.WriteLine("BorderX = " + v.BorderX);
+            //writer.WriteLine("BorderY = " + v.BorderY);
+            //writer.WriteLine("SpeedX = " + v.SpeedX);
+            //writer.WriteLine("SpeedY = " + v.SpeedY);
+
         }
         writer.WriteLine("  </views>");
+        writer.WriteLine("  <instances>");
+        foreach (var g in room.GameObjects)
+        {
+
+            writer.WriteLine("    <instance objName=\"" + (g.ObjectDefinition == null ? "undefined" : g.ObjectDefinition.Name.Content) +
+                "\" x=\"" + g.X +
+                "\" y=\"" + g.Y +
+                "\" name=\"" + "inst_" + g.InstanceID +
+                "\" locked=\"" + 0 +
+                "\" code=\"" + "" +
+                "\" scaleX=\"" + g.ScaleX +
+                "\" scaleY=\"" + g.ScaleY +
+                "\" colour=\"" + g.Color +
+                "\" rotation=\"" + g.Rotation +
+                "\"/>");
+
+            //writer.WriteLine("X = " + g.X);
+            //writer.WriteLine("Y = " + g.Y);
+            //writer.WriteLine("ObjectDefinition = " + (g.ObjectDefinition == null ? "undefined" : g.ObjectDefinition.Name.Content));
+            //writer.WriteLine("InstanceID = " + g.InstanceID);
+            //writer.WriteLine("ScaleX = " + g.ScaleX);
+            //writer.WriteLine("ScaleY = " + g.ScaleY);
+            //writer.WriteLine("Color = " + g.Color);
+            //writer.WriteLine("Rotation = " + g.Rotation);
+        }
+        writer.WriteLine("  </instances>");
         writer.WriteLine("</room>");
 
         writer.WriteLine("Caption = " + room.Caption.Content);
