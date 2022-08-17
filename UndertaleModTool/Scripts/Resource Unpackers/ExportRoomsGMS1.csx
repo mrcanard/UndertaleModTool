@@ -151,7 +151,6 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("  <instances>");
         foreach (var g in room.GameObjects)
         {
-
             writer.WriteLine("    <instance objName=\"" + (g.ObjectDefinition == null ? "undefined" : g.ObjectDefinition.Name.Content) +
                 "\" x=\"" + g.X +
                 "\" y=\"" + g.Y +
@@ -163,41 +162,38 @@ void DumpRoom(UndertaleRoom room)
                 "\" colour=\"" + g.Color +
                 "\" rotation=\"" + g.Rotation +
                 "\"/>");
-
-            //writer.WriteLine("X = " + g.X);
-            //writer.WriteLine("Y = " + g.Y);
-            //writer.WriteLine("ObjectDefinition = " + (g.ObjectDefinition == null ? "undefined" : g.ObjectDefinition.Name.Content));
-            //writer.WriteLine("InstanceID = " + g.InstanceID);
-            //writer.WriteLine("ScaleX = " + g.ScaleX);
-            //writer.WriteLine("ScaleY = " + g.ScaleY);
-            //writer.WriteLine("Color = " + g.Color);
-            //writer.WriteLine("Rotation = " + g.Rotation);
         }
         writer.WriteLine("  </instances>");
+        writer.WriteLine("  <tiles>");
+        foreach (var t in room.Tiles)
+        {
+            writer.WriteLine("    <tile bgName=\"" + t.ObjectDefinition.Name.Content +
+                "\" x=\"" + t.X +
+                "\" y=\"" + t.Y +
+                "\" w=\"" + t.Width +
+                "\" h=\"" + t.Height +
+                "\" xo=\"" + t.SourceX +
+                "\" yo=\"" + t.SourceY +
+                "\" id=\"" + t.InstanceID +
+                "\" name=\"" + "inst_" + t.InstanceID +
+                "\" depth=\"" + t.TileDepth +
+                "\" locked=\"" + "0" +
+                "\" colour=\"" + t.Color +
+                "\" scaleX=\"" + t.ScaleX +
+                "\" scaleY=\"" + t.ScaleY +
+                "\"/>");
+        }
+        writer.WriteLine("  </tiles>");
+        writer.WriteLine("  <PhysicsWorld>" + (room.World ? -1 : 0) + "</PhysicsWorld>");
+        writer.WriteLine("  <PhysicsWorldTop>" + room.Top + "</PhysicsWorldTop>");
+        writer.WriteLine("  <PhysicsWorldLeft>" + room.Left + "</PhysicsWorldLeft>");
+        writer.WriteLine("  <PhysicsWorldRight>" + room.Right + "</PhysicsWorldRight>");
+        writer.WriteLine("  <PhysicsWorldBottom>" + room.Bottom + "</PhysicsWorldBottom>");
+        writer.WriteLine("  <PhysicsWorldGravityX>" + room.GravityX + "</PhysicsWorldGravityX>");
+        writer.WriteLine("  <PhysicsWorldGravityY>" + room.GravityY + "</PhysicsWorldGravityY>");
+        writer.WriteLine("  <PhysicsWorldPixToMeters>" + room.MetersPerPixel.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + "</PhysicsWorldPixToMeters>");
+
         writer.WriteLine("</room>");
-
-        writer.WriteLine("Caption = " + room.Caption.Content);
-        writer.WriteLine("Width = " + room.Width);
-        writer.WriteLine("Height = " + room.Height);
-        writer.WriteLine("Speed = " + room.Speed);
-        writer.WriteLine("Persistent = " + room.Persistent);
-        writer.WriteLine("BackgroundColor = " + (room.BackgroundColor ^ 0xFF000000));
-        writer.WriteLine("DrawBackgroundColor = " + room.DrawBackgroundColor);
-        writer.WriteLine("Flags = " + room.Flags);
-        writer.WriteLine("World = " + room.World);
-        writer.WriteLine("Top = " + room.Top);
-        writer.WriteLine("Left = " + room.Left);
-        writer.WriteLine("Right = " + room.Right);
-        writer.WriteLine("Bottom = " + room.Bottom);
-        writer.WriteLine("GravityX = " + room.GravityX);
-        writer.WriteLine("GravityY = " + room.GravityY);
-        writer.WriteLine("MetersPerPixel = " + room.MetersPerPixel);
-        writer.WriteLine("GridWidth = " + room.GridWidth);
-        writer.WriteLine("GridHeight = " + room.GridHeight);
-        writer.WriteLine("GridThicknessPx = " + room.GridThicknessPx);
-
-
-
 
         //writer.WriteLine("  <events>");
         //var i = 0;
