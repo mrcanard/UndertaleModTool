@@ -179,7 +179,7 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("  <origname>sound\\audio\\" + sound.File.Content + "</origname>");
         writer.WriteLine("  <effects>" + sound.Effects + "</effects>");
         writer.WriteLine("  <volume>");
-        writer.WriteLine("    <volume>" + sound.Volume + "</volume>");
+        writer.WriteLine("    <volume>" + (sound.Volume == 1 ? sound.Volume : sound.Volume.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)) + "</volume>");
         writer.WriteLine("  </volume>");
         writer.WriteLine("  <pan>0</pan>");
         writer.WriteLine("  <bitRates>");

@@ -62,7 +62,7 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine("  <bbox_top>" + sprite.MarginTop + "</bbox_top>");
         writer.WriteLine("  <bbox_bottom>" + sprite.MarginBottom + "</bbox_bottom>");
         writer.WriteLine("  <HTile>0</HTile>");
-        writer.WriteLine("  <HTile>0</HTile>");
+        writer.WriteLine("  <VTile>0</VTile>");
         writer.WriteLine("  <TextureGroups>");
         writer.WriteLine("    <TextureGroup0>0</TextureGroup0>");
         writer.WriteLine("  </TextureGroups>");
