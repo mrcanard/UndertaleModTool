@@ -129,6 +129,7 @@ void DumpGameObject(UndertaleGameObject game_object)
                     else
                     {
                         string mycode = Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value);
+                        mycode = mycode.Replace("&", "&amp;");
                         mycode = mycode.Replace("<", "&lt;");
                         mycode = mycode.Replace(">", "&gt;");
                         writer.WriteLine("            <string>" + mycode + "</string>");
