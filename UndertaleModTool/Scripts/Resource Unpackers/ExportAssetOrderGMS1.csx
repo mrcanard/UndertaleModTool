@@ -56,7 +56,12 @@ using (StreamWriter writer = new StreamWriter(outputPath))
     if (Data.Backgrounds.Count > 0)
     {
         foreach (var background in Data.Backgrounds)
-            writer.WriteLine("    <background>background\\" + background.Name.Content + "</background>");
+        {
+            if((! background.Name.Content.Contains("_1080")) & (! background.Name.Content.Contains("_544")))
+            {
+                writer.WriteLine("    <background>background\\" + background.Name.Content + "</background>");
+            }
+        }
     }
     writer.WriteLine("  </backgrounds>");
 

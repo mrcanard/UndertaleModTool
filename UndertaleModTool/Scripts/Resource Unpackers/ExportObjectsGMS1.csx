@@ -79,6 +79,8 @@ void DumpGameObject(UndertaleGameObject game_object)
         writer.WriteLine("  <solid>" + (game_object.Solid ? -1 : 0) + "</solid>");
         writer.WriteLine("  <visible>" + (game_object.Visible ? -1 : 0) + "</visible>");
         writer.WriteLine("  <depth>" + game_object.Depth + "</depth>");
+        writer.WriteLine("  <persistent>" + (game_object.Persistent ? -1 : 0) + "</persistent>");
+
         if (game_object.ParentId != null)
         {
             writer.WriteLine("  <parentName>" + game_object.ParentId.Name.Content + "</parentName>");
@@ -119,7 +121,18 @@ void DumpGameObject(UndertaleGameObject game_object)
                     writer.WriteLine("        <arguments>");
                     writer.WriteLine("          <argument>");
                     writer.WriteLine("            <kind>" + a.ArgumentCount + "</kind>");
-                    writer.WriteLine("            <string>" + (a.CodeId != null ? Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value) : "") + "</string>");
+                    if(a.CodeId == null)
+                    {
+                        writer.WriteLine("            <string></string>");
+
+                    }
+                    else
+                    {
+                        string mycode = Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value);
+                        mycode = mycode.Replace("<", "&lt;");
+                        mycode = mycode.Replace(">", "&gt;");
+                        writer.WriteLine("            <string>" + mycode + "</string>");
+                    }
                     writer.WriteLine("          </argument>");
                     writer.WriteLine("        </arguments>");
                     writer.WriteLine("      </action>");
