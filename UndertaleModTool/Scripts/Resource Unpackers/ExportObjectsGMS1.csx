@@ -107,7 +107,8 @@ void DumpGameObject(UndertaleGameObject game_object)
                 {
                     writer.WriteLine("      <action>");
                     writer.WriteLine("        <libid>"+ a.LibID + "</libid>");
-                    writer.WriteLine("        <id>"+ a.ID + "</id>");
+                    //writer.WriteLine("        <id>"+ a.ID + "</id>");
+                    writer.WriteLine("        <id>603</id>"); // exécution de code
                     writer.WriteLine("        <kind>"+ a.Kind + "</kind>");
                     writer.WriteLine("        <userelative>"+ (a.UseRelative ? -1 : 0) + "</userelative>");
                     writer.WriteLine("        <isquestion>"+ (a.IsQuestion ? -1 : 0) + "</isquestion>");
@@ -132,6 +133,7 @@ void DumpGameObject(UndertaleGameObject game_object)
                         mycode = mycode.Replace("&", "&amp;");
                         mycode = mycode.Replace("<", "&lt;");
                         mycode = mycode.Replace(">", "&gt;");
+                        mycode = mycode.Replace("action_set_relative", "// action_set_relative");
                         writer.WriteLine("            <string>" + mycode + "</string>");
                     }
                     writer.WriteLine("          </argument>");
