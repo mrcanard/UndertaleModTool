@@ -102,7 +102,14 @@ void DumpGameObject(UndertaleGameObject game_object)
         {
             foreach (var e2 in e1)
             {
-                writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
+                if(i == 4) // Collision
+                {
+                    writer.WriteLine("    <event eventtype=\"" + i + "\" ename=\"" + Data.GameObjects[(int) e2.EventSubtype].Name.Content + "\">");
+                } else
+                {
+                    writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
+                }
+
                 foreach (var a in e2.Actions)
                 {
                     writer.WriteLine("      <action>");
