@@ -107,6 +107,9 @@ namespace UndertaleModTool
         }
         public void ReplaceTextInGML(UndertaleCode code, string keyword, string replacement, bool caseSensitive = false, bool isRegex = false, GlobalDecompileContext context = null)
         {
+            if (code.ParentEntry is not null)
+                return;
+
             EnsureDataLoaded();
 
             string passBack = "";
@@ -201,6 +204,9 @@ namespace UndertaleModTool
                 code.Name = Data.Strings.MakeString(codeName);
                 Data.Code.Add(code);
             }
+            else if (code.ParentEntry is not null)
+                return;
+
             if (Data?.GeneralInfo.BytecodeVersion > 14 && Data.CodeLocals.ByName(codeName) == null)
             {
                 UndertaleCodeLocals locals = new UndertaleCodeLocals();
@@ -219,7 +225,7 @@ namespace UndertaleModTool
             if (doParse)
             {
                 // This portion links code.
-                if (codeName.Substring(0, 10).Equals("gml_Script"))
+                if (codeName.StartsWith("gml_Script"))
                 {
                     // Add code to scripts section.
                     if (Data.Scripts.ByName(codeName.Substring(11)) == null)
@@ -235,7 +241,7 @@ namespace UndertaleModTool
                         scr.Code = code;
                     }
                 }
-                else if (codeName.Substring(0, 16).Equals("gml_GlobalScript"))
+                else if (codeName.StartsWith("gml_GlobalScript"))
                 {
                     // Add code to global init section.
                     UndertaleGlobalInit init_entry = null;
@@ -260,7 +266,7 @@ namespace UndertaleModTool
                         NewInit.Code = code;
                     }
                 }
-                else if (codeName.Substring(0, 10).Equals("gml_Object"))
+                else if (codeName.StartsWith("gml_Object"))
                 {
                     string afterPrefix = codeName.Substring(11);
                     int underCount = 0;
@@ -313,7 +319,7 @@ namespace UndertaleModTool
                             methodNumberStr = afterPrefix.Substring(afterPrefix.LastIndexOf("_Collision_") + s2.Length, afterPrefix.Length - (afterPrefix.LastIndexOf("_Collision_") + s2.Length));
                             methodName = "Collision";
                             // GMS 2.3+ use the object name for the one colliding, which is rather useful.
-                            if (Data.GMS2_3)
+                            if (Data.IsVersionAtLeast(2, 3))
                             {
                                 if (Data.GameObjects.ByName(methodNumberStr) != null)
                                 {
@@ -410,6 +416,9 @@ namespace UndertaleModTool
         void SafeImport(string codeName, string gmlCode, bool IsGML, bool destroyASM = true, bool CheckDecompiler = false, bool throwOnError = false)
         {
             UndertaleCode code = Data.Code.ByName(codeName);
+            if (code?.ParentEntry is not null)
+                return;
+
             try
             {
                 if (IsGML)
@@ -447,4 +456,3 @@ namespace UndertaleModTool
         }
     }
 }
-
