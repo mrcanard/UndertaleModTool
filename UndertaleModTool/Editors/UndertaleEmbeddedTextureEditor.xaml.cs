@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using System.Drawing;
 using UndertaleModLib.Models;
 using UndertaleModLib.Util;
+using System.Globalization;
+using UndertaleModLib;
 
 namespace UndertaleModTool
 {
@@ -98,18 +100,66 @@ namespace UndertaleModTool
             }
         }
 
-        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.ChangedButton == MouseButton.Right)
+                return;
+
             var pos = e.GetPosition(sender as IInputElement);
             var tex = this.DataContext as UndertaleEmbeddedTexture;
-            var tpag = (Application.Current.MainWindow as MainWindow).Data.TexturePageItems.Where((x) =>
+            var tpag = mainWindow.Data.TexturePageItems.Where((x) =>
             {
                 if (x.TexturePage != tex)
                     return false;
                 return pos.X > x.SourceX && pos.X < x.SourceX + x.SourceWidth && pos.Y > x.SourceY && pos.Y < x.SourceY + x.SourceHeight;
             }).FirstOrDefault();
             if (tpag != null)
-                (Application.Current.MainWindow as MainWindow).ChangeSelection(tpag);
+                mainWindow.ChangeSelection(tpag, e.ChangedButton == MouseButton.Middle);
+            else
+                mainWindow.ShowWarning("Cannot find a texture page item at this position.");
+        }
+    }
+
+    public class TextureLoadedWrapper : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Any(v => v == DependencyProperty.UnsetValue))
+                return null;
+
+            bool textureLoaded, textureExternal;
+            try
+            {
+                textureLoaded = (bool)values[0];
+                textureExternal = (bool)values[1];
+            }
+            catch
+            {
+                return null;
+            }
+
+            return (textureLoaded || !textureExternal) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class GeneratedMipsWrapper : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is not UndertaleData data)
+                return Visibility.Collapsed;
+
+            return data.IsVersionAtLeast(2, 0, 6) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

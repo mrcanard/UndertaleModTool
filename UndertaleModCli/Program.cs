@@ -407,7 +407,7 @@ public partial class Program : IScriptInterface
             {
                 string directory = codeDict[UMT_REPLACE_ALL].FullName;
                 foreach (FileInfo file in new DirectoryInfo(directory).GetFiles())
-                    program.ReplaceCodeEntryWithFile(file.Name, file);
+                    program.ReplaceCodeEntryWithFile(Path.GetFileNameWithoutExtension(file.Name), file);
             }
             // Otherwise, just replace every file which was given
             else
@@ -440,7 +440,7 @@ public partial class Program : IScriptInterface
             {
                 string directory = textureDict[UMT_REPLACE_ALL].FullName;
                 foreach (FileInfo file in new DirectoryInfo(directory).GetFiles())
-                    program.ReplaceTextureWithFile(file.Name, file);
+                    program.ReplaceTextureWithFile(Path.GetFileNameWithoutExtension(file.Name), file);
             }
             // Otherwise, just replace every file which was given
             else
@@ -703,6 +703,7 @@ public partial class Program : IScriptInterface
             throw;
         }
 
+        lines = $"#line 1 \"{path}\"\n" + lines;
         ScriptPath = path;
         RunCSharpCode(lines, ScriptPath);
     }
@@ -791,7 +792,7 @@ public partial class Program : IScriptInterface
     private static string RemoveQuotes(string s)
 
     {
-        return s.TrimStart('"').TrimEnd('"');
+        return s.Trim('"', '\'');
     }
 
     /// <summary>

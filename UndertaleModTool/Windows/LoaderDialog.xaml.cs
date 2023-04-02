@@ -16,6 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Windows.Shell;
 
 namespace UndertaleModTool
 {
@@ -42,7 +43,12 @@ namespace UndertaleModTool
             {
                 ProgressBar.IsIndeterminate = !value.HasValue;
                 if (value.HasValue)
+                {
                     ProgressBar.Maximum = value.Value;
+                    TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                }
+                else
+                    TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
             }
         }
         public bool IsClosed { get; set; } = false;
@@ -56,6 +62,14 @@ namespace UndertaleModTool
             this.DataContext = this;
 
             (Application.Current.MainWindow as MainWindow).FileMessageEvent += ReportProgress;
+        }
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!IsVisible || IsLoaded)
+                return;
+
+            if (Settings.Instance.EnableDarkMode)
+                MainWindow.SetDarkTitleBarForWindow(this, true, false);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -143,15 +157,8 @@ namespace UndertaleModTool
         }
         public void UpdateValue(double value)
         {
-            if (value - ProgressBar.Value <= 1) //if value not changed or changed by 1
-            {
-                ProgressBar.Value = value;
-            }
-            else
-            {
-                DoubleAnimation animation = new(value, TimeSpan.FromMilliseconds(100)); //time is the same as in "ProgressUpdater()"
-                ProgressBar.BeginAnimation(ProgressBar.ValueProperty, animation);       //smooth progress change
-            }
+            ProgressBar.Value = value;
+            TaskbarItemInfo.ProgressValue = value / ProgressBar.Maximum;
         }
 
         public void ReportProgress(string status, double value)

@@ -129,7 +129,8 @@ namespace UndertaleModTool
 
         private void UndertaleRoomEditor_Loaded(object sender, RoutedEventArgs e)
         {
-            RoomRootItem.IsSelected = true;
+            if (ObjectEditor.Content is null)
+                RoomRootItem.IsSelected = true;
         }
         private void UndertaleRoomEditor_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -147,6 +148,10 @@ namespace UndertaleModTool
                 ScrollViewer viewer = MainWindow.FindVisualChild<ScrollViewer>(RoomObjectsTree);
                 viewer.ScrollToVerticalOffset(0);
                 viewer.ScrollToHorizontalOffset(0);
+
+                RoomGraphics.ClearValue(LayoutTransformProperty);
+                RoomGraphicsScroll.ScrollToVerticalOffset(0);
+                RoomGraphicsScroll.ScrollToHorizontalOffset(0);
             }
 
             UndertaleCachedImageLoader.Reset();
@@ -1114,14 +1119,43 @@ namespace UndertaleModTool
         private void RoomObjectsTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             object sel = (sender as TreeView).SelectedItem;
-            if (sel is GameObject)
-                mainWindow.ChangeSelection((sel as GameObject).ObjectDefinition);
-            if (sel is Background)
-                mainWindow.ChangeSelection((sel as Background).BackgroundDefinition);
-            if (sel is Tile)
-                mainWindow.ChangeSelection((sel as Tile).ObjectDefinition);
-            if (sel is SpriteInstance)
-                mainWindow.ChangeSelection((sel as SpriteInstance).Sprite);
+            if (sel is GameObject gameObj)
+                mainWindow.ChangeSelection(gameObj.ObjectDefinition);
+            if (sel is Background bg)
+                mainWindow.ChangeSelection(bg.BackgroundDefinition);
+            if (sel is Tile tile)
+                mainWindow.ChangeSelection(tile.ObjectDefinition);
+            if (sel is SpriteInstance sprInst)
+                mainWindow.ChangeSelection(sprInst.Sprite);
+        }
+        private async void RoomObjectsTree_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton != MouseButton.Middle)
+                return;
+
+            TreeViewItem treeViewItem = MainWindow.VisualUpwardSearch<TreeViewItem>(e.OriginalSource as DependencyObject);
+            treeViewItem?.Focus();
+
+            RoomObjectsTree.UpdateLayout();
+            ObjectEditor.UpdateLayout();
+            await Task.Run(async () =>
+            {
+                // Added a little delay in order to see that selection was changed
+                await Task.Delay(25);
+
+                Dispatcher.Invoke(() =>
+                {
+                    object sel = (sender as TreeView).SelectedItem;
+                    if (sel is GameObject gameObj)
+                        mainWindow.ChangeSelection(gameObj.ObjectDefinition, true);
+                    if (sel is Background bg)
+                        mainWindow.ChangeSelection(bg.BackgroundDefinition, true);
+                    if (sel is Tile tile)
+                        mainWindow.ChangeSelection(tile.ObjectDefinition, true);
+                    if (sel is SpriteInstance sprInst)
+                        mainWindow.ChangeSelection(sprInst.Sprite, true);
+                });
+            });
         }
 
         private UndertaleObject copied;
@@ -1307,7 +1341,7 @@ namespace UndertaleModTool
                 layer.AssetsData.Sequences ??= new UndertalePointerList<SequenceInstance>();
 
                 // if it's needed to set "NineSlices"
-                if (!data.GMS2_3_2)
+                if (!data.IsVersionAtLeast(2, 3, 2))
                     layer.AssetsData.NineSlices ??= new UndertalePointerList<SpriteInstance>();
             }
             else if (layer.LayerType == LayerType.Tiles)
@@ -1468,7 +1502,9 @@ namespace UndertaleModTool
                             break;
 
                         case LayerType.Instances:
-                            allObjects.AddRange(layer.InstancesData.Instances);
+                            var instances = layer.InstancesData.Instances
+                                            .Where(g => g.ObjectDefinition?.Sprite?.Textures.Count > 0);
+                            allObjects.AddRange(instances);
                             break;
                     }
                 }
@@ -1663,6 +1699,7 @@ namespace UndertaleModTool
             canvas.CurrentLayer = layer;
             ObjElemDict[layer] = canvas;
         }
+
         private void LayerCanvas_Unloaded(object sender, RoutedEventArgs e)
         {
             LayerCanvas canvas = sender as LayerCanvas;
@@ -1726,6 +1763,7 @@ namespace UndertaleModTool
 
     public class LayerDataTemplateSelector : DataTemplateSelector
     {
+        public DataTemplate PathDataTemplate { get; set; }
         public DataTemplate InstancesDataTemplate { get; set; }
         public DataTemplate TilesDataTemplate { get; set; }
         public DataTemplate AssetsDataTemplate { get; set; }
@@ -1738,6 +1776,8 @@ namespace UndertaleModTool
             {
                 switch ((item as Layer).LayerType)
                 {
+                    case LayerType.Path:
+                        return PathDataTemplate;
                     case LayerType.Instances:
                         return InstancesDataTemplate;
                     case LayerType.Tiles:
@@ -2332,6 +2372,22 @@ namespace UndertaleModTool
                 return h - 22; // "TabController" has predefined height
             else
                 return 0;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class IsGMS2_2_2_302Converter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is not UndertaleData data)
+                return Visibility.Collapsed;
+
+            return data.IsVersionAtLeast(2, 2, 2, 302) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
