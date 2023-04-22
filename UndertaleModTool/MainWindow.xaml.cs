@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -226,8 +227,8 @@ namespace UndertaleModTool
             { SystemColors.WindowTextBrushKey, new SolidColorBrush(whiteColor) },
             { SystemColors.ControlTextBrushKey, new SolidColorBrush(whiteColor) },
             { SystemColors.WindowBrushKey, new SolidColorBrush(darkColor) },
-            { SystemColors.ControlBrushKey, new SolidColorBrush(darkColor) },
-            { SystemColors.ControlLightLightBrushKey, new SolidColorBrush(darkLightColor) },
+            { SystemColors.ControlBrushKey, new SolidColorBrush(darkLightColor) },
+            { SystemColors.ControlLightBrushKey, new SolidColorBrush(Color.FromArgb(255, 60, 60, 60)) },
             { SystemColors.MenuTextBrushKey, new SolidColorBrush(whiteColor) },
             { SystemColors.MenuBrushKey, new SolidColorBrush(darkLightColor) },
             { SystemColors.GrayTextBrushKey, new SolidColorBrush(Color.FromArgb(255, 136, 136, 136)) },
@@ -467,6 +468,9 @@ namespace UndertaleModTool
             // Copy the known code corrections into the profile, if they don't already exist.
             ApplyCorrections();
             CrashCheck();
+
+            RunGMSDebuggerItem.Visibility = Settings.Instance.ShowDebuggerOption
+                                            ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Dictionary<string, NamedPipeServerStream> childFiles = new Dictionary<string, NamedPipeServerStream>();
@@ -560,8 +564,8 @@ namespace UndertaleModTool
                 resources[SystemColors.GrayTextBrushKey] = grayTextBrush;
                 resources[SystemColors.InactiveSelectionHighlightBrushKey] = inactiveSelectionBrush;
 
-                Windows.TextInput.BGColor = System.Drawing.SystemColors.Control;
-                Windows.TextInput.TextBoxBGColor = System.Drawing.SystemColors.Window;
+                Windows.TextInput.BGColor = System.Drawing.SystemColors.Window;
+                Windows.TextInput.TextBoxBGColor = System.Drawing.SystemColors.ControlLight;
                 Windows.TextInput.TextColor = System.Drawing.SystemColors.ControlText;
             }
 
@@ -722,22 +726,36 @@ namespace UndertaleModTool
         {
             SaveResult result = SaveResult.NotSaved;
 
-            DependencyObject child = VisualTreeHelper.GetChild(DataEditor, 0);
-            if (child is not null && VisualTreeHelper.GetChild(child, 0) is UndertaleCodeEditor codeEditor)
+            UndertaleCodeEditor codeEditor;
+            try
             {
-                #pragma warning disable CA1416
-                if (codeEditor.DecompiledChanged || codeEditor.DisassemblyChanged)
-                {
-                    IsSaving = true;
+                DependencyObject child = VisualTreeHelper.GetChild(DataEditor, 0);
+                var editor = VisualTreeHelper.GetChild(child, 0);
+                if (editor is null)
+                    return SaveResult.Error;
 
-                    await codeEditor.SaveChanges();
-                    //"IsSaving" should became false on success
-
-                    result = IsSaving ? SaveResult.Error : SaveResult.Saved;
-                    IsSaving = false;
-                }
-                #pragma warning restore CA1416
+                codeEditor = editor as UndertaleCodeEditor;
+                if (codeEditor is null)
+                    return result;
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return SaveResult.Error;
+            }
+            
+            #pragma warning disable CA1416
+            if (codeEditor.DecompiledChanged || codeEditor.DisassemblyChanged)
+            {
+                IsSaving = true;
+
+                await codeEditor.SaveChanges();
+                //"IsSaving" should became false on success
+
+                result = IsSaving ? SaveResult.Error : SaveResult.Saved;
+                IsSaving = false;
+            }
+            #pragma warning restore CA1416
 
             return result;
         }
@@ -754,8 +772,11 @@ namespace UndertaleModTool
                 if (!CanSafelySave)
                     this.ShowWarning("Errors occurred during loading. High chance of data loss! Proceed at your own risk.");
 
-                if (await SaveCodeChanges() == SaveResult.NotSaved)
+                var result = await SaveCodeChanges();
+                if (result == SaveResult.NotSaved)
                     _ = DoSaveDialog();
+                else if (result == SaveResult.Error)
+                    this.ShowError("The changes in code editor weren't saved due to some error in \"SaveCodeChanges()\".");
             }
         }
         private async void DataWindow_Closing(object sender, CancelEventArgs e)
@@ -787,7 +808,10 @@ namespace UndertaleModTool
                                 if (saveRes == SaveResult.NotSaved)
                                     _ = DoSaveDialog();
                                 else if (saveRes == SaveResult.Error)
+                                {
+                                    this.ShowError("The changes in code editor weren't saved due to some error in \"SaveCodeChanges()\".");
                                     return;
+                                }
                             }
                         }
                         else
@@ -1599,6 +1623,8 @@ namespace UndertaleModTool
                 // Gets the clicked visual element by the mouse position (relative to "MainTree").
                 // This is used instead of "VisualTreeHelper.HitTest()" because that ignores the visibility of elements,
                 // which led to "ghost" hits on empty space.
+
+                // Updated: why I simply didn't use "e.OriginalSource"?
                 DependencyObject obj = MainTree.InputHitTest(e.GetPosition(MainTree)) as DependencyObject;
                 if (obj is not TextBlock)
                     return;
@@ -1645,7 +1671,14 @@ namespace UndertaleModTool
                         effects |= DragDropEffects.Copy;
                     }*/
 
-                    DragDrop.DoDragDrop(MainTree, data, effects);
+                    try
+                    {
+                        DragDrop.DoDragDrop(MainTree, data, effects);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error on handling \"MainTree\" drag&drop:\n{ex}");
+                    }
                 }
             }
         }
@@ -1909,9 +1942,68 @@ namespace UndertaleModTool
             }
         }
 
+        private void MenuItem_FindUnreferencedAssets_Click(object sender, RoutedEventArgs e)
+        {
+            FindReferencesTypesDialog dialog = null;
+            try
+            {
+                dialog = new(Data);
+                dialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                this.ShowError("An error occured in the object references related window.\n" +
+                               $"Please report this on GitHub.\n\n{ex}");
+            }
+            finally
+            {
+                dialog?.Close();
+            }
+        }
+
+        private void MenuItem_ContextMenuOpened(object sender, RoutedEventArgs e)
+        {
+            var menu = sender as ContextMenu;
+            foreach (var item in menu.Items)
+            {
+                var menuItem = item as MenuItem;
+                if ((menuItem.Header as string) == "Find all references")
+                {
+                    menuItem.Visibility = UndertaleResourceReferenceMap.IsTypeReferenceable(menu.DataContext?.GetType())
+                                          ? Visibility.Visible : Visibility.Collapsed;
+
+                    break;
+                }
+            }
+        }
         private void MenuItem_OpenInNewTab_Click(object sender, RoutedEventArgs e)
         {
             OpenInTab(Highlighted, true);
+        }
+        private void MenuItem_FindAllReferences_Click(object sender, RoutedEventArgs e)
+        {
+            var obj = (sender as FrameworkElement)?.DataContext as UndertaleResource;
+            if (obj is null)
+            {
+                this.ShowError("The selected object is not an \"UndertaleResource\".");
+                return;
+            }
+
+            FindReferencesTypesDialog dialog = null;
+            try
+            {
+                dialog = new(obj, Data);
+                dialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                this.ShowError("An error occured in the object references related window.\n" +
+                               $"Please report this on GitHub.\n\n{ex}");
+            }
+            finally
+            {
+                dialog?.Close();
+            }
         }
         private void MenuItem_CopyName_Click(object sender, RoutedEventArgs e)
         {
@@ -1976,7 +2068,8 @@ namespace UndertaleModTool
                     if (obj is UndertaleScript)
                     {
                         UndertaleCode code = new UndertaleCode();
-                        code.Name = Data.Strings.MakeString("gml_Script_" + newname);
+                        string prefix = Data.IsVersionAtLeast(2, 3) ? "gml_GlobalScript_" : "gml_Script_";
+                        code.Name = Data.Strings.MakeString(prefix + newname);
                         Data.Code.Add(code);
                         if (Data?.GeneralInfo.BytecodeVersion > 14)
                         {
@@ -1987,7 +2080,6 @@ namespace UndertaleModTool
                             argsLocal.Index = 0;
                             locals.Locals.Add(argsLocal);
                             code.LocalsCount = 1;
-                            code.GenerateLocalVarDefinitions(code.FindReferencedLocalVars(), locals);
                             Data.CodeLocals.Add(locals);
                         }
                         (obj as UndertaleScript).Code = code;
@@ -2001,7 +2093,6 @@ namespace UndertaleModTool
                         argsLocal.Index = 0;
                         locals.Locals.Add(argsLocal);
                         (obj as UndertaleCode).LocalsCount = 1;
-                        (obj as UndertaleCode).GenerateLocalVarDefinitions((obj as UndertaleCode).FindReferencedLocalVars(), locals);
                         Data.CodeLocals.Add(locals);
                     }
                 }
@@ -2061,7 +2152,7 @@ namespace UndertaleModTool
 
                     var subDirName = subDirectory.Name;
                     // In addition to the _ comment from above, we also need to add at least one item, so that WPF uses this as a submenuitem
-                    MenuItem subItem = new MenuItem {Header = subDirName.Replace("_", "__"), Items = {new MenuItem {Header = "(loading...)", IsEnabled = false}}};
+                    MenuItemDark subItem = new() {Header = subDirName.Replace("_", "__"), Items = {new MenuItem {Header = "(loading...)", IsEnabled = false}}};
                     subItem.SubmenuOpened += (o, args) => MenuItem_RunScript_SubmenuOpened(o, args, subDirectory.FullName);
                     item.Items.Add(subItem);
                 }
@@ -2096,6 +2187,9 @@ namespace UndertaleModTool
         private async void MenuItem_RunBuiltinScript_Item_Click(object sender, RoutedEventArgs e)
         {
             string path = (string)(sender as MenuItem).CommandParameter;
+            if (!File.Exists(path))
+                path = Path.Combine(Program.GetExecutableDirectory(), path);
+
             if (File.Exists(path))
                 await RunScript(path);
             else
@@ -2208,7 +2302,7 @@ namespace UndertaleModTool
                 {
                     foreach (string resType in resTypes)
                     {
-                        IEnumerable resListCollection = Data[resType] as IEnumerable;
+                        IEnumerable resListCollection = Data[resType];
                         if (resListCollection is not null)
                         {
                             BindingOperations.EnableCollectionSynchronization(resListCollection, bindingLock);
@@ -2223,7 +2317,7 @@ namespace UndertaleModTool
                     {
                         if (syncBindings.Contains(resType))
                         {
-                            BindingOperations.DisableCollectionSynchronization(Data[resType] as IEnumerable);
+                            BindingOperations.DisableCollectionSynchronization(Data[resType]);
 
                             syncBindings.Remove(resType);
                         }
@@ -2234,7 +2328,7 @@ namespace UndertaleModTool
             {
                 if (enable)
                 {
-                    IEnumerable resListCollection = Data[resourceType] as IEnumerable;
+                    IEnumerable resListCollection = Data[resourceType];
                     if (resListCollection is not null)
                     {
                         BindingOperations.EnableCollectionSynchronization(resListCollection, bindingLock);
@@ -2244,7 +2338,7 @@ namespace UndertaleModTool
                 }
                 else if (syncBindings.Contains(resourceType))
                 {
-                    BindingOperations.DisableCollectionSynchronization(Data[resourceType] as IEnumerable);
+                    BindingOperations.DisableCollectionSynchronization(Data[resourceType]);
 
                     syncBindings.Remove(resourceType);
                 }
@@ -2255,7 +2349,7 @@ namespace UndertaleModTool
             if (syncBindings.Count <= 0) return;
 
             foreach (string resType in syncBindings)
-                BindingOperations.DisableCollectionSynchronization(Data[resType] as IEnumerable);
+                BindingOperations.DisableCollectionSynchronization(Data[resType]);
 
             syncBindings.Clear();
         }
@@ -2454,14 +2548,21 @@ namespace UndertaleModTool
             return excText;
         }
 
+        public void InitializeProgressDialog(string title, string msg)
+        {
+            scriptDialog ??= new LoaderDialog(title, msg)
+            {
+                Owner = this,
+                PreventClose = true
+            };
+        }
+
         public async Task RunScript(string path)
         {
             ScriptExecutionSuccess = true;
             ScriptErrorMessage = "";
             ScriptErrorType = "";
-            scriptDialog = new LoaderDialog("Script in progress...", "Please wait...");
-            scriptDialog.Owner = this;
-            scriptDialog.PreventClose = true;
+            InitializeScriptDialog();
             this.IsEnabled = false; // Prevent interaction while the script is running.
 
             await RunScriptNow(path); // Runs the script now.
@@ -2483,7 +2584,7 @@ namespace UndertaleModTool
 
                 ScriptPath = path;
 
-                string compatScriptText = Regex.Replace(scriptText, @"\bDecompileContext\b", "GlobalDecompileContext", RegexOptions.None);
+                string compatScriptText = Regex.Replace(scriptText, @"\bDecompileContext(?!\.)\b", "GlobalDecompileContext", RegexOptions.None);
                 object result = await CSharpScript.EvaluateAsync(compatScriptText, scriptOptions, this, typeof(IScriptInterface));
 
                 if (FinishedMessageEnabled)
@@ -2778,13 +2879,15 @@ namespace UndertaleModTool
                 return;
             }
 
+            string configStr = Version.Contains("Git:") ? "Debug" : "Release";
             bool isSingleFile = !File.Exists(Path.Combine(ExePath, "UndertaleModTool.dll"));
             string assemblyLocation = AppDomain.CurrentDomain.GetAssemblies()
                                       .First(x => x.GetName().Name.StartsWith("System.Collections")).Location; // any of currently used assemblies
             bool isBundled = !Regex.Match(assemblyLocation, @"C:\\Program Files( \(x86\))*\\dotnet\\shared\\").Success;
+            string patchName = $"GUI-windows-latest-{configStr}-isBundled-{isBundled.ToString().ToLower()}-isSingleFile-{isSingleFile.ToString().ToLower()}";
 
             string baseUrl = "https://api.github.com/repos/krzys-h/UndertaleModTool/actions/";
-            string detectedActionName = "Publish GUI";
+            string detectedActionName = "Publish continuous release of UndertaleModTool";
 
             // Fetch the latest workflow run
             var result = await HttpGetAsync(baseUrl + "runs?branch=master&status=success&per_page=20");
@@ -2818,7 +2921,7 @@ namespace UndertaleModTool
 
             DateTime currDate = File.GetLastWriteTime(Path.Combine(ExePath, "UndertaleModTool.exe"));
             DateTime lastDate = (DateTime)action["updated_at"];
-            if (lastDate.Subtract(currDate).Minutes <= 10)
+            if (lastDate.Subtract(currDate).TotalMinutes <= 10)
                 if (this.ShowQuestion("UndertaleModTool is already up to date.\nUpdate anyway?") != MessageBoxResult.Yes)
                 {
                     window.UpdateButtonEnabled = true;
@@ -2854,7 +2957,8 @@ namespace UndertaleModTool
                 var currentArtifact = (JObject) artifactList[index];
                 string artifactName = (string)currentArtifact["name"];
 
-                if (artifactName.Contains($"isBundled-{isBundled.ToString().ToLower()}-isSingleFile-{isSingleFile.ToString().ToLower()}"))
+                // If the tool ever becomes cross platform this needs to check the OS
+                if (artifactName.Equals(patchName))
                     artifact = currentArtifact;
             }
             if (artifact is null)
@@ -2871,7 +2975,6 @@ namespace UndertaleModTool
 
             string tempFolder = Path.Combine(Path.GetTempPath(), "UndertaleModTool");
             Directory.CreateDirectory(tempFolder); // We're about to download, so make sure the download dir actually exists
-            File.WriteAllText(Path.Combine(tempFolder, "detectedActionName.txt"), detectedActionName); // for debugging purposes (will be removed later)
 
             // It's time to download; let's use a cool progress bar
             scriptDialog = new("Downloading", "Downloading new version...")
@@ -2945,6 +3048,11 @@ namespace UndertaleModTool
                         return;
                     }
 
+                    // Unzip double-zipped update
+                    ZipFile.ExtractToDirectory(Path.Combine(tempFolder, "Update.zip.zip"), tempFolder, true);
+                    File.Move(Path.Combine(tempFolder, $"{patchName}.zip"), Path.Combine(tempFolder, "Update.zip"));
+                    File.Delete(Path.Combine(tempFolder, "Update.zip.zip"));
+
                     string updaterFolder = Path.Combine(ExePath, "Updater");
                     if (!File.Exists(Path.Combine(updaterFolder, "UndertaleModToolUpdater.exe")))
                     {
@@ -3004,7 +3112,8 @@ namespace UndertaleModTool
                     ended = true;
                 });
 
-                webClient.DownloadFileAsync(new Uri(downloadUrl), Path.GetTempPath() + "UndertaleModTool\\Update.zip");
+                // The Artifact is already zipped then zipped again by the download archive
+                webClient.DownloadFileAsync(new Uri(downloadUrl), Path.Combine(tempFolder, "Update.zip.zip"));
             }
         }
 
@@ -3126,6 +3235,11 @@ result in loss of work.");
             if (Data == null)
                 return;
 
+            var result = this.ShowQuestion("Are you sure that you want to run the game with GMS debugger?\n" +
+                                           "If you want to enable a debug mode in some game, then you need to use one of the scripts.");
+            if (result != MessageBoxResult.Yes)
+                return;
+
             bool origDbg = Data.GeneralInfo.IsDebuggerDisabled;
             Data.GeneralInfo.IsDebuggerDisabled = false;
 
@@ -3233,7 +3347,7 @@ result in loss of work.");
             IList resList;
             try
             {
-                resList = Data[res.GetType()] as IList;
+                resList = Data[res.GetType()];
             }
             catch (Exception ex)
             {
@@ -3272,7 +3386,7 @@ result in loss of work.");
                 mainTreeViewer.UpdateLayout();
 
                 double firstElemOffset = mainTreeViewer.VerticalOffset + (resPanel.Children[0] as TreeViewItem).TransformToAncestor(mainTreeViewer).Transform(new Point(0, 0)).Y;
-                mainTreeViewer.ScrollToVerticalOffset(firstElemOffset + ((resList.IndexOf(obj) + 1) * 16) - (mainTreeViewer.ViewportHeight / 2));
+                mainTreeViewer.ScrollToVerticalOffset(firstElemOffset + ((resList.IndexOf(res) + 1) * 16) - (mainTreeViewer.ViewportHeight / 2));
             }
             mainTreeViewer.UpdateLayout();
 
@@ -3714,7 +3828,14 @@ result in loss of work.");
             if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
             {
                 CurrentTabIndex = tabItem.TabIndex;
-                DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.All);
+                try
+                {
+                    DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.All);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error on handling \"TabItem\" drag&drop:\n{ex}");
+                }
             }
         }
         private void TabItem_Drop(object sender, DragEventArgs e)
@@ -3783,6 +3904,21 @@ result in loss of work.");
             if (viewer.ComputedVerticalScrollBarVisibility != Visibility.Visible
                 && e.Source == viewer)
                 e.Handled = true;
+        }
+
+        public bool HasEditorForAsset(object asset)
+        {
+            if (asset is null)
+                return false;
+
+            Type objType = asset.GetType();
+            foreach (var key in DataEditor.Resources.Keys)
+            {
+                if (key is DataTemplateKey templateKey && (templateKey.DataType as Type) == objType)
+                    return true;
+            }
+
+            return false;
         }
     }
 

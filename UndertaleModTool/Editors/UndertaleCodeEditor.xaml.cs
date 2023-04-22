@@ -480,16 +480,28 @@ namespace UndertaleModTool
             {
                 DisassemblyEditor.IsReadOnly = false;
 
-                var data = mainWindow.Data;
-                text = code.Disassemble(data.Variables, data.CodeLocals.For(code));
+                try
+                {
+                    var data = mainWindow.Data;
+                    text = code.Disassemble(data.Variables, data.CodeLocals.For(code));
 
-                CurrentLocals = new List<string>();
+                    CurrentLocals = new List<string>();
+                }
+                catch (Exception ex)
+                {
+                    DisassemblyEditor.IsReadOnly = true;
+
+                    string exStr = ex.ToString();
+                    exStr = String.Join("\n;", exStr.Split('\n'));
+                    text = $";  EXCEPTION!\n;   {exStr}\n";
+                }
             }
 
             DisassemblyEditor.Document.BeginUpdate();
             DisassemblyEditor.Document.Text = text;
 
-            RestoreCaretPosition(DisassemblyEditor, currLine, currColumn, scrollPos);
+            if (!DisassemblyEditor.IsReadOnly)
+                RestoreCaretPosition(DisassemblyEditor, currLine, currColumn, scrollPos);
 
             DisassemblyEditor.Document.EndUpdate();
 
@@ -522,7 +534,7 @@ namespace UndertaleModTool
                     decompilationOutput = Decompiler.Decompile(gettextCode, new GlobalDecompileContext(null, false)).Replace("\r\n", "\n").Split('\n');
                 }
             }
-            Regex textdataRegex = new Regex("^ds_map_add\\(global\\.text_data_en, \\\"(.*)\\\", \\\"(.*)\\\"\\)");
+            Regex textdataRegex = new Regex("^ds_map_add\\(global\\.text_data_en, \\\"(.*)\\\", \\\"(.*)\\\"\\)", RegexOptions.Compiled);
             foreach (var line in decompilationOutput)
             {
                 Match m = textdataRegex.Match(line);
