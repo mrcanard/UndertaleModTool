@@ -108,57 +108,51 @@ void DumpSprite(UndertaleSprite sprite)
             }
         }
         writer.WriteLine("  ],");
+        writer.WriteLine("  \"gridX\": 0,");
+        writer.WriteLine("  \"gridY\": 0,");
+        writer.WriteLine("  \"height\": 162,");
+        writer.WriteLine("  \"HTile\": false,");
+        writer.WriteLine("  \"layers\": [");
+        writer.WriteLine("    {\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"1.0\",\"name\":\""+ sprite.Name.Content + "_layer" +"\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},");
+        writer.WriteLine("  ],");
+        writer.WriteLine("  \"nineSlice\": null,");
+        writer.WriteLine("  \"origin\": 9,");
+        writer.WriteLine("  \"parent\": {");
+        writer.WriteLine("    \"name\": \"Sprites\",");
+        writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
+        writer.WriteLine("  },");
+        writer.WriteLine("  \"preMultiplyAlpha\": false,");
+        writer.WriteLine("  \"sequence\": {");
+        writer.WriteLine("    \"resourceType\": \"GMSequence\",");
+        writer.WriteLine("    \"resourceVersion\": \"1.4\",");
+        writer.WriteLine("    \"name\": \""+ sprite.Name.Content +"\",");
+        writer.WriteLine("    \"autoRecord\": true,");
+        writer.WriteLine("    \"backdropHeight\": 768,");
+        writer.WriteLine("    \"backdropImageOpacity\": 0.5,");
+        writer.WriteLine("    \"backdropImagePath\": \"\",");
+        writer.WriteLine("    \"backdropWidth\": 1366,");
+        writer.WriteLine("    \"backdropXOffset\": 0.0,");
+        writer.WriteLine("    \"backdropYOffset\": 0.0,");
+        writer.WriteLine("    \"events\": {\"resourceType\":\"KeyframeStore<MessageEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},");
+        writer.WriteLine("    \"eventStubScript\": null,");
+        writer.WriteLine("    \"eventToFunction\": {},");
+        writer.WriteLine("    \"length\": "+ sprite.Textures.Count +",");
+        writer.WriteLine("    \"lockOrigin\": false,");
+        writer.WriteLine("    \"moments\": {\"resourceType\":\"KeyframeStore<MomentsEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},");
+        writer.WriteLine("    \"playback\": 1,");
+        writer.WriteLine("    \"playbackSpeed\": 36.0,");
+        writer.WriteLine("    \"playbackSpeedType\": 0,");
+        writer.WriteLine("    \"showBackdrop\": true,");
+        writer.WriteLine("    \"showBackdropImage\": false,");
+        writer.WriteLine("    \"timeUnits\": 1,");
+        writer.WriteLine("    \"tracks\": [");
+        writer.WriteLine("      {\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"1.0\",\"name\":\"frames\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+        // frames
+        writer.WriteLine("      ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},");
+        writer.WriteLine("    ],");
+        writer.WriteLine("  },");
 
 /*
-{
-  "resourceType": "GMSprite",
-  "resourceVersion": "1.0",
-  "name": "spr_frankenstein_defeat_down",
-  "bbox_bottom": 161,
-  "bbox_left": 0,
-  "bbox_right": 148,
-  "bbox_top": 0,
-  "bboxMode": 0,
-  "collisionKind": 1,
-  "collisionTolerance": 0,
-  "DynamicTexturePage": false,
-  "edgeFiltering": false,
-  "For3D": false,
-  "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"722f7fd7-d359-4a82-b50b-beff3bb8a896",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"100a218d-aad5-4868-bd6c-0a368bfb2538",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"f0e38236-bf62-4a37-816d-07e9e2b97f4a",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"743bfcaf-15f8-437f-a219-6cba9f2952a6",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"05b91551-ebf3-4398-9c9d-303928fe23fb",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"4394fbfe-20e7-49c7-b8df-1dfbe3c0eefb",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"4918ec92-65fc-454e-822e-ba937d029eac",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"ea263d3b-b17d-4155-8e35-9ad0ea4c9e35",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"016f36a5-e40b-42a0-942f-b2079c7ffc68",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"33accf0a-9cb1-4ab4-95f4-d754a899734d",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"8c37cec3-6653-4ae2-9fdd-de049ce14b6e",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"6b913af6-e5ef-40ac-af6d-93cbdbb21183",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"4e89d539-aca1-4b2f-bb88-39d99f9ce27a",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"1ed2cfc5-ac34-4bc7-925c-882c48f44c73",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"13452054-c160-4f1a-ad5c-f5f5ed60a1a9",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"e1b1704e-fb5a-479f-9c3f-bdbe406e216f",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"1027e610-9198-4e50-a323-07e60ca32207",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"6d9c30db-5160-40f7-a371-0b0f5eefc825",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"c77e36fd-c181-4427-889d-8cc9d980cdc4",},
-  ],
-  "gridX": 0,
-  "gridY": 0,
-  "height": 162,
-  "HTile": false,
-  "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"fde88da6-d67b-48b6-92c6-ee6a6db05503","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
-  ],
-  "nineSlice": null,
-  "origin": 9,
-  "parent": {
-    "name": "Frankenstein",
-    "path": "folders/Sprites/Enemies/Frankenstein.yy",
-  },
-  "preMultiplyAlpha": false,
   "sequence": {
     "resourceType": "GMSequence",
     "resourceVersion": "1.4",
