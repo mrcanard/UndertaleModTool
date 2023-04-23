@@ -83,6 +83,27 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine("</sprite>");
         */
 
+        // Dans le répertoire
+        for (int i = 0; i < sprite.Textures.Count; i++)
+        {
+            if (sprite.Textures[i]?.Texture != null)
+            {
+                worker.ExportAsPNG(sprite.Textures[i].Texture,texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + "_"+ i + ".png", null, padded); // Include padding to make sprites look neat!
+            }
+        }
+
+        // Création de layers
+        Directory.CreateDirectory(texFolder + sprite.Name.Content + "\\" + "layers");
+        for (int i = 0; i < sprite.Textures.Count; i++)
+        {
+            if (sprite.Textures[i]?.Texture != null)
+            {
+                Directory.CreateDirectory(texFolder + sprite.Name.Content + "\\" + "layers" + "\\" + sprite.Name.Content + "_" + i);
+                worker.ExportAsPNG(sprite.Textures[i].Texture,texFolder + sprite.Name.Content + "\\" + "layers" + "\\" + sprite.Name.Content + "_"+ i + "\\" + sprite.Name.Content + "_" + "layer" + ".png", null, padded); // Include padding to make sprites look neat!
+            }
+        }
+
+
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMSprite\",");
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
@@ -98,12 +119,10 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine("  \"edgeFiltering\": false,");
         writer.WriteLine("  \"For3D\": false,");
         writer.WriteLine("  \"frames\": [");
-        string frameSection = "  \"frames\": [\n";
         for (int i = 0; i < sprite.Textures.Count; i++)
         {
             if (sprite.Textures[i]?.Texture != null)
             {
-                // writer.WriteLine("    <frame index=\"" + i + "\">images\\" + sprite.Name.Content + "_" + i + ".png</frame>");
                 writer.WriteLine("    {\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"1.1\",\"name\":\""+ sprite.Name.Content + "_" + i +"\",},");
             }
         }
@@ -147,75 +166,30 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine("    \"timeUnits\": 1,");
         writer.WriteLine("    \"tracks\": [");
         writer.WriteLine("      {\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"1.0\",\"name\":\"frames\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
-        // frames
+        for (int i = 0; i < sprite.Textures.Count; i++)
+        {
+            if (sprite.Textures[i]?.Texture != null)
+            {
+                writer.WriteLine("        {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+sprite.Name.Content + "_"+ i +"\",\"path\":\"sprites/"+ sprite.Name.Content +"/"+ sprite.Name.Content +".yy\",},},},\"Disabled\":false,\"id\":\""+ sprite.Name.Content + "_" + i + "_id" +"\",\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+            }
+        }
         writer.WriteLine("      ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},");
         writer.WriteLine("    ],");
+        writer.WriteLine("    \"visibleRange\": null,");
+        writer.WriteLine("    \"volume\": 1.0,");
+        writer.WriteLine("    \"xorigin\": 60,");
+        writer.WriteLine("    \"yorigin\": 157,");
         writer.WriteLine("  },");
-
-/*
-  "sequence": {
-    "resourceType": "GMSequence",
-    "resourceVersion": "1.4",
-    "name": "spr_frankenstein_defeat_down",
-    "autoRecord": true,
-    "backdropHeight": 768,
-    "backdropImageOpacity": 0.5,
-    "backdropImagePath": "",
-    "backdropWidth": 1366,
-    "backdropXOffset": 0.0,
-    "backdropYOffset": 0.0,
-    "events": {"resourceType":"KeyframeStore<MessageEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
-    "eventStubScript": null,
-    "eventToFunction": {},
-    "length": 19.0,
-    "lockOrigin": false,
-    "moments": {"resourceType":"KeyframeStore<MomentsEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
-    "playback": 1,
-    "playbackSpeed": 36.0,
-    "playbackSpeedType": 0,
-    "showBackdrop": true,
-    "showBackdropImage": false,
-    "timeUnits": 1,
-    "tracks": [
-      {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"722f7fd7-d359-4a82-b50b-beff3bb8a896","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"42c8f2a1-cc4a-49f3-93a1-88185e3c8385","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"100a218d-aad5-4868-bd6c-0a368bfb2538","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"4023da66-deb2-4b7f-b076-43a2968a97f5","IsCreationKey":false,"Key":1.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"f0e38236-bf62-4a37-816d-07e9e2b97f4a","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"b696c28e-5cbf-40e1-acf8-9b27392f1e89","IsCreationKey":false,"Key":2.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"743bfcaf-15f8-437f-a219-6cba9f2952a6","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"3a4e72af-c8dc-4a09-8cbc-a33ff8a9ad66","IsCreationKey":false,"Key":3.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"05b91551-ebf3-4398-9c9d-303928fe23fb","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"17231431-12ab-42a2-be73-1b19b9a04b5e","IsCreationKey":false,"Key":4.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"4394fbfe-20e7-49c7-b8df-1dfbe3c0eefb","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"71f7c8b4-6356-4ee5-aaba-7ab2832abe55","IsCreationKey":false,"Key":5.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"4918ec92-65fc-454e-822e-ba937d029eac","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"9511ac7f-b264-46bf-bbbf-4aa28f3f0355","IsCreationKey":false,"Key":6.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"ea263d3b-b17d-4155-8e35-9ad0ea4c9e35","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"3edff6c3-bbeb-4633-b682-be9e526e9820","IsCreationKey":false,"Key":7.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"016f36a5-e40b-42a0-942f-b2079c7ffc68","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"cbb5183d-be9e-438d-b0fa-92c4baeca2ed","IsCreationKey":false,"Key":8.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"33accf0a-9cb1-4ab4-95f4-d754a899734d","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"0f6a7c85-541d-499f-8978-644fe95b0226","IsCreationKey":false,"Key":9.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"8c37cec3-6653-4ae2-9fdd-de049ce14b6e","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"faf4b512-bc01-4399-82ef-5d9915b48a24","IsCreationKey":false,"Key":10.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"6b913af6-e5ef-40ac-af6d-93cbdbb21183","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"5c069e42-39dd-4fc9-ad89-2726218271f4","IsCreationKey":false,"Key":11.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"4e89d539-aca1-4b2f-bb88-39d99f9ce27a","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"787c17c5-f30a-4d7f-8b39-e57a424d4781","IsCreationKey":false,"Key":12.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"1ed2cfc5-ac34-4bc7-925c-882c48f44c73","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"417163e2-b8b1-438b-8279-c17b92b83e26","IsCreationKey":false,"Key":13.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"13452054-c160-4f1a-ad5c-f5f5ed60a1a9","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"9e8e9f20-5127-45fc-862e-9b752fe263e3","IsCreationKey":false,"Key":14.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"e1b1704e-fb5a-479f-9c3f-bdbe406e216f","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"381cdefa-dcee-4855-8ab0-01a90299e32b","IsCreationKey":false,"Key":15.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"1027e610-9198-4e50-a323-07e60ca32207","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"becebd71-fa85-432b-9e47-cc760f6e45cf","IsCreationKey":false,"Key":16.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"6d9c30db-5160-40f7-a371-0b0f5eefc825","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"b2444c94-0279-4c9b-96f6-82a617863dc6","IsCreationKey":false,"Key":17.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"c77e36fd-c181-4427-889d-8cc9d980cdc4","path":"sprites/spr_frankenstein_defeat_down/spr_frankenstein_defeat_down.yy",},},},"Disabled":false,"id":"e3e6c049-cf2f-4a08-9d0c-d6aa6f2978b6","IsCreationKey":false,"Key":18.0,"Length":1.0,"Stretch":false,},
-          ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
-    ],
-    "visibleRange": null,
-    "volume": 1.0,
-    "xorigin": 60,
-    "yorigin": 157,
-  },
-  "swatchColours": null,
-  "swfPrecision": 2.525,
-  "textureGroupId": {
-    "name": "Default",
-    "path": "texturegroups/Default",
-  },
-  "type": 0,
-  "VTile": false,
-  "width": 150,
-}
-*/
-
+        writer.WriteLine("  \"swatchColours\": null,");
+        writer.WriteLine("  \"swfPrecision\": 2.525,");
+        writer.WriteLine("  \"textureGroupId\": {");
+        writer.WriteLine("    \"name\": \"Default\",");
+        writer.WriteLine("    \"path\": \"texturegroups/Default\",");
+        writer.WriteLine("  },");
+        writer.WriteLine("  \"type\": 0,");
+        writer.WriteLine("  \"VTile\": false,");
+        writer.WriteLine("  \"width\": 150,");
+        writer.WriteLine("}");
 
     }
 
