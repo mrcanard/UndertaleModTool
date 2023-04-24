@@ -105,6 +105,25 @@ void DumpSprite(UndertaleSprite sprite)
     }
     */
 
+    // BEGIN : Extraction Images
+    string layer_directory = texFolder + sprite.Name.Content + "\\" + "layers";
+    Directory.CreateDirectory(layer_directory);
+    for (int i = 0; i < sprite.Textures.Count; i++)
+    {
+      if (sprite.Textures[i]?.Texture != null)
+      {
+        // Extraction de l'image à la base du répertoire
+        worker.ExportAsPNG(sprite.Textures[i].Texture,texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + "_"+ i + ".png", null, padded); // Include padding to make sprites look neat!
+
+        // Création du répertoire dans "layers"
+        Directory.CreateDirectory(texFolder + sprite.Name.Content + "\\" + "layers" + "\\" + sprite.Name.Content + "_" + i);
+
+        // Extraction de l'image "layer"
+        worker.ExportAsPNG(sprite.Textures[i].Texture,texFolder + sprite.Name.Content + "\\" + "layers" + "\\" + sprite.Name.Content + "_"+ i + "\\" + sprite.Name.Content + "_" + "layer" + ".png", null, padded); // Include padding to make sprites look neat!
+      }
+    }
+    // END : Extraction Images
+
     writer.WriteLine("{");
     writer.WriteLine("  \"resourceType\": \"GMSprite\",");
     writer.WriteLine("  \"resourceVersion\": \"1.0\",");
