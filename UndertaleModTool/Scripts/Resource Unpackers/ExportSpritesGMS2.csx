@@ -46,7 +46,7 @@ void DumpSprite(UndertaleSprite sprite)
   Directory.CreateDirectory(texFolder + sprite.Name.Content);
   using (StreamWriter writer = new StreamWriter(texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + ".yy"))
   {
-    
+
     // BEGIN : Extraction Images
     string layer_directory = texFolder + sprite.Name.Content + "\\" + "layers";
     Directory.CreateDirectory(layer_directory);
@@ -81,7 +81,6 @@ void DumpSprite(UndertaleSprite sprite)
     writer.WriteLine("  \"edgeFiltering\": false,");
     writer.WriteLine("  \"For3D\": false,");
     // BEGIN : frames
-    /*
     writer.WriteLine("  \"frames\": [");
     for (int i = 0; i < sprite.Textures.Count; i++)
     {
@@ -91,18 +90,15 @@ void DumpSprite(UndertaleSprite sprite)
         }
     }
     writer.WriteLine("  ],");
-    */
     // END : frames
     writer.WriteLine("  \"gridX\": 0,");
     writer.WriteLine("  \"gridY\": 0,");
     writer.WriteLine("  \"height\": 45,");
     writer.WriteLine("  \"HTile\": false,");
     // BEGIN : layers
-    /*
     writer.WriteLine("  \"layers\": [");
     writer.WriteLine("    {\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"1.0\",\"name\":\"" + sprite.Name.Content + "_" + "layer" +"\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},");
     writer.WriteLine("  ],");
-    */
     // END : layers
     writer.WriteLine("  \"nineSlice\": null,");
     writer.WriteLine("  \"origin\": 9,");
@@ -135,19 +131,17 @@ void DumpSprite(UndertaleSprite sprite)
     writer.WriteLine("    \"showBackdropImage\": false,");
     writer.WriteLine("    \"timeUnits\": 1,");
     // BEGIN : tracks
-    /*
     writer.WriteLine("    \"tracks\": [");
     writer.WriteLine("      {\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"1.0\",\"name\":\"frames\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
     for (int i = 0; i < sprite.Textures.Count; i++)
     {
         if (sprite.Textures[i]?.Texture != null)
         {
-            writer.WriteLine("            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+ sprite.Name.Content + "_" + i +"\",\"path\":\"sprites/"+ sprite.Name.Content +"/"+ sprite.Name.Content +".yy\",},},},\"Disabled\":false,\"id\":\"" + sprite.Name.Content + "_" + i + "_id" + "\",\"IsCreationKey\":false,\"Key\":1.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+ sprite.Name.Content + "_" + i +"\",\"path\":\"sprites/"+ sprite.Name.Content +"/"+ sprite.Name.Content +".yy\",},},},\"Disabled\":false,\"IsCreationKey\":false,\"Key\":1.0,\"Length\":1.0,\"Stretch\":false,},");
         }
     }
     writer.WriteLine("      ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},");
     writer.WriteLine("    ],");
-    */
     // END : tracks
     writer.WriteLine("    \"visibleRange\": null,");
     writer.WriteLine("    \"volume\": 1.0,");
