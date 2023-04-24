@@ -70,10 +70,10 @@ void DumpSprite(UndertaleSprite sprite)
     writer.WriteLine("  \"resourceType\": \"GMSprite\",");
     writer.WriteLine("  \"resourceVersion\": \"1.0\",");
     writer.WriteLine("  \"name\": \""+ sprite.Name.Content +"\",");
-    writer.WriteLine("  \"bbox_bottom\": 44,");
-    writer.WriteLine("  \"bbox_left\": 0,");
-    writer.WriteLine("  \"bbox_right\": 249,");
-    writer.WriteLine("  \"bbox_top\": 0,");
+    writer.WriteLine("  \"bbox_bottom\": "+ sprite.MarginBottom +",");
+    writer.WriteLine("  \"bbox_left\": "+ sprite.MarginLeft +",");
+    writer.WriteLine("  \"bbox_right\": "+ sprite.MarginRight +",");
+    writer.WriteLine("  \"bbox_top\": "+ sprite.MarginTop +",");
     writer.WriteLine("  \"bboxMode\": 0,");
     writer.WriteLine("  \"collisionKind\": 1,");
     writer.WriteLine("  \"collisionTolerance\": 0,");
@@ -93,7 +93,7 @@ void DumpSprite(UndertaleSprite sprite)
     // END : frames
     writer.WriteLine("  \"gridX\": 0,");
     writer.WriteLine("  \"gridY\": 0,");
-    writer.WriteLine("  \"height\": 45,");
+    writer.WriteLine("  \"height\": "+ sprite.Height +",");
     writer.WriteLine("  \"HTile\": false,");
     // BEGIN : layers
     writer.WriteLine("  \"layers\": [");
@@ -145,8 +145,8 @@ void DumpSprite(UndertaleSprite sprite)
     // END : tracks
     writer.WriteLine("    \"visibleRange\": null,");
     writer.WriteLine("    \"volume\": 1.0,");
-    writer.WriteLine("    \"xorigin\": 3,");
-    writer.WriteLine("    \"yorigin\": 28,");
+    writer.WriteLine("    \"xorigin\": "+ sprite.OriginX +",");
+    writer.WriteLine("    \"yorigin\": "+ sprite.OriginY +",");
     writer.WriteLine("  },");
     writer.WriteLine("  \"swatchColours\": null,");
     writer.WriteLine("  \"swfPrecision\": 2.525,");
@@ -156,7 +156,7 @@ void DumpSprite(UndertaleSprite sprite)
     writer.WriteLine("  },");
     writer.WriteLine("  \"type\": 0,");
     writer.WriteLine("  \"VTile\": false,");
-    writer.WriteLine("  \"width\": 250,");
+    writer.WriteLine("  \"width\": "+ sprite.Width +",");
     writer.WriteLine("}");
 
   }
