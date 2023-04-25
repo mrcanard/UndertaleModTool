@@ -121,12 +121,12 @@ void DumpSprite(UndertaleSprite sprite)
     writer.WriteLine("    \"events\": {\"resourceType\":\"KeyframeStore<MessageEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},");
     writer.WriteLine("    \"eventStubScript\": null,");
     writer.WriteLine("    \"eventToFunction\": {},");
-    writer.WriteLine("    \"length\": 1.0,");
+    writer.WriteLine("    \"length\": "+ sprite.Textures.Count +",");
     writer.WriteLine("    \"lockOrigin\": false,");
     writer.WriteLine("    \"moments\": {\"resourceType\":\"KeyframeStore<MomentsEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},");
     writer.WriteLine("    \"playback\": 1,");
-    writer.WriteLine("    \"playbackSpeed\": 0.0,");
-    writer.WriteLine("    \"playbackSpeedType\": 0,");
+    writer.WriteLine("    \"playbackSpeed\": "+sprite.GMS2PlaybackSpeed+",");
+    writer.WriteLine("    \"playbackSpeedType\": "+(ushort) sprite.GMS2PlaybackSpeedType+",");
     writer.WriteLine("    \"showBackdrop\": true,");
     writer.WriteLine("    \"showBackdropImage\": false,");
     writer.WriteLine("    \"timeUnits\": 1,");
@@ -137,7 +137,7 @@ void DumpSprite(UndertaleSprite sprite)
     {
         if (sprite.Textures[i]?.Texture != null)
         {
-            writer.WriteLine("            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+ sprite.Name.Content + "_" + i +"\",\"path\":\"sprites/"+ sprite.Name.Content +"/"+ sprite.Name.Content +".yy\",},},},\"Disabled\":false,\"IsCreationKey\":false,\"Key\":1.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+ sprite.Name.Content + "_" + i +"\",\"path\":\"sprites/"+ sprite.Name.Content +"/"+ sprite.Name.Content +".yy\",},},},\"Disabled\":false,\"IsCreationKey\":false,\"Key\":"+i+",\"Length\":1.0,\"Stretch\":false,},");
         }
     }
     writer.WriteLine("      ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},");
