@@ -87,22 +87,26 @@ void DumpRoom(UndertaleRoom room)
                 // pass
             } else if(layer.LayerType == UndertaleRoom.LayerType.Instances) {
                 // Instances
-
+                writer.WriteLine("    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Instances\",\"depth\":0,\"effectEnabled\":true,\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":[");
+                foreach (var inst in layer.InstancesData.Instances) {
+                    writer.WriteLine("        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_FA9458C\",\"colour\":4294967295,\"frozen\":false,\"hasCreationCode\":false,\"ignore\":false,\"imageIndex\":0,\"imageSpeed\":1.0,\"inheritCode\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"isDnd\":false,\"objectId\":{\"name\":\"obj_house\",\"path\":\"objects/obj_house/obj_house.yy\",},\"properties\":[],\"rotation\":0.0,\"scaleX\":1.0,\"scaleY\":1.0,\"x\":1958.5,\"y\":1252.0,},");
+                }
+                writer.WriteLine("      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},");
             } else if(layer.LayerType == UndertaleRoom.LayerType.Tiles) {
                 // Tiles
-
+                // pass
             } else if(layer.LayerType == UndertaleRoom.LayerType.Background) {
                 // Background
-
+                writer.WriteLine("    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Backgrounds\",\"animationFPS\":0.0,\"animationSpeedType\":0,\"colour\":4294967295,\"depth\":200,\"effectEnabled\":true,\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"hspeed\":0.0,\"htiled\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\"spr_background_level\",\"path\":\"sprites/spr_background_level/spr_background_level.yy\",},\"stretch\":false,\"userdefinedAnimFPS\":false,\"userdefinedDepth\":false,\"visible\":true,\"vspeed\":0.0,\"vtiled\":false,\"x\":0,\"y\":0,},");
             } else if(layer.LayerType == UndertaleRoom.LayerType.Assets) {
                 // Assets
-
+                writer.WriteLine("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"HUD\",\"assets\":[");
+                writer.WriteLine("        {\"resourceType\":\"GMRSequenceGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"graphic_55D24E25\",\"animationSpeed\":1.0,\"colour\":4294967295,\"frozen\":false,\"headPosition\":0.0,\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"rotation\":0.0,\"scaleX\":1.0,\"scaleY\":1.0,\"sequenceId\":{\"name\":\"seq_game_hud\",\"path\":\"sequences/seq_game_hud/seq_game_hud.yy\",},\"x\":0.0,\"y\":0.0,},");
+                writer.WriteLine("      ],\"depth\":-5000,\"effectEnabled\":true,\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},");
             } else if(layer.LayerType == UndertaleRoom.LayerType.Effect) {
                 // Effect
-
+                // pass
             }
-
-            // writer.WriteLine("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"HUD\",\"assets\":[");
 
         }
 
