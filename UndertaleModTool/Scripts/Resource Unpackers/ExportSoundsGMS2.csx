@@ -14,7 +14,7 @@ string winFolder = GetFolder(FilePath); // The folder data.win is located in.
 bool usesAGRP               = (Data.AudioGroups.Count > 0);
 
 // Sound Folder
-string ExportFolder = winFolder + "Export_Sounds\\";
+string ExportFolder = winFolder + "sounds\\";
 
 //Overwrite Folder Check One
 if (Directory.Exists(ExportFolder))

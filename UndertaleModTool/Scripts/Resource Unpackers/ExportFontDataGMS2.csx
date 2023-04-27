@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 EnsureDataLoaded();
 
-string fntFolder = GetFolder(FilePath) + "Export_Fonts" + Path.DirectorySeparatorChar;
+string fntFolder = GetFolder(FilePath) + "fonts" + Path.DirectorySeparatorChar;
 TextureWorker worker = new TextureWorker();
 Directory.CreateDirectory(fntFolder);
 List<string> input = new List<string>();

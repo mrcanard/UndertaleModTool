@@ -12,7 +12,7 @@ EnsureDataLoaded();
 bool padded = true;
 
 
-string texFolder = GetFolder(FilePath) + "Export_Sprites" + Path.DirectorySeparatorChar;
+string texFolder = GetFolder(FilePath) + "sprites" + Path.DirectorySeparatorChar;
 TextureWorker worker = new TextureWorker();
 if (Directory.Exists(texFolder))
 {
