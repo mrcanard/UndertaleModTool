@@ -20,6 +20,12 @@ System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
 string fntPaths = GetFolder(FilePath) + "paths" + Path.DirectorySeparatorChar;
 TextureWorker worker = new TextureWorker();
+
+if (Directory.Exists(fntPaths))
+{
+    Directory.Delete(fntPaths, true);
+}
+
 Directory.CreateDirectory(fntPaths);
 
 SetProgressBar(null, "Paths", 0, Data.Paths.Count);
