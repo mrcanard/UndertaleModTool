@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 EnsureDataLoaded();
 
-string codeFolder = GetFolder(FilePath) + "Export_Script" + Path.DirectorySeparatorChar;
+string codeFolder = GetFolder(FilePath) + "scripts" + Path.DirectorySeparatorChar;
 ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(() => new GlobalDecompileContext(Data, false));
+
 if (Directory.Exists(codeFolder))
 {
-    ScriptError("A code export already exists. Please remove it.", "Error");
-    return;
+    Directory.Delete(codeFolder, true);
 }
 
 Directory.CreateDirectory(codeFolder);
