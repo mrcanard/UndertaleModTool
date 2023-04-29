@@ -21,15 +21,15 @@ bool exportFromCache = false;
 if (GMLCacheEnabled && Data.GMLCache is not null)
     exportFromCache = ScriptQuestion("Export from the cache?");
 
-List<UndertaleCode> toDump;
+List<UndertaleScript> toDump;
 if (!exportFromCache)
 {
     toDump = new();
-    foreach (UndertaleCode code in Data.Code)
+    foreach (UndertaleScript script in Data.Scripts)
     {
-        if (code.ParentEntry != null)
-            continue;
-        toDump.Add(code);
+        //if (code.ParentEntry != null)
+        //    continue;
+        toDump.Add(script);
     }
 }
 
@@ -58,41 +58,48 @@ string GetFolder(string path)
 
 async Task DumpCode()
 {
-    if (cacheGenerated)
-    {
-        await Task.Run(() => Parallel.ForEach(Data.GMLCache, DumpCachedCode));
+    if (Data.KnownSubFunctions is null) //if we run script before opening any code
+        Decompiler.BuildSubFunctionCache(Data);
 
-        if (Data.GMLCacheFailed.Count > 0)
-        {
-            if (Data.KnownSubFunctions is null) //if we run script before opening any code
-                Decompiler.BuildSubFunctionCache(Data);
-
-            await Task.Run(() => Parallel.ForEach(Data.GMLCacheFailed, (codeName) => DumpCode(Data.Code.ByName(codeName))));
-        }
-    }
-    else
-    {
-        if (Data.KnownSubFunctions is null) //if we run script before opening any code
-            Decompiler.BuildSubFunctionCache(Data);
-
-        await Task.Run(() => Parallel.ForEach(toDump, DumpCode));
-    }
+    await Task.Run(() => Parallel.ForEach(toDump, DumpCode));
 }
 
-void DumpCode(UndertaleCode code)
+void DumpCode(UndertaleScript script)
 {
-    if (code is not null)
+
+    if (script.Code is not null)
     {
-        if(code.Name.Content.Contains("gml_Script_")) {
-            string path = Path.Combine(codeFolder, code.Name.Content.Substring(11) + ".gml");
+        if(! script.Name.Content.Contains("gml_Script_")) {
+
+            // Extraction .gml
+            Directory.CreateDirectory(Path.Combine(codeFolder, script.Name.Content));
+            string path = Path.Combine(codeFolder, script.Name.Content, script.Name.Content + ".gml");
             try
             {
-                File.WriteAllText(path, (code != null ? Decompiler.Decompile(code, DECOMPILE_CONTEXT.Value) : ""));
+                File.WriteAllText(path, (script.Code != null ? Decompiler.Decompile(script.Code, DECOMPILE_CONTEXT.Value) : ""));
             }
             catch (Exception e)
             {
                 File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
             }        
+
+            // Extraction .yy
+            using (StreamWriter writer = new StreamWriter(codeFolder + script.Name.Content + "\\" + script.Name.Content + ".yy"))
+            {
+
+                writer.WriteLine("{");
+                writer.WriteLine("  \"resourceType\": \"GMScript\",");
+                writer.WriteLine("  \"resourceVersion\": \"1.0\",");
+                writer.WriteLine("  \"name\": \""+script.Name.Content+"\",");
+                writer.WriteLine("  \"isCompatibility\": false,");
+                writer.WriteLine("  \"isDnD\": false,");
+                writer.WriteLine("  \"parent\": {");
+                writer.WriteLine("    \"name\": \"Scripts\",");
+                writer.WriteLine("    \"path\": \"folders/Scripts.yy\",");
+                writer.WriteLine("  },");
+                writer.WriteLine("}");
+
+            }
         }
     }
 
