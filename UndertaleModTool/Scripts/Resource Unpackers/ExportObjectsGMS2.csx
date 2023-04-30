@@ -16,6 +16,7 @@ System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
 string objectsFolder = GetFolder(FilePath) + "objects" + Path.DirectorySeparatorChar;
 ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(() => new GlobalDecompileContext(Data, false));
+
 if (Directory.Exists(objectsFolder))
 {
   Directory.Delete(objectsFolder, true);
@@ -80,9 +81,79 @@ void DumpGameObject(UndertaleGameObject game_object)
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
         writer.WriteLine("  \"name\": \""+game_object.Name.Content+"\",");
         writer.WriteLine("  \"eventList\": [");
-        foreach(var g in game_object.Events) {
-            writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":0,\"eventType\":0,\"isDnD\":false,},");
+        var i = 0;
+        foreach (var e1 in game_object.Events)
+        {
+            foreach (var e2 in e1)
+            {
+                if(i == 4) // Collision
+                {
+                    writer.WriteLine("    <event eventtype=\"" + i + "\" ename=\"" + Data.GameObjects[(int) e2.EventSubtype].Name.Content + "\">");
+                } else
+                {
+                    writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
+                }
+
+                foreach (var a in e2.Actions)
+                {
+                    writer.WriteLine("      <action>");
+                    writer.WriteLine("        <libid>"+ a.LibID + "</libid>");
+                    //writer.WriteLine("        <id>"+ a.ID + "</id>");
+                    writer.WriteLine("        <id>603</id>"); // exécution de code
+                    writer.WriteLine("        <kind>"+ a.Kind + "</kind>");
+                    writer.WriteLine("        <userelative>"+ (a.UseRelative ? -1 : 0) + "</userelative>");
+                    writer.WriteLine("        <isquestion>"+ (a.IsQuestion ? -1 : 0) + "</isquestion>");
+                    writer.WriteLine("        <useapplyto>"+ (a.UseApplyTo ? -1 : 0) + "</useapplyto>");
+                    writer.WriteLine("        <exetype>"+ a.ExeType + "</exetype>");
+                    writer.WriteLine("        <functionname></functionname>");
+                    writer.WriteLine("        <codestring></codestring>");
+                    writer.WriteLine("        <whoName>"+ (a.Who == -1 ? "self" : "") + "</whoName>");
+                    writer.WriteLine("        <relative>" + (a.Relative ? -1 : 0) + "</relative>");
+                    writer.WriteLine("        <isnot>"+ (a.IsNot ? -1 : 0) + "</isnot>");
+                    writer.WriteLine("        <arguments>");
+                    writer.WriteLine("          <argument>");
+                    writer.WriteLine("            <kind>" + a.ArgumentCount + "</kind>");
+                    if(a.CodeId == null)
+                    {
+                        writer.WriteLine("            <string></string>");
+
+                    }
+                    else
+                    {
+                        string mycode = Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value);
+                        mycode = mycode.Replace("&", "&amp;");
+                        mycode = mycode.Replace("<", "&lt;");
+                        mycode = mycode.Replace(">", "&gt;");
+                        mycode = mycode.Replace("action_set_relative", "// action_set_relative");
+                        writer.WriteLine("            <string>" + mycode + "</string>");
+                    }
+                    writer.WriteLine("          </argument>");
+                    writer.WriteLine("        </arguments>");
+                    writer.WriteLine("      </action>");
+                }
+                writer.WriteLine("    </event>");
+            }
+            i++;
         }
+
+        /*
+        foreach(var g in game_object.Events) {
+            //writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":0,\"eventType\":0,\"isDnD\":false,},");
+            writer.WriteLine("EventSubType : " + g.EventSubtype);
+            foreach(var a in g.Actions) {
+                writer.WriteLine("LibID : " + a.LibID);
+                writer.WriteLine("ID : " + a.ID);
+                writer.WriteLine("Kind : " + a.Kind);
+                writer.WriteLine("UseRelative : " + a.UseRelative);
+                writer.WriteLine("IsQuestion : " + a.IsQuestion);
+                writer.WriteLine("UseApplyTo : " + a.UseApplyTo);
+                writer.WriteLine("ExeType : " + a.ExeType);
+                writer.WriteLine("ActionName : " + a.ActionName.Content);
+                writer.WriteLine("ArgumentCount : " + a.ArgumentCount);
+            }
+        }
+        */
+
         writer.WriteLine("  ],");
         if(Data.IsVersionAtLeast(2022, 5)) {
             writer.WriteLine("  \"managed\": "+(game_object.Managed ? "true" : "false")+",");
