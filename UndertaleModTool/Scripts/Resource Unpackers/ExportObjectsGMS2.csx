@@ -84,7 +84,7 @@ void DumpGameObject(UndertaleGameObject game_object)
             writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":0,\"eventType\":0,\"isDnD\":false,},");
         }
         writer.WriteLine("  ],");
-        if(IsVersionAtLeast(2022, 5)) {
+        if(Data.IsVersionAtLeast(2022, 5)) {
             writer.WriteLine("  \"managed\": "+(game_object.Managed ? "true" : "false")+",");
         }
         writer.WriteLine("  \"overriddenProperties\": [],");
@@ -103,29 +103,29 @@ void DumpGameObject(UndertaleGameObject game_object)
         }
         writer.WriteLine("  \"persistent\": "+(game_object.Persistent ? "true" : "false")+",");
         writer.WriteLine("  \"physicsAngularDamping\": "+game_object.AngularDamping.ToString("0.0")+",");
-        writer.WriteLine("  \"physicsDensity\": 0.5,");
-        writer.WriteLine("  \"physicsFriction\": 0.2,");
-        writer.WriteLine("  \"physicsGroup\": 1,");
-        writer.WriteLine("  \"physicsKinematic\": false,");
-        writer.WriteLine("  \"physicsLinearDamping\": 0.1,");
-        writer.WriteLine("  \"physicsObject\": false,");
-        writer.WriteLine("  \"physicsRestitution\": 0.1,");
-        writer.WriteLine("  \"physicsSensor\": false,");
+        writer.WriteLine("  \"physicsDensity\": "+game_object.Density.ToString("0.0")+",");
+        writer.WriteLine("  \"physicsFriction\": "+game_object.Friction.ToString("0.0")+",");
+        writer.WriteLine("  \"physicsGroup\": "+game_object.Group+",");
+        writer.WriteLine("  \"physicsKinematic\": "+(game_object.Kinematic ? "true" : "false")+",");
+        writer.WriteLine("  \"physicsLinearDamping\": "+game_object.LinearDamping.ToString("0.0")+",");
+        writer.WriteLine("  \"physicsObject\": "+(game_object.UsesPhysics ? "true" : "false")+",");
+        writer.WriteLine("  \"physicsRestitution\": "+game_object.Restitution.ToString("0.0")+",");
+        writer.WriteLine("  \"physicsSensor\": "+(game_object.IsSensor ? "true" : "false")+",");
         writer.WriteLine("  \"physicsShape\": 1,");
         writer.WriteLine("  \"physicsShapePoints\": [],");
-        writer.WriteLine("  \"physicsStartAwake\": true,");
+        writer.WriteLine("  \"physicsStartAwake\": "+(game_object.Awake ? "true" : "false")+",");
         writer.WriteLine("  \"properties\": [],");
-        writer.WriteLine("  \"solid\": false,");
+        writer.WriteLine("  \"solid\": "+(game_object.Solid ? "true" : "false")+",");
         if(game_object.Sprite is null) {
             writer.WriteLine("  \"spriteId\": null,");
         } else {
             writer.WriteLine("  \"spriteId\": {");
-            writer.WriteLine("    \"name\": \"spr_arrow\",");
-            writer.WriteLine("    \"path\": \"sprites/spr_arrow/spr_arrow.yy\",");
+            writer.WriteLine("    \"name\": \""+game_object.Sprite.Name.Content+"\",");
+            writer.WriteLine("    \"path\": \"sprites/"+game_object.Sprite.Name.Content+"/"+game_object.Sprite.Name.Content+".yy\",");
             writer.WriteLine("  },");
         }
         writer.WriteLine("  \"spriteMaskId\": null,");
-        writer.WriteLine("  \"visible\": true,");
+        writer.WriteLine("  \"visible\": "+(game_object.Visible ? "true" : "false")+",");
         writer.WriteLine("}");
 
     }
