@@ -7,20 +7,14 @@ using System.Collections.Generic;
 
 EnsureDataLoaded();
 
-// Pour avoir un "." au lieu d'une "," dans les conversion en décimal
-System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo) System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
-customCulture.NumberFormat.NumberDecimalSeparator = ".";
-
-System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
-//
-
 string objectsFolder = GetFolder(FilePath) + "objects" + Path.DirectorySeparatorChar;
 ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(() => new GlobalDecompileContext(Data, false));
+// if (Directory.Exists(objectsFolder))
+// {
+//     ScriptError("An object export already exists. Please remove it.", "Error");
+//     return;
+// }
 
-if (Directory.Exists(objectsFolder))
-{
-  Directory.Delete(objectsFolder, true);
-}
 Directory.CreateDirectory(objectsFolder);
 
 bool exportFromCache = false;
@@ -71,135 +65,575 @@ async Task DumpCode()
 
 void DumpGameObject(UndertaleGameObject game_object)
 {
-
-    Directory.CreateDirectory(objectsFolder + game_object.Name.Content);
-    using (StreamWriter writer = new StreamWriter(objectsFolder + game_object.Name.Content + "\\" + game_object.Name.Content + ".yy"))
+    using (StreamWriter writer = new StreamWriter(objectsFolder + game_object.Name.Content + ".object.gmx"))
     {
-
-        writer.WriteLine("{");
-        writer.WriteLine("  \"resourceType\": \"GMObject\",");
-        writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-        writer.WriteLine("  \"name\": \""+game_object.Name.Content+"\",");
-        writer.WriteLine("  \"eventList\": [");
-        var i = 0;
-        foreach (var e1 in game_object.Events)
-        {
-            foreach (var e2 in e1)
-            {
-                if(i == 4) // Collision
-                {
-                    writer.WriteLine("    <event eventtype=\"" + i + "\" ename=\"" + Data.GameObjects[(int) e2.EventSubtype].Name.Content + "\">");
-                } else
-                {
-                    writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
-                }
-
-                foreach (var a in e2.Actions)
-                {
-                    writer.WriteLine("      <action>");
-                    writer.WriteLine("        <libid>"+ a.LibID + "</libid>");
-                    //writer.WriteLine("        <id>"+ a.ID + "</id>");
-                    writer.WriteLine("        <id>603</id>"); // exécution de code
-                    writer.WriteLine("        <kind>"+ a.Kind + "</kind>");
-                    writer.WriteLine("        <userelative>"+ (a.UseRelative ? -1 : 0) + "</userelative>");
-                    writer.WriteLine("        <isquestion>"+ (a.IsQuestion ? -1 : 0) + "</isquestion>");
-                    writer.WriteLine("        <useapplyto>"+ (a.UseApplyTo ? -1 : 0) + "</useapplyto>");
-                    writer.WriteLine("        <exetype>"+ a.ExeType + "</exetype>");
-                    writer.WriteLine("        <functionname></functionname>");
-                    writer.WriteLine("        <codestring></codestring>");
-                    writer.WriteLine("        <whoName>"+ (a.Who == -1 ? "self" : "") + "</whoName>");
-                    writer.WriteLine("        <relative>" + (a.Relative ? -1 : 0) + "</relative>");
-                    writer.WriteLine("        <isnot>"+ (a.IsNot ? -1 : 0) + "</isnot>");
-                    writer.WriteLine("        <arguments>");
-                    writer.WriteLine("          <argument>");
-                    writer.WriteLine("            <kind>" + a.ArgumentCount + "</kind>");
-                    if(a.CodeId == null)
-                    {
-                        writer.WriteLine("            <string></string>");
-
-                    }
-                    else
-                    {
-                        string mycode = Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value);
-                        mycode = mycode.Replace("&", "&amp;");
-                        mycode = mycode.Replace("<", "&lt;");
-                        mycode = mycode.Replace(">", "&gt;");
-                        mycode = mycode.Replace("action_set_relative", "// action_set_relative");
-                        writer.WriteLine("            <string>" + mycode + "</string>");
-                    }
-                    writer.WriteLine("          </argument>");
-                    writer.WriteLine("        </arguments>");
-                    writer.WriteLine("      </action>");
-                }
-                writer.WriteLine("    </event>");
-            }
-            i++;
-        }
-
-        /*
-        foreach(var g in game_object.Events) {
-            //writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":0,\"eventType\":0,\"isDnD\":false,},");
-            writer.WriteLine("EventSubType : " + g.EventSubtype);
-            foreach(var a in g.Actions) {
-                writer.WriteLine("LibID : " + a.LibID);
-                writer.WriteLine("ID : " + a.ID);
-                writer.WriteLine("Kind : " + a.Kind);
-                writer.WriteLine("UseRelative : " + a.UseRelative);
-                writer.WriteLine("IsQuestion : " + a.IsQuestion);
-                writer.WriteLine("UseApplyTo : " + a.UseApplyTo);
-                writer.WriteLine("ExeType : " + a.ExeType);
-                writer.WriteLine("ActionName : " + a.ActionName.Content);
-                writer.WriteLine("ArgumentCount : " + a.ArgumentCount);
-            }
-        }
-        */
-
-        writer.WriteLine("  ],");
-        if(Data.IsVersionAtLeast(2022, 5)) {
-            writer.WriteLine("  \"managed\": "+(game_object.Managed ? "true" : "false")+",");
-        }
-        writer.WriteLine("  \"overriddenProperties\": [],");
-        writer.WriteLine("  \"parent\": {");
-        writer.WriteLine("    \"name\": \"Objects\",");
-        writer.WriteLine("    \"path\": \"folders/Objects.yy\",");
-        writer.WriteLine("  },");
-
-        if(game_object.ParentId is null) {
-            writer.WriteLine("  \"parentObjectId\": null,");
-        } else {
-            writer.WriteLine("  \"parentObjectId\": {");
-            writer.WriteLine("    \"name\": \""+game_object.ParentId.Name.Content+"\",");
-            writer.WriteLine("    \"path\": \"objects/"+game_object.ParentId.Name.Content+"/"+game_object.ParentId.Name.Content+".yy\",");
-            writer.WriteLine("  },");
-        }
-        writer.WriteLine("  \"persistent\": "+(game_object.Persistent ? "true" : "false")+",");
-        writer.WriteLine("  \"physicsAngularDamping\": "+game_object.AngularDamping.ToString("0.0")+",");
-        writer.WriteLine("  \"physicsDensity\": "+game_object.Density.ToString("0.0")+",");
-        writer.WriteLine("  \"physicsFriction\": "+game_object.Friction.ToString("0.0")+",");
-        writer.WriteLine("  \"physicsGroup\": "+game_object.Group+",");
-        writer.WriteLine("  \"physicsKinematic\": "+(game_object.Kinematic ? "true" : "false")+",");
-        writer.WriteLine("  \"physicsLinearDamping\": "+game_object.LinearDamping.ToString("0.0")+",");
-        writer.WriteLine("  \"physicsObject\": "+(game_object.UsesPhysics ? "true" : "false")+",");
-        writer.WriteLine("  \"physicsRestitution\": "+game_object.Restitution.ToString("0.0")+",");
-        writer.WriteLine("  \"physicsSensor\": "+(game_object.IsSensor ? "true" : "false")+",");
-        writer.WriteLine("  \"physicsShape\": 1,");
-        writer.WriteLine("  \"physicsShapePoints\": [],");
-        writer.WriteLine("  \"physicsStartAwake\": "+(game_object.Awake ? "true" : "false")+",");
-        writer.WriteLine("  \"properties\": [],");
-        writer.WriteLine("  \"solid\": "+(game_object.Solid ? "true" : "false")+",");
-        if(game_object.Sprite is null) {
-            writer.WriteLine("  \"spriteId\": null,");
-        } else {
-            writer.WriteLine("  \"spriteId\": {");
-            writer.WriteLine("    \"name\": \""+game_object.Sprite.Name.Content+"\",");
-            writer.WriteLine("    \"path\": \"sprites/"+game_object.Sprite.Name.Content+"/"+game_object.Sprite.Name.Content+".yy\",");
-            writer.WriteLine("  },");
-        }
-        writer.WriteLine("  \"spriteMaskId\": null,");
-        writer.WriteLine("  \"visible\": "+(game_object.Visible ? "true" : "false")+",");
-        writer.WriteLine("}");
+	writer.WriteLine("{");
+	writer.WriteLine("  \"resourceType\": \"GMObject\",");
+	writer.WriteLine("  \"resourceVersion\": \"1.0\",");
+	writer.WriteLine("  \"name\": \"obj_player\",");
+	writer.WriteLine("  \"eventList\": [");
+	writer.WriteLine("    <event eventtype=\"0\" enumb=\"0\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>event_inherited()");
+	writer.WriteLine("coins = 0");
+	writer.WriteLine("in_knockback = 0");
+	writer.WriteLine("defeated_object = 25");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"2\" enumb=\"0\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>in_knockback = 0");
+	writer.WriteLine("sprite_index = spr_player_idle");
+	writer.WriteLine("image_index = 0");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"3\" enumb=\"2\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>event_inherited()");
+	writer.WriteLine("switch sprite_index");
+	writer.WriteLine("{");
+	writer.WriteLine("    case spr_player_walk:");
+	writer.WriteLine("        image_speed = 1");
+	writer.WriteLine("        if (vel_x == 0)");
+	writer.WriteLine("            sprite_index = spr_player_idle");
+	writer.WriteLine("        if (vel_y &gt; 1)");
+	writer.WriteLine("        {");
+	writer.WriteLine("            sprite_index = spr_player_fall");
+	writer.WriteLine("            image_index = 0");
+	writer.WriteLine("        }");
+	writer.WriteLine("        break");
+	writer.WriteLine("    case 54:");
+	writer.WriteLine("        if (vel_y &gt;= 0)");
+	writer.WriteLine("        {");
+	writer.WriteLine("            sprite_index = spr_player_fall");
+	writer.WriteLine("            image_index = 0");
+	writer.WriteLine("            image_speed = 1");
+	writer.WriteLine("        }");
+	writer.WriteLine("        break");
+	writer.WriteLine("    case 60:");
+	writer.WriteLine("        if grounded");
+	writer.WriteLine("        {");
+	writer.WriteLine("            sprite_index = spr_player_idle");
+	writer.WriteLine("            image_speed = 1");
+	writer.WriteLine("            audio_play_sound(snd_land_01, 0, false)");
+	writer.WriteLine("        }");
+	writer.WriteLine("        break");
+	writer.WriteLine("    case 10:");
+	writer.WriteLine("        if grounded");
+	writer.WriteLine("        {");
+	writer.WriteLine("            var _dust = instance_create_layer(x, bbox_bottom, layer, obj_effect_knockback)");
+	writer.WriteLine("            _dust.image_xscale = image_xscale");
+	writer.WriteLine("        }");
+	writer.WriteLine("        break");
+	writer.WriteLine("    default:");
+	writer.WriteLine("        image_speed = 1");
+	writer.WriteLine("        break");
+	writer.WriteLine("}");
+	writer.WriteLine("");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"3\" enumb=\"0\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>event_inherited()");
+	writer.WriteLine("audio_listener_set_position(0, x, y, 0)");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"4\" ename=\"obj_enemy_parent\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>if (vel_y &gt; 0)");
+	writer.WriteLine("{");
+	writer.WriteLine("    if ((bbox_bottom - vel_y) &lt; (other.bbox_top - other.vel_y))");
+	writer.WriteLine("    {");
+	writer.WriteLine("        other.hp = 0");
+	writer.WriteLine("        vel_y = (-jump_speed)");
+	writer.WriteLine("        sprite_index = spr_player_jump");
+	writer.WriteLine("        image_index = 0");
+	writer.WriteLine("        image_speed = 1");
+	writer.WriteLine("        instance_create_layer(x, bbox_bottom, \"Instances\", obj_effect_jump)");
+	writer.WriteLine("        audio_play_sound(snd_enemy_hit, 0, false)");
+	writer.WriteLine("        var _sound = audio_play_sound(snd_jump, 0, false)");
+	writer.WriteLine("        audio_sound_pitch(_sound, random_range(0.8, 1))");
+	writer.WriteLine("    }");
+	writer.WriteLine("}");
+	writer.WriteLine("if (no_hurt_frames &gt; 0)");
+	writer.WriteLine("{");
+	writer.WriteLine("}");
+	writer.WriteLine("var _x_sign = sign((x - other.x))");
+	writer.WriteLine("vel_x = (_x_sign * 15)");
+	writer.WriteLine("hp -= other.damage");
+	writer.WriteLine("in_knockback = 1");
+	writer.WriteLine("no_hurt_frames = 120");
+	writer.WriteLine("sprite_index = spr_player_hurt");
+	writer.WriteLine("image_index = 0");
+	writer.WriteLine("alarm[0] = 15");
+	writer.WriteLine("audio_play_sound(snd_life_lost_01, 0, false)");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"4\" ename=\"obj_end_gate\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>instance_create_layer(x, y, layer, obj_player_end_level)");
+	writer.WriteLine("instance_destroy()");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"4\" ename=\"obj_hurt_zone\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>hp -= 1");
+	writer.WriteLine("if (hp &gt; 0)");
+	writer.WriteLine("{");
+	writer.WriteLine("    x = grounded_x");
+	writer.WriteLine("    y = grounded_y");
+	writer.WriteLine("    no_hurt_frames += 120");
+	writer.WriteLine("    vel_x = 0");
+	writer.WriteLine("    vel_y = 0");
+	writer.WriteLine("    in_knockback = 1");
+	writer.WriteLine("    alarm[0] = 20");
+	writer.WriteLine("    audio_play_sound(snd_life_lost_01, 0, false)");
+	writer.WriteLine("}");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"4\" ename=\"obj_coin\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>coins += 1");
+	writer.WriteLine("instance_create_layer(other.x, other.y, \"Instances\", obj_coin_collect_effect)");
+	writer.WriteLine("audio_play_sound(snd_coin_collect_01, 0, false)");
+	writer.WriteLine("instance_destroy(other)");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"5\" enumb=\"37\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>if in_knockback");
+	writer.WriteLine("{");
+	writer.WriteLine("}");
+	writer.WriteLine("vel_x = (-move_speed)");
+	writer.WriteLine("if (sprite_index == spr_player_fall)");
+	writer.WriteLine("{");
+	writer.WriteLine("}");
+	writer.WriteLine("if grounded");
+	writer.WriteLine("    sprite_index = spr_player_walk");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"5\" enumb=\"39\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>if in_knockback");
+	writer.WriteLine("{");
+	writer.WriteLine("}");
+	writer.WriteLine("vel_x = move_speed");
+	writer.WriteLine("if (sprite_index == spr_player_fall)");
+	writer.WriteLine("{");
+	writer.WriteLine("}");
+	writer.WriteLine("if grounded");
+	writer.WriteLine("    sprite_index = spr_player_walk");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"5\" enumb=\"65\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>event_perform(ev_keyboard, vk_left)");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"5\" enumb=\"68\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>event_perform(ev_keyboard, vk_right)");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"7\" enumb=\"7\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>switch sprite_index");
+	writer.WriteLine("{");
+	writer.WriteLine("    case spr_player_jump:");
+	writer.WriteLine("        image_speed = 0");
+	writer.WriteLine("        image_index = (image_number - 1)");
+	writer.WriteLine("        break");
+	writer.WriteLine("    case 60:");
+	writer.WriteLine("        image_speed = 0");
+	writer.WriteLine("        image_index = (image_number - 1)");
+	writer.WriteLine("        break");
+	writer.WriteLine("}");
+	writer.WriteLine("");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"7\" enumb=\"0\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>if (bbox_top &gt; room_height)");
+	writer.WriteLine("{");
+	writer.WriteLine("    hp -= 1");
+	writer.WriteLine("    if (hp &gt; 0)");
+	writer.WriteLine("    {");
+	writer.WriteLine("        x = grounded_x");
+	writer.WriteLine("        y = grounded_y");
+	writer.WriteLine("        no_hurt_frames += 120");
+	writer.WriteLine("        vel_x = 0");
+	writer.WriteLine("        vel_y = 0");
+	writer.WriteLine("        in_knockback = 1");
+	writer.WriteLine("        alarm[0] = 20");
+	writer.WriteLine("        audio_play_sound(snd_life_lost_01, 0, false)");
+	writer.WriteLine("    }");
+	writer.WriteLine("}");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"7\" enumb=\"76\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>var _message = ds_map_find_value(event_data, \"message\")");
+	writer.WriteLine("if (_message == \"footstep\")");
+	writer.WriteLine("{");
+	writer.WriteLine("    var _effect = instance_create_layer(x, bbox_bottom, \"Instances\", obj_effect_walk)");
+	writer.WriteLine("    _effect.image_xscale = image_xscale");
+	writer.WriteLine("    var _sound = choose(8, 7, 11)");
+	writer.WriteLine("    audio_play_sound(_sound, 0, false)");
+	writer.WriteLine("}");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("    <event eventtype=\"9\" enumb=\"32\">");
+	writer.WriteLine("      <action>");
+	writer.WriteLine("        <libid>1</libid>");
+	writer.WriteLine("        <id>603</id>");
+	writer.WriteLine("        <kind>7</kind>");
+	writer.WriteLine("        <userelative>0</userelative>");
+	writer.WriteLine("        <isquestion>0</isquestion>");
+	writer.WriteLine("        <useapplyto>0</useapplyto>");
+	writer.WriteLine("        <exetype>2</exetype>");
+	writer.WriteLine("        <functionname></functionname>");
+	writer.WriteLine("        <codestring></codestring>");
+	writer.WriteLine("        <whoName>self</whoName>");
+	writer.WriteLine("        <relative>0</relative>");
+	writer.WriteLine("        <isnot>0</isnot>");
+	writer.WriteLine("        <arguments>");
+	writer.WriteLine("          <argument>");
+	writer.WriteLine("            <kind>0</kind>");
+	writer.WriteLine("            <string>if grounded");
+	writer.WriteLine("{");
+	writer.WriteLine("    vel_y = (-jump_speed)");
+	writer.WriteLine("    sprite_index = spr_player_jump");
+	writer.WriteLine("    image_index = 0");
+	writer.WriteLine("    grounded = 0");
+	writer.WriteLine("    instance_create_layer(x, bbox_bottom, \"Instances\", obj_effect_jump)");
+	writer.WriteLine("    var _sound = audio_play_sound(snd_jump, 0, false)");
+	writer.WriteLine("    audio_sound_pitch(_sound, random_range(0.8, 1))");
+	writer.WriteLine("}");
+	writer.WriteLine("</string>");
+	writer.WriteLine("          </argument>");
+	writer.WriteLine("        </arguments>");
+	writer.WriteLine("      </action>");
+	writer.WriteLine("    </event>");
+	writer.WriteLine("  ],");
+	writer.WriteLine("  \"managed\": true,");
+	writer.WriteLine("  \"overriddenProperties\": [],");
+	writer.WriteLine("  \"parent\": {");
+	writer.WriteLine("    \"name\": \"Objects\",");
+	writer.WriteLine("    \"path\": \"folders/Objects.yy\",");
+	writer.WriteLine("  },");
+	writer.WriteLine("  \"parentObjectId\": {");
+	writer.WriteLine("    \"name\": \"obj_character_parent\",");
+	writer.WriteLine("    \"path\": \"objects/obj_character_parent/obj_character_parent.yy\",");
+	writer.WriteLine("  },");
+	writer.WriteLine("  \"persistent\": false,");
+	writer.WriteLine("  \"physicsAngularDamping\": 0.1,");
+	writer.WriteLine("  \"physicsDensity\": 0.5,");
+	writer.WriteLine("  \"physicsFriction\": 0.2,");
+	writer.WriteLine("  \"physicsGroup\": 1,");
+	writer.WriteLine("  \"physicsKinematic\": false,");
+	writer.WriteLine("  \"physicsLinearDamping\": 0.1,");
+	writer.WriteLine("  \"physicsObject\": false,");
+	writer.WriteLine("  \"physicsRestitution\": 0.1,");
+	writer.WriteLine("  \"physicsSensor\": false,");
+	writer.WriteLine("  \"physicsShape\": 1,");
+	writer.WriteLine("  \"physicsShapePoints\": [],");
+	writer.WriteLine("  \"physicsStartAwake\": true,");
+	writer.WriteLine("  \"properties\": [],");
+	writer.WriteLine("  \"solid\": false,");
+	writer.WriteLine("  \"spriteId\": {");
+	writer.WriteLine("    \"name\": \"spr_player_idle\",");
+	writer.WriteLine("    \"path\": \"sprites/spr_player_idle/spr_player_idle.yy\",");
+	writer.WriteLine("  },");
+	writer.WriteLine("  \"spriteMaskId\": null,");
+	writer.WriteLine("  \"visible\": true,");
+	writer.WriteLine("}");
 
     }
+
+    //     if (code is not null)
+    //     {
+    //         if(code.Name.Content.Contains("gml_Script_")) {
+    //             string path = Path.Combine(objectsFolder, code.Name.Content.Substring(11) + ".gml");
+    //             try
+    //             {
+    //                 File.WriteAllText(path, (code != null ? Decompiler.Decompile(code, DECOMPILE_CONTEXT.Value) : ""));
+    //             }
+    //             catch (Exception e)
+    //             {
+    //                 File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
+    //             }        
+    //         }
+    //     }
 
     IncrementProgressParallel();
 }
