@@ -108,6 +108,14 @@ void DumpGameObject(UndertaleGameObject game_object)
 				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
                 }
 
+                // Création fichier .gml : BUG
+				var enumDisplayStatus = (EventType) i;
+				string stringValue = enumDisplayStatus.ToString();
+			    using (StreamWriter gml_writer = new StreamWriter(objectsFolder + game_object.Name.Content + "\\" + stringValue + "_0" + ".gml"))
+			    {
+			    	gml_writer.WriteLine("");
+			    }
+
             }
             i++;
         }
