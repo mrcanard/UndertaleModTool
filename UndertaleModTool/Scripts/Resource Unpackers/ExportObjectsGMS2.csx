@@ -133,7 +133,7 @@ void DumpGameObject(UndertaleGameObject game_object)
 			writer.WriteLine("    \"path\": \"objects/"+game_object.ParentId.Name.Content+"/"+game_object.ParentId.Name.Content+".yy\",");
 			writer.WriteLine("  },");
 		}
-		writer.WriteLine("  \"persistent\": false,");
+		writer.WriteLine("  \"persistent\": "+(game_object.Visible ? "true" : "false")+",");
 		writer.WriteLine("  \"physicsAngularDamping\": 0.1,");
 		writer.WriteLine("  \"physicsDensity\": 0.5,");
 		writer.WriteLine("  \"physicsFriction\": 0.2,");
@@ -156,8 +156,17 @@ void DumpGameObject(UndertaleGameObject game_object)
 			writer.WriteLine("    \"path\": \"sprites/"+game_object.Sprite.Name.Content+"/"+game_object.Sprite.Name.Content+".yy\",");
 			writer.WriteLine("  },");
 		}
-		writer.WriteLine("  \"spriteMaskId\": null,");
-		writer.WriteLine("  \"visible\": true,");
+
+		if(game_object.TextureMaskId is null) {
+			writer.WriteLine("  \"spriteMaskId\": null,");
+		} else {
+			writer.WriteLine("  \"spriteMaskId\": {");
+			writer.WriteLine("    \"name\": \""+game_object.TextureMaskId.Name.Content+"\",");
+			writer.WriteLine("    \"path\": \"sprites/"+game_object.TextureMaskId.Name.Content+"/"+game_object.TextureMaskId.Name.Content+".yy\",");
+			writer.WriteLine("  },");
+		}
+
+		writer.WriteLine("  \"visible\": "+(game_object.Visible ? "true" : "false")+",");
 		writer.WriteLine("}");
 		writer.WriteLine("");
 
