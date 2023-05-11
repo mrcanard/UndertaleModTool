@@ -108,48 +108,6 @@ void DumpGameObject(UndertaleGameObject game_object)
 				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
                 }
 
-                /*
-                foreach (var a in e2.Actions)
-                {
-                    writer.WriteLine("      <action>");
-                    writer.WriteLine("        <libid>"+ a.LibID + "</libid>");
-                    //writer.WriteLine("        <id>"+ a.ID + "</id>");
-                    writer.WriteLine("        <id>603</id>"); // exécution de code
-                    writer.WriteLine("        <kind>"+ a.Kind + "</kind>");
-                    writer.WriteLine("        <userelative>"+ (a.UseRelative ? -1 : 0) + "</userelative>");
-                    writer.WriteLine("        <isquestion>"+ (a.IsQuestion ? -1 : 0) + "</isquestion>");
-                    writer.WriteLine("        <useapplyto>"+ (a.UseApplyTo ? -1 : 0) + "</useapplyto>");
-                    writer.WriteLine("        <exetype>"+ a.ExeType + "</exetype>");
-                    writer.WriteLine("        <functionname></functionname>");
-                    writer.WriteLine("        <codestring></codestring>");
-                    writer.WriteLine("        <whoName>"+ (a.Who == -1 ? "self" : "") + "</whoName>");
-                    writer.WriteLine("        <relative>" + (a.Relative ? -1 : 0) + "</relative>");
-                    writer.WriteLine("        <isnot>"+ (a.IsNot ? -1 : 0) + "</isnot>");
-                    writer.WriteLine("        <arguments>");
-                    writer.WriteLine("          <argument>");
-                    writer.WriteLine("            <kind>" + a.ArgumentCount + "</kind>");
-                    
-                    if(a.CodeId == null)
-                    {
-                        writer.WriteLine("            <string></string>");
-
-                    }
-                    else
-                    {
-                        string mycode = Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value);
-                        mycode = mycode.Replace("&", "&amp;");
-                        mycode = mycode.Replace("<", "&lt;");
-                        mycode = mycode.Replace(">", "&gt;");
-                        mycode = mycode.Replace("action_set_relative", "// action_set_relative");
-                        writer.WriteLine("            <string>" + mycode + "</string>");
-                    }
-                    
-                    writer.WriteLine("          </argument>");
-                    writer.WriteLine("        </arguments>");
-                    writer.WriteLine("      </action>");
-                }
-                writer.WriteLine("    </event>");
-                */
             }
             i++;
         }
@@ -180,10 +138,14 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("  \"physicsStartAwake\": true,");
 		writer.WriteLine("  \"properties\": [],");
 		writer.WriteLine("  \"solid\": false,");
-		writer.WriteLine("  \"spriteId\": {");
-		writer.WriteLine("    \"name\": \"spr_block_brick\",");
-		writer.WriteLine("    \"path\": \"sprites/spr_block_brick/spr_block_brick.yy\",");
-		writer.WriteLine("  },");
+		if(game_object.Sprite is null) {
+			writer.WriteLine("  \"spriteId\": null,");
+		} else {
+			writer.WriteLine("  \"spriteId\": {");
+			writer.WriteLine("    \"name\": \""+game_object.Sprite.Name.Content+"\",");
+			writer.WriteLine("    \"path\": \"sprites/"+game_object.Sprite.Name.Content+"/"+game_object.Sprite.Name.Content+".yy\",");
+			writer.WriteLine("  },");
+		}
 		writer.WriteLine("  \"spriteMaskId\": null,");
 		writer.WriteLine("  \"visible\": true,");
 		writer.WriteLine("}");
