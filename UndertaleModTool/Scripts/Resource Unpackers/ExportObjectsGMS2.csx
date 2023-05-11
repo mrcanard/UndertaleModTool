@@ -133,7 +133,7 @@ void DumpGameObject(UndertaleGameObject game_object)
 			writer.WriteLine("    \"path\": \"objects/"+game_object.ParentId.Name.Content+"/"+game_object.ParentId.Name.Content+".yy\",");
 			writer.WriteLine("  },");
 		}
-		writer.WriteLine("  \"persistent\": "+(game_object.Visible ? "true" : "false")+",");
+		writer.WriteLine("  \"persistent\": "+(game_object.Persistent ? "true" : "false")+",");
 		writer.WriteLine("  \"physicsAngularDamping\": 0.1,");
 		writer.WriteLine("  \"physicsDensity\": 0.5,");
 		writer.WriteLine("  \"physicsFriction\": 0.2,");
