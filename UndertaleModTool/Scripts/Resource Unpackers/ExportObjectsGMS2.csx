@@ -119,10 +119,14 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("    \"name\": \"Blocks\",");
 		writer.WriteLine("    \"path\": \"folders/Objects/Environment/Blocks.yy\",");
 		writer.WriteLine("  },");
-		writer.WriteLine("  \"parentObjectId\": {");
-		writer.WriteLine("    \"name\": \"obj_block_parent\",");
-		writer.WriteLine("    \"path\": \"objects/obj_block_parent/obj_block_parent.yy\",");
-		writer.WriteLine("  },");
+		if(game_object.ParentId is null) {
+			writer.WriteLine("  \"parentObjectId\": null,");
+		} else {
+			writer.WriteLine("  \"parentObjectId\": {");
+			writer.WriteLine("    \"name\": \""+game_object.ParentId.Name.Content+"\",");
+			writer.WriteLine("    \"path\": \"objects/"+game_object.ParentId.Name.Content+"/"+game_object.ParentId.Name.Content+".yy\",");
+			writer.WriteLine("  },");
+		}
 		writer.WriteLine("  \"persistent\": false,");
 		writer.WriteLine("  \"physicsAngularDamping\": 0.1,");
 		writer.WriteLine("  \"physicsDensity\": 0.5,");
