@@ -74,10 +74,86 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("{");
 		writer.WriteLine("  \"resourceType\": \"GMObject\",");
 		writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-		writer.WriteLine("  \"name\": \"obj_block_brick\",");
+		writer.WriteLine("  \"name\": \""+game_object.Name.Content+"\",");
 		writer.WriteLine("  \"eventList\": [");
-		writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":10,\"eventType\":7,\"isDnD\":false,},");
-		writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":0,\"eventType\":3,\"isDnD\":false,},");
+
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":37,"eventType":5,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":39,"eventType":5,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":65,"eventType":5,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":68,"eventType":5,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":32,"eventType":9,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":2,"eventType":3,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":7,"eventType":7,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":2,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_end_gate","path":"objects/obj_end_gate/obj_end_gate.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":7,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_hurt_zone","path":"objects/obj_hurt_zone/obj_hurt_zone.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_coin","path":"objects/obj_coin/obj_coin.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":76,"eventType":7,"isDnD":false,},
+	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,},
+        //            writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
+
+		var i = 0;
+        foreach (var e1 in game_object.Events)
+        {
+            foreach (var e2 in e1)
+            {
+                if(i == 4) // Collision
+                {
+				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":{\"name\":\"obj_enemy_parent\",\"path\":\"objects/obj_enemy_parent/obj_enemy_parent.yy\",},\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
+                } else
+                {
+				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
+                }
+
+                /*
+                foreach (var a in e2.Actions)
+                {
+                    writer.WriteLine("      <action>");
+                    writer.WriteLine("        <libid>"+ a.LibID + "</libid>");
+                    //writer.WriteLine("        <id>"+ a.ID + "</id>");
+                    writer.WriteLine("        <id>603</id>"); // exécution de code
+                    writer.WriteLine("        <kind>"+ a.Kind + "</kind>");
+                    writer.WriteLine("        <userelative>"+ (a.UseRelative ? -1 : 0) + "</userelative>");
+                    writer.WriteLine("        <isquestion>"+ (a.IsQuestion ? -1 : 0) + "</isquestion>");
+                    writer.WriteLine("        <useapplyto>"+ (a.UseApplyTo ? -1 : 0) + "</useapplyto>");
+                    writer.WriteLine("        <exetype>"+ a.ExeType + "</exetype>");
+                    writer.WriteLine("        <functionname></functionname>");
+                    writer.WriteLine("        <codestring></codestring>");
+                    writer.WriteLine("        <whoName>"+ (a.Who == -1 ? "self" : "") + "</whoName>");
+                    writer.WriteLine("        <relative>" + (a.Relative ? -1 : 0) + "</relative>");
+                    writer.WriteLine("        <isnot>"+ (a.IsNot ? -1 : 0) + "</isnot>");
+                    writer.WriteLine("        <arguments>");
+                    writer.WriteLine("          <argument>");
+                    writer.WriteLine("            <kind>" + a.ArgumentCount + "</kind>");
+                    
+                    if(a.CodeId == null)
+                    {
+                        writer.WriteLine("            <string></string>");
+
+                    }
+                    else
+                    {
+                        string mycode = Decompiler.Decompile(a.CodeId, DECOMPILE_CONTEXT.Value);
+                        mycode = mycode.Replace("&", "&amp;");
+                        mycode = mycode.Replace("<", "&lt;");
+                        mycode = mycode.Replace(">", "&gt;");
+                        mycode = mycode.Replace("action_set_relative", "// action_set_relative");
+                        writer.WriteLine("            <string>" + mycode + "</string>");
+                    }
+                    
+                    writer.WriteLine("          </argument>");
+                    writer.WriteLine("        </arguments>");
+                    writer.WriteLine("      </action>");
+                }
+                writer.WriteLine("    </event>");
+                */
+            }
+            i++;
+        }
+
 		writer.WriteLine("  ],");
 		writer.WriteLine("  \"managed\": true,");
 		writer.WriteLine("  \"overriddenProperties\": [],");
@@ -215,7 +291,7 @@ void DumpGameObject(UndertaleGameObject game_object)
         writer.WriteLine("  <PhysicsShapePoints/>");
         writer.WriteLine("</object>");
 		*/
-		
+
     }
 
     IncrementProgressParallel();
