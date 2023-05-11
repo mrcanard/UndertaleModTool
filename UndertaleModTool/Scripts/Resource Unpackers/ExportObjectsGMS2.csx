@@ -115,10 +115,16 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("  ],");
 		writer.WriteLine("  \"managed\": true,");
 		writer.WriteLine("  \"overriddenProperties\": [],");
+        writer.WriteLine("  \"parent\": {");
+        writer.WriteLine("    \"name\": \"Objects\",");
+        writer.WriteLine("    \"path\": \"folders/Objects.yy\",");
+        writer.WriteLine("  },");
+        /*
 		writer.WriteLine("  \"parent\": {");
 		writer.WriteLine("    \"name\": \"Blocks\",");
 		writer.WriteLine("    \"path\": \"folders/Objects/Environment/Blocks.yy\",");
 		writer.WriteLine("  },");
+		*/
 		if(game_object.ParentId is null) {
 			writer.WriteLine("  \"parentObjectId\": null,");
 		} else {
