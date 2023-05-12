@@ -123,14 +123,10 @@ void DumpGameObject(UndertaleGameObject game_object)
 
                 }
 
-                writer.WriteLine(fileGMLName);
-
-                /*
-			    using (StreamWriter gml_writer = new StreamWriter(objectsFolder + game_object.Name.Content + "\\" + stringValue + "_0" + ".gml"))
-			    {
-			    	gml_writer.WriteLine("");
-			    }
-			    */
+                using (StreamWriter gml_writer = new StreamWriter(fileGMLName))
+                {
+                	gml_writer.WriteLine("Here we go !");
+                }
 
             }
             i++;
