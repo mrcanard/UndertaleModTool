@@ -100,21 +100,37 @@ void DumpGameObject(UndertaleGameObject game_object)
         {
             foreach (var e2 in e1)
             {
+
+            	string fileGMLName;
                 if(i == 4) // Collision
                 {
-				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":{\"name\":\"obj_enemy_parent\",\"path\":\"objects/obj_enemy_parent/obj_enemy_parent.yy\",},\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
+                	var collisionObjectName = Data.GameObjects[(int) e2.EventSubtype].Name.Content;
+				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":{\"name\":\""+collisionObjectName+"\",\"path\":\"objects/"+collisionObjectName+"/"+collisionObjectName+".yy\",},\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
+
+	                // Création fichier .gml : BUG
+					var enumDisplayStatus = (EventType) i;
+					string stringValue = enumDisplayStatus.ToString();
+					fileGMLName = objectsFolder + game_object.Name.Content + "\\" + stringValue + "_" + collisionObjectName + ".gml";
+
                 } else
                 {
 				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
+
+	                // Création fichier .gml : BUG
+					var enumDisplayStatus = (EventType) i;
+					string stringValue = enumDisplayStatus.ToString();
+					fileGMLName = objectsFolder + game_object.Name.Content + "\\" + stringValue + "_" + e2.EventSubtype + ".gml";
+
                 }
 
-                // Création fichier .gml : BUG
-				var enumDisplayStatus = (EventType) i;
-				string stringValue = enumDisplayStatus.ToString();
+                writer.WriteLine(fileGMLName);
+
+                /*
 			    using (StreamWriter gml_writer = new StreamWriter(objectsFolder + game_object.Name.Content + "\\" + stringValue + "_0" + ".gml"))
 			    {
 			    	gml_writer.WriteLine("");
 			    }
+			    */
 
             }
             i++;
