@@ -105,7 +105,7 @@ void DumpGameObject(UndertaleGameObject game_object)
                 if(i == 4) // Collision
                 {
                 	var collisionObjectName = Data.GameObjects[(int) e2.EventSubtype].Name.Content;
-				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":{\"name\":\""+collisionObjectName+"\",\"path\":\"objects/"+collisionObjectName+"/"+collisionObjectName+".yy\",},\"eventNum\":"+e2.EventSubtype+",\"eventType\":"+i+",\"isDnD\":false,},");
+				    writer.WriteLine("    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":{\"name\":\""+collisionObjectName+"\",\"path\":\"objects/"+collisionObjectName+"/"+collisionObjectName+".yy\",},\"eventNum\":0,\"eventType\":"+i+",\"isDnD\":false,},");
 
 	                // Création fichier .gml : BUG
 					var enumDisplayStatus = (EventType) i;
