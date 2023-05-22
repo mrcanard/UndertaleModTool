@@ -109,26 +109,16 @@ void DumpGameObject(UndertaleGameObject game_object)
 
 				    if (action.CodeId is not null)
 				    {
-				        if(action.CodeId.Name.Content.Contains("gml_Script_")) {
-				            //string path = Path.Combine(codeFolder, action.CodeId.Name.Content.Substring(11) + ".gml");
-				            string path = fileGMLName;
-				            try
-				            {
-				                File.WriteAllText(path, (action.CodeId != null ? Decompiler.Decompile(action.CodeId, DECOMPILE_CONTEXT.Value) : ""));
-				            }
-				            catch (Exception e)
-				            {
-				                File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
-				            }        
-				        }
+			            string path = fileGMLName;
+			            try
+			            {
+			                File.WriteAllText(path, (action.CodeId != null ? Decompiler.Decompile(action.CodeId, DECOMPILE_CONTEXT.Value) : ""));
+			            }
+			            catch (Exception e)
+			            {
+			                File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
+			            }        
 				    }
-
-				    /*
-	                using (StreamWriter gml_writer = new StreamWriter(fileGMLName))
-	                {
-	                	gml_writer.WriteLine("Here we go !");
-	                }
-	                */
                 }
             }
             i++;
