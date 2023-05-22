@@ -18,8 +18,8 @@ ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDe
 Directory.CreateDirectory(objectsFolder);
 
 bool exportFromCache = false;
-// if (GMLCacheEnabled && Data.GMLCache is not null)
-//     exportFromCache = ScriptQuestion("Export from the cache?");
+if (GMLCacheEnabled && Data.GMLCache is not null)
+    exportFromCache = ScriptQuestion("Export from the cache?");
 
 List<UndertaleGameObject> toDump;
 if (!exportFromCache)
@@ -77,24 +77,6 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("  \"name\": \""+game_object.Name.Content+"\",");
 		writer.WriteLine("  \"eventList\": [");
 
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":37,"eventType":5,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":39,"eventType":5,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":65,"eventType":5,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":68,"eventType":5,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":32,"eventType":9,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":2,"eventType":3,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":7,"eventType":7,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":2,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_end_gate","path":"objects/obj_end_gate/obj_end_gate.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":7,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_hurt_zone","path":"objects/obj_hurt_zone/obj_hurt_zone.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":{"name":"obj_coin","path":"objects/obj_coin/obj_coin.yy",},"eventNum":0,"eventType":4,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":76,"eventType":7,"isDnD":false,},
-	    // {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,},
-        //            writer.WriteLine("    <event eventtype=\"" + i + "\" enumb=\"" + e2.EventSubtype + "\">");
-
 		var i = 0;
         foreach (var e1 in game_object.Events)
         {
@@ -123,11 +105,31 @@ void DumpGameObject(UndertaleGameObject game_object)
 
                 }
 
-                using (StreamWriter gml_writer = new StreamWriter(fileGMLName))
-                {
-                	gml_writer.WriteLine("Here we go !");
-                }
+                foreach(var action in e2.Actions) {
 
+				    if (action.CodeId is not null)
+				    {
+				        if(action.CodeId.Name.Content.Contains("gml_Script_")) {
+				            //string path = Path.Combine(codeFolder, action.CodeId.Name.Content.Substring(11) + ".gml");
+				            string path = fileGMLName;
+				            try
+				            {
+				                File.WriteAllText(path, (action.CodeId != null ? Decompiler.Decompile(action.CodeId, DECOMPILE_CONTEXT.Value) : ""));
+				            }
+				            catch (Exception e)
+				            {
+				                File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
+				            }        
+				        }
+				    }
+
+				    /*
+	                using (StreamWriter gml_writer = new StreamWriter(fileGMLName))
+	                {
+	                	gml_writer.WriteLine("Here we go !");
+	                }
+	                */
+                }
             }
             i++;
         }
