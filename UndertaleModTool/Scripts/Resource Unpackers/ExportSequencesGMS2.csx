@@ -159,7 +159,7 @@ void DumpSequence(UndertaleSequence sequence)
         writer.WriteLine("  \"volume\": 1.0,");
         writer.WriteLine("  \"xorigin\": -960,");
         writer.WriteLine("  \"yorigin\": -540,");
-        writer.WriteLine("}");
+        writer.Write("}");
     }
 
     IncrementProgressParallel();
