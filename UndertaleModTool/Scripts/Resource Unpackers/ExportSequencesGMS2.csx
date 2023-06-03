@@ -106,6 +106,27 @@ void DumpSequence(UndertaleSequence sequence)
         writer.WriteLine("  \"spriteId\": null,");
         writer.WriteLine("  \"timeUnits\": 1,");
         writer.WriteLine("  \"tracks\": [");
+
+        foreach(var track in sequence.Tracks) {
+            writer.WriteLine("    {\"resourceType\":\"GMInstanceTrack\",\"resourceVersion\":\"1.0\",\"name\":\"obj_hud_coins\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<AssetInstanceKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+            writer.WriteLine("          {\"resourceType\":\"Keyframe<AssetInstanceKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"AssetInstanceKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\"obj_hud_coins\",\"path\":\"objects/obj_hud_coins/obj_hud_coins.yy\",},},},\"Disabled\":false,\"id\":\"8a94dc1f-cb7f-4278-ad63-019475a8a382\",\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("        ],},\"modifiers\":[],\"trackColour\":4282949618,\"tracks\":[");
+            writer.WriteLine("        {\"resourceType\":\"GMRealTrack\",\"resourceVersion\":\"1.0\",\"name\":\"origin\",\"builtinName\":16,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":true,\"keyframes\":{\"resourceType\":\"KeyframeStore<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+            writer.WriteLine("              {\"resourceType\":\"Keyframe<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":0.0,},\"1\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":0.0,},},\"Disabled\":false,\"id\":\"c36e823e-724b-4d55-ba22-41850acc20ed\",\"IsCreationKey\":true,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("            ],},\"modifiers\":[],\"trackColour\":4282949618,\"tracks\":[],\"traits\":0,},");
+            writer.WriteLine("        {\"resourceType\":\"GMRealTrack\",\"resourceVersion\":\"1.0\",\"name\":\"position\",\"builtinName\":14,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+            writer.WriteLine("              {\"resourceType\":\"Keyframe<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":796.755,},\"1\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":-514.4296,},},\"Disabled\":false,\"id\":\"589e3835-d596-4de5-9415-422bb8b9c65d\",\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("            ],},\"modifiers\":[],\"trackColour\":4282949618,\"tracks\":[],\"traits\":0,},");
+            writer.WriteLine("        {\"resourceType\":\"GMRealTrack\",\"resourceVersion\":\"1.0\",\"name\":\"rotation\",\"builtinName\":8,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":true,\"keyframes\":{\"resourceType\":\"KeyframeStore<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+            writer.WriteLine("              {\"resourceType\":\"Keyframe<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":0.0,},},\"Disabled\":false,\"id\":\"a0f77c09-ad85-4ca0-b505-dea7575e66d8\",\"IsCreationKey\":true,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("            ],},\"modifiers\":[],\"trackColour\":4282949618,\"tracks\":[],\"traits\":0,},");
+            writer.WriteLine("        {\"resourceType\":\"GMRealTrack\",\"resourceVersion\":\"1.0\",\"name\":\"scale\",\"builtinName\":15,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+            writer.WriteLine("              {\"resourceType\":\"Keyframe<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":1.0992798,},\"1\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":1.0992798,},},\"Disabled\":false,\"id\":\"711e4102-88c3-444d-9000-ba2289644cff\",\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+            writer.WriteLine("            ],},\"modifiers\":[],\"trackColour\":4282949618,\"tracks\":[],\"traits\":0,},");
+            writer.WriteLine("      ],\"traits\":0,},");
+        }
+        
+        /*
         writer.WriteLine("    {\"resourceType\":\"GMInstanceTrack\",\"resourceVersion\":\"1.0\",\"name\":\"obj_hud_coins\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<AssetInstanceKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
         writer.WriteLine("          {\"resourceType\":\"Keyframe<AssetInstanceKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"AssetInstanceKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\"obj_hud_coins\",\"path\":\"objects/obj_hud_coins/obj_hud_coins.yy\",},},},\"Disabled\":false,\"id\":\"8a94dc1f-cb7f-4278-ad63-019475a8a382\",\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
         writer.WriteLine("        ],},\"modifiers\":[],\"trackColour\":4282949618,\"tracks\":[");
@@ -154,6 +175,8 @@ void DumpSequence(UndertaleSequence sequence)
         writer.WriteLine("              {\"resourceType\":\"Keyframe<RealKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":1.0,},\"1\":{\"resourceType\":\"RealKeyframe\",\"resourceVersion\":\"1.0\",\"AnimCurveId\":null,\"EmbeddedAnimCurve\":null,\"RealValue\":1.0,},},\"Disabled\":false,\"id\":\"453a30dc-a39f-424e-9169-822939610b89\",\"IsCreationKey\":true,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
         writer.WriteLine("            ],},\"modifiers\":[],\"trackColour\":4282970841,\"tracks\":[],\"traits\":0,},");
         writer.WriteLine("      ],\"traits\":0,},");
+        */
+
         writer.WriteLine("  ],");
         writer.WriteLine("  \"visibleRange\": null,");
         writer.WriteLine("  \"volume\": 1.0,");
