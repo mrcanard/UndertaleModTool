@@ -96,6 +96,8 @@ namespace UndertaleModTool
                     return null;
             }
 
+            if (texture.SourceWidth == 0 || texture.SourceHeight == 0)
+                return null;
 
             if (tileRectList is not null)
             {
@@ -502,10 +504,10 @@ namespace UndertaleModTool
                                 resBMP.RotateFlip(RotateFlipType.Rotate90FlipNone);
                                 break;
                             case 5:
-                                resBMP.RotateFlip(RotateFlipType.Rotate90FlipY);
+                                resBMP.RotateFlip(RotateFlipType.Rotate270FlipY);
                                 break;
                             case 6:
-                                resBMP.RotateFlip(RotateFlipType.Rotate270FlipY);
+                                resBMP.RotateFlip(RotateFlipType.Rotate90FlipY);
                                 break;
                             case 7:
                                 resBMP.RotateFlip(RotateFlipType.Rotate270FlipNone);

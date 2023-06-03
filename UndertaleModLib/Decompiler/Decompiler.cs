@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -63,6 +64,7 @@ namespace UndertaleModLib.Decompiler
         public GlobalDecompileContext GlobalContext;
         public UndertaleCode TargetCode;
         public UndertaleGameObject Object;
+        public static bool GMS2_3;
 
         public DecompileContext(GlobalDecompileContext globalContext, UndertaleCode code, bool computeObject = true)
         {
@@ -257,7 +259,7 @@ namespace UndertaleModLib.Decompiler
                     UndertaleInstruction.Opcode.Not => "~",
                     UndertaleInstruction.Opcode.Shl => "<<",
                     UndertaleInstruction.Opcode.Shr => ">>",
-                    _ => op.ToString().ToUpper(),
+                    _ => op.ToString().ToUpper(CultureInfo.InvariantCulture),
                 };
             }
 
@@ -272,7 +274,7 @@ namespace UndertaleModLib.Decompiler
                     UndertaleInstruction.ComparisonType.NEQ => "!=",
                     UndertaleInstruction.ComparisonType.GTE => ">=",
                     UndertaleInstruction.ComparisonType.GT => ">",
-                    _ => op.ToString().ToUpper(),
+                    _ => op.ToString().ToUpper(CultureInfo.InvariantCulture),
                 };
             }
 
@@ -379,7 +381,7 @@ namespace UndertaleModLib.Decompiler
                 {
                     int? val = ConvertToInt(Value);
                     if (val != null && val < 0 && val >= -16)
-                        return ((UndertaleInstruction.InstanceType)Value).ToString().ToLower();
+                        return ((UndertaleInstruction.InstanceType)Value).ToString().ToLower(CultureInfo.InvariantCulture);
                 }
                 else switch (AssetType) // Need to put else because otherwise it gets terribly unoptimized with GameObject type
                 {
@@ -636,7 +638,7 @@ namespace UndertaleModLib.Decompiler
                 if (Opcode == UndertaleInstruction.Opcode.Not && Type == UndertaleInstruction.DataType.Boolean)
                     op = "!"; // This is a logical negation instead, see #93
                 string arg = Argument.ToString(context);
-                if (arg.Contains(" "))
+                if (arg.Contains(' ', StringComparison.InvariantCulture))
                     return String.Format("({0}({1}))", op, arg);
                 return String.Format("({0}{1})", op, arg);
             }
@@ -1078,7 +1080,7 @@ namespace UndertaleModLib.Decompiler
                 {
                     if (AssetTypeResolver.return_types.ContainsKey(context.TargetCode.Name.Content))
                         Value.DoTypePropagation(context, AssetTypeResolver.return_types[context.TargetCode.Name.Content]);
-                    if (context.GlobalContext.Data != null && !context.GlobalContext.Data.GMS2_3)
+                    if (context.GlobalContext.Data != null && !DecompileContext.GMS2_3)
                     {
                         // We might be decompiling a legacy script - resolve it's name
                         UndertaleScript script = context.GlobalContext.Data.Scripts.FirstOrDefault(x => x.Code == context.TargetCode);
@@ -1087,7 +1089,7 @@ namespace UndertaleModLib.Decompiler
                     }
 
                     string cleanVal = Value.ToString(context);
-                    if (cleanVal.EndsWith("\n"))
+                    if (cleanVal.EndsWith("\n", StringComparison.InvariantCulture))
                         cleanVal = cleanVal.Substring(0, cleanVal.Length - 1);
 
                     return "return " + cleanVal + ";";
@@ -1126,7 +1128,7 @@ namespace UndertaleModLib.Decompiler
                     {
                         try
                         {
-                            if (Destination.Var.Name.Content.StartsWith("___struct___"))
+                            if (Destination.Var.Name.Content.StartsWith("___struct___", StringComparison.InvariantCulture))
                             {
                                 Expression val = Value;
                                 while (val is ExpressionCast cast)
@@ -1526,9 +1528,9 @@ namespace UndertaleModLib.Decompiler
                     else
                         constructor = Arguments[0].ToString(context);
 
-                    if (constructor.StartsWith("gml_Script_"))
+                    if (constructor.StartsWith("gml_Script_", StringComparison.InvariantCulture))
                         constructor = constructor.Substring(11);
-                    if (constructor.EndsWith(context.TargetCode.Name.Content))
+                    if (constructor.EndsWith(context.TargetCode.Name.Content, StringComparison.InvariantCulture))
                         constructor = constructor.Substring(0, constructor.Length - context.TargetCode.Name.Content.Length - 1);
 
                     if (AssetTypeResolver.builtin_funcs.TryGetValue(constructor, out AssetIDType[] types))
@@ -1772,7 +1774,7 @@ namespace UndertaleModLib.Decompiler
                 string name = Var.Name.Content;
                 if (ArrayIndices != null)
                 {
-                    if (context?.GlobalContext.Data?.GMS2_3 == true)
+                    if (DecompileContext.GMS2_3 == true)
                     {
                         if (name == "argument" && context.DecompilingStruct && context.ArgumentReplacements != null && ArrayIndices.Count == 1)
                         {
@@ -1818,7 +1820,7 @@ namespace UndertaleModLib.Decompiler
                             if (constant.AssetType == AssetIDType.GameObject && val < 0)
                             {
                                 UndertaleInstruction.InstanceType instanceType = (UndertaleInstruction.InstanceType)val;
-                                prefix = (instanceType == UndertaleInstruction.InstanceType.Global || instanceType == UndertaleInstruction.InstanceType.Other) ? prefix.ToLower() : "";
+                                prefix = (instanceType == UndertaleInstruction.InstanceType.Global || instanceType == UndertaleInstruction.InstanceType.Other) ? prefix.ToLower(CultureInfo.InvariantCulture) : "";
                             }
                         }
                     }
@@ -2064,17 +2066,38 @@ namespace UndertaleModLib.Decompiler
 
                     case UndertaleInstruction.Opcode.Ret:
                     case UndertaleInstruction.Opcode.Exit:
-                        ReturnStatement stmt = new ReturnStatement(instr.Kind == UndertaleInstruction.Opcode.Ret ? stack.Pop() : null);
-                        /*
-                            This shouldn't be necessary: all unused things on the stack get converted to tempvars at the end anyway, and this fixes decompilation of repeat()
-                            See #85
+                        // 2.3 scripts add exits to every script, even those that lack a return
+                        // This detects that type of exit using the next block.
+                        Block nextBlock = null;
+                        if (DecompileContext.GMS2_3 && instr.Kind == UndertaleInstruction.Opcode.Exit)
+                        {
+                            uint[] blockAddresses = blocks.Keys.ToArray();
+                            Array.Sort(blockAddresses);
+                            int nextBlockIndex = Array.IndexOf(blockAddresses, block.Address ?? 0) + 1;
+                            if (blockAddresses.Length > nextBlockIndex)
+                            {
+                                uint nextBlockAddress = blockAddresses[nextBlockIndex];
+                                nextBlock = blocks[nextBlockAddress];
+                            }
+                        }
 
-                            foreach (var expr in stack.Reverse())
-                                if (!(expr is ExpressionTempVar))
-                                    statements.Add(expr);
-                            stack.Clear();
-                        */
-                        statements.Add(stmt);
+                        if (!(nextBlock is not null
+                            && nextBlock.Instructions.Count > 0
+                            && nextBlock.Instructions[0].Kind == UndertaleInstruction.Opcode.Push
+                            && nextBlock.Instructions[0].Value.GetType() != typeof(int)))
+                        {
+                            ReturnStatement stmt = new ReturnStatement(instr.Kind == UndertaleInstruction.Opcode.Ret ? stack.Pop() : null);
+                            /*
+                                This shouldn't be necessary: all unused things on the stack get converted to tempvars at the end anyway, and this fixes decompilation of repeat()
+                                See #85
+
+                                foreach (var expr in stack.Reverse())
+                                    if (!(expr is ExpressionTempVar))
+                                        statements.Add(expr);
+                                stack.Clear();
+                            */
+                            statements.Add(stmt);
+                        }
                         end = true;
                         returned = true;
                         break;
@@ -2122,7 +2145,7 @@ namespace UndertaleModLib.Decompiler
                         break;
 
                     case UndertaleInstruction.Opcode.PushEnv:
-                        if (context.GlobalContext.Data?.GMS2_3 == true)
+                        if (DecompileContext.GMS2_3 == true)
                         {
                             Expression expr = stack.Pop();
 
@@ -2383,7 +2406,7 @@ namespace UndertaleModLib.Decompiler
                             if (callTargetBody != null && callTargetBody.ParentEntry != null && !context.DisableAnonymousFunctionNameResolution)
                             {
                                 // Special case: this is a direct reference to a method variable
-                                // Figure out what it's actual name is
+                                // Figure out what its actual name is
 
                                 static string FindActualNameForAnonymousCodeObject(DecompileContext context, UndertaleCode anonymousCodeObject)
                                 {
@@ -2395,6 +2418,7 @@ namespace UndertaleModLib.Decompiler
                                         Dictionary<uint, Block> blocks2 = PrepareDecompileFlow(anonymousCodeObject.ParentEntry, new List<uint>() { 0 });
                                         DecompileFromBlock(childContext, blocks2, blocks2[0]);
                                         // This hack handles decompilation of code entries getting shorter, but not longer or out of place.
+                                        // Probably is no longer needed since we now update Length mostly-correctly
                                         Block lastBlock;
                                         if (!blocks2.TryGetValue(anonymousCodeObject.Length / 4, out lastBlock))
                                             lastBlock = blocks2[blocks2.Keys.Max()];
@@ -2402,7 +2426,8 @@ namespace UndertaleModLib.Decompiler
                                         foreach (Statement stmt2 in statements)
                                         {
                                             if (stmt2 is AssignmentStatement assign &&
-                                                assign.Value is FunctionDefinition funcDef)
+                                                assign.Value is FunctionDefinition funcDef &&
+                                                funcDef.FunctionBodyCodeEntry == anonymousCodeObject)
                                             {
                                                 if (funcDef.FunctionBodyEntryBlock.Address == anonymousCodeObject.Offset / 4)
                                                     return assign.Destination.Var.Name.Content;
@@ -2449,7 +2474,7 @@ namespace UndertaleModLib.Decompiler
 
                     case UndertaleInstruction.Opcode.Break:
                         // GMS 2.3 sub-opcodes
-                        if (context.GlobalContext.Data?.GMS2_3 == true)
+                        if (DecompileContext.GMS2_3 == true)
                         {
                             switch ((short)instr.Value)
                             {
@@ -3107,7 +3132,7 @@ namespace UndertaleModLib.Decompiler
                 if (IsForLoop)
                 {
                     string conditionStr = Condition.ToString(context); // Cut off parenthesis for the condition.
-                    if (conditionStr.StartsWith("(") && conditionStr.EndsWith(")"))
+                    if (conditionStr.StartsWith("(", StringComparison.InvariantCulture) && conditionStr.EndsWith(")", StringComparison.InvariantCulture))
                         conditionStr = conditionStr.Substring(1, conditionStr.Length - 2);
 
                     return "for (" + InitializeStatement.ToString(context) + "; " + conditionStr + "; " + StepStatement.ToString(context) + ")\n" + context.Indentation + Block.ToString(context);
@@ -3492,7 +3517,7 @@ namespace UndertaleModLib.Decompiler
                                 (!(cmp.Argument1 is ExpressionTempVar) || (cmp.Argument1 as ExpressionTempVar).Var.Var != switchTempVar))
                                 throw new Exception("Malformed switch statement: bad condition var (" + cmp.Argument1.ToString(context) + ")");
                             if (cmp.Opcode != UndertaleInstruction.ComparisonType.EQ)
-                                throw new Exception("Malformed switch statement: bad contition type (" + cmp.Opcode.ToString().ToUpper() + ")");
+                                throw new Exception("Malformed switch statement: bad contition type (" + cmp.Opcode.ToString().ToUpper(CultureInfo.InvariantCulture) + ")");
                             caseExpr = cmp.Argument2;
                         }
 
@@ -3745,11 +3770,17 @@ namespace UndertaleModLib.Decompiler
             return result;
         }
 
-        public static string Decompile(UndertaleCode code, GlobalDecompileContext globalContext)
+        public static string Decompile(UndertaleCode code, GlobalDecompileContext globalContext, Action<string> msgDelegate = null)
         {
             globalContext.DecompilerWarnings.Clear();
             DecompileContext context = new DecompileContext(globalContext, code);
+
+            if (msgDelegate is not null)
+                msgDelegate("Building the cache of all sub-functions...");
             BuildSubFunctionCache(globalContext.Data);
+            if (msgDelegate is not null)
+                msgDelegate("Decompiling, please wait... This can take a while on complex scripts.");
+
             try
             {
                 if (globalContext.Data != null && globalContext.Data.ToolInfo.ProfileMode)
@@ -3800,42 +3831,76 @@ namespace UndertaleModLib.Decompiler
         {
             // Find all functions defined in GlobalScripts
             // Use the cache so this only gets calculated once
-            if (data == null || !data.GMS2_3 || data.KnownSubFunctions != null)
+            if (data == null || !data.IsVersionAtLeast(2, 3) || data.KnownSubFunctions != null)
                 return;
-            foreach (var func in data.Functions)
+
+            // There's no "ConcurrentHashSet<>"; values aren't used.
+            ConcurrentDictionary<string, string> processingCodeList = new();
+            byte elapsedSec = 1;
+            Task mainTask = Task.Run(() =>
             {
-                if (data.Code.ByName(func.Name.Content) != null)
-                    func.Autogenerated = true;
-            }
-            data.KnownSubFunctions = new Dictionary<string, UndertaleFunction>();
-            GlobalDecompileContext globalDecompileContext = new GlobalDecompileContext(data, false);
-            Parallel.ForEach(data.GlobalInitScripts, globalScript =>
-            {
-                UndertaleCode scriptCode = globalScript.Code;
-                try
+                HashSet<string> codeNames = new(data.Code.Select(c => c.Name?.Content));
+                foreach (var func in data.Functions)
                 {
-                    DecompileContext childContext = new DecompileContext(globalDecompileContext, scriptCode, false);
-                    childContext.DisableAnonymousFunctionNameResolution = true;
-                    Dictionary<uint, Block> blocks2 = PrepareDecompileFlow(scriptCode, new List<uint>() { 0 });
-                    DecompileFromBlock(childContext, blocks2, blocks2[0]);
-                    List<Statement> statements = HLDecompile(childContext, blocks2, blocks2[0], blocks2[scriptCode.Length / 4]);
-                    foreach (Statement stmt2 in statements)
+                    if (codeNames.Contains(func.Name.Content))
+                        func.Autogenerated = true;
+                }
+                data.KnownSubFunctions = new Dictionary<string, UndertaleFunction>();
+                GlobalDecompileContext globalDecompileContext = new GlobalDecompileContext(data, false);
+
+                Parallel.ForEach(data.GlobalInitScripts, globalScript =>
+                {
+                    UndertaleCode scriptCode = globalScript.Code;
+                    processingCodeList[scriptCode.Name.Content] = null;
+                    try
                     {
-                        if (stmt2 is AssignmentStatement assign &&
-                            assign.Value is FunctionDefinition funcDef)
+                        DecompileContext childContext = new DecompileContext(globalDecompileContext, scriptCode, false);
+                        childContext.DisableAnonymousFunctionNameResolution = true;
+                        Dictionary<uint, Block> blocks2 = PrepareDecompileFlow(scriptCode, new List<uint>() { 0 });
+                        DecompileFromBlock(childContext, blocks2, blocks2[0]);
+                        List<Statement> statements = HLDecompile(childContext, blocks2, blocks2[0], blocks2[scriptCode.Length / 4]);
+                        foreach (Statement stmt2 in statements)
                         {
-                            lock (data.KnownSubFunctions)
+                            if (stmt2 is AssignmentStatement assign &&
+                                assign.Value is FunctionDefinition funcDef)
                             {
-                                data.KnownSubFunctions.Add(assign.Destination.Var.Name.Content, funcDef.Function);
+                                lock (data.KnownSubFunctions)
+                                {
+                                    data.KnownSubFunctions.Add(assign.Destination.Var.Name.Content, funcDef.Function);
+                                }
                             }
                         }
                     }
-                }
-                catch (Exception e)
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.ToString());
+                    }
+
+                    processingCodeList.Remove(scriptCode.Name.Content, out _);
+                });
+
+                elapsedSec = 3 * 60;
+            });
+
+            Task timeoutTask = Task.Run(async () =>
+            {
+                while (true)
                 {
-                    Debug.WriteLine(e.ToString());
+                    await Task.Delay(1000);
+
+                    if (++elapsedSec > 3 * 60)
+                        return;
                 }
             });
+
+            // If the timeout task ended earlier than the main task
+            if (Task.WaitAny(mainTask, timeoutTask) == 1)
+            {
+                throw new TimeoutException("The building cache process hung.\n" +
+                                           "The function code entries that didn't manage to decompile:\n" +
+                                           String.Join('\n', processingCodeList.Keys) + "\n\n" + 
+                                           "You should save the game data (if it's necessary) and re-open the app.\n");
+            }
         }
 
         private static void DoTypePropagation(DecompileContext context, Dictionary<uint, Block> blocks)
@@ -3886,7 +3951,7 @@ namespace UndertaleModLib.Decompiler
                 sb.Append("    block_" + pair.Key + " [label=\"");
                 sb.Append("[" + block.ToString() + ", Exit: " + block.conditionalExit + (block.nextBlockTrue != null ? ", T: " + block.nextBlockTrue.Address : "") + (block.nextBlockFalse != null ? ", F: " + block.nextBlockFalse.Address : "") + "]\n");
                 foreach (var instr in block.Instructions)
-                    sb.Append(instr.ToString().Replace("\"", "\\\"") + "\\n");
+                    sb.Append(instr.ToString().Replace("\"", "\\\"", StringComparison.InvariantCulture) + "\\n");
                 sb.Append('"');
                 sb.Append(pair.Key == 0 ? ", color=\"blue\"" : "");
                 sb.AppendLine(", shape=\"box\"];");
