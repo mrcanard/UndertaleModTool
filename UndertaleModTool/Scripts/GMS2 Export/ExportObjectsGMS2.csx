@@ -113,7 +113,11 @@ void DumpGameObject(UndertaleGameObject game_object)
 			            try
 			            {
 			                File.WriteAllText(path, (action.CodeId != null ? Decompiler.Decompile(action.CodeId, DECOMPILE_CONTEXT.Value) : ""));
-			            }
+                            using (StreamWriter sw = File.AppendText(path))
+                            {
+                                sw.WriteLine("");
+                            }
+                        }
 			            catch (Exception e)
 			            {
 			                File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
@@ -149,7 +153,7 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("  \"physicsAngularDamping\": 0.1,");
 		writer.WriteLine("  \"physicsDensity\": 0.5,");
 		writer.WriteLine("  \"physicsFriction\": 0.2,");
-		writer.WriteLine("  \"physicsGroup\": 1,");
+		writer.WriteLine("  \"physicsGroup\": "+ game_object.Group +",");
 		writer.WriteLine("  \"physicsKinematic\": false,");
 		writer.WriteLine("  \"physicsLinearDamping\": 0.1,");
 		writer.WriteLine("  \"physicsObject\": false,");
@@ -179,8 +183,7 @@ void DumpGameObject(UndertaleGameObject game_object)
 		}
 
 		writer.WriteLine("  \"visible\": "+(game_object.Visible ? "true" : "false")+",");
-		writer.WriteLine("}");
-		writer.WriteLine("");
+		writer.Write("}");
 
     }
 
