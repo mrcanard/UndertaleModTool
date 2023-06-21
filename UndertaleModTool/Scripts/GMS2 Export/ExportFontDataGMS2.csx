@@ -84,7 +84,7 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  },");
         writer.WriteLine("  \"pointRounding\": 0,");
         writer.WriteLine("  \"ranges\": [");
-        writer.WriteLine("    { \"lower\":" + font.RangeStart + ",\"upper\":" + font.RangeEnd + ",},");
+        writer.WriteLine("    {\"lower\":" + font.RangeStart + ",\"upper\":" + font.RangeEnd + ",},");
         writer.WriteLine("  ],");
         writer.WriteLine("  \"regenerateBitmap\": false,");
         writer.WriteLine("  \"sampleText\": \"abcdef ABCDEF\\n0123456789 .,<>\\\"'&!?\\nthe quick brown fox jumps over the lazy dog\\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\\nDefault character: ▯ (9647)\",");
@@ -95,7 +95,7 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("    \"path\": \"texturegroups/Default\",");
         writer.WriteLine("  },");
         writer.WriteLine("  \"TTFName\": \"\",");
-        writer.WriteLine("}");
+        writer.Write("}");
     }
 
     IncrementProgressParallel();
