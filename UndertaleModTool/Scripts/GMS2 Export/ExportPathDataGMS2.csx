@@ -62,18 +62,27 @@ void DumpPath(UndertalePath path)
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
         writer.WriteLine("  \"name\": \""+path.Name.Content+"\",");
         writer.WriteLine("  \"closed\": "+(path.IsClosed ? "true" : "false")+",");
-        writer.WriteLine("  \"kind\": 0,");
+        writer.WriteLine("  \"kind\": "+(path.IsSmooth ? -1 : 0)+",");
         writer.WriteLine("  \"parent\": {");
         writer.WriteLine("    \"name\": \"Paths\",");
         writer.WriteLine("    \"path\": \"folders/Paths.yy\",");
         writer.WriteLine("  },");
-        writer.WriteLine("  \"points\": [");
-        foreach(var g in path.Points) {
-            writer.WriteLine("    {\"speed\":"+g.Speed.ToString("0.0")+",\"x\":"+g.X.ToString("0.0")+",\"y\":"+g.Y.ToString("0.0")+",},");
+        if(path.Points.Count > 1)
+        {
+            writer.WriteLine("  \"points\": [");
+            foreach (var g in path.Points)
+            {
+                writer.WriteLine("    {\"speed\":" + g.Speed.ToString("0.0") + ",\"x\":" + g.X.ToString("0.0") + ",\"y\":" + g.Y.ToString("0.0") + ",},");
+            }
+            writer.WriteLine("  ],");
+        } else
+        {
+            writer.WriteLine("  \"points\": [],");
         }
-        writer.WriteLine("  ],");
+
         writer.WriteLine("  \"precision\": "+path.Precision+",");
-        writer.WriteLine("}");
+        writer.Write("}");
+
 
     }
 
