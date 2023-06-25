@@ -159,7 +159,7 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("  \"physicsObject\": false,");
 		writer.WriteLine("  \"physicsRestitution\": 0.1,");
 		writer.WriteLine("  \"physicsSensor\": false,");
-		writer.WriteLine("  \"physicsShape\": 1,");
+		writer.WriteLine("  \"physicsShape\": "+ (int) game_object.CollisionShape +",");
 		writer.WriteLine("  \"physicsShapePoints\": [],");
 		writer.WriteLine("  \"physicsStartAwake\": true,");
 		writer.WriteLine("  \"properties\": [],");
