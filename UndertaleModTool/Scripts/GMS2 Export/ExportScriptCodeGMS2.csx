@@ -97,7 +97,7 @@ void DumpCode(UndertaleScript script)
                 writer.WriteLine("    \"name\": \"Scripts\",");
                 writer.WriteLine("    \"path\": \"folders/Scripts.yy\",");
                 writer.WriteLine("  },");
-                writer.WriteLine("}");
+                writer.Write("}");
 
             }
         }
