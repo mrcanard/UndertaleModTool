@@ -134,8 +134,8 @@ void DumpSound(UndertaleSound sound)
     string soundFilePath;
 
     // Création du répertoire pour le son
-    soundFilePath = winFolder + "Export_Sounds\\" + soundName;
-    MakeFolder("Export_Sounds");
+    soundFilePath = winFolder + "sounds\\" + soundName;
+    MakeFolder("sounds");
     Directory.CreateDirectory(soundFilePath);
 
     soundFilePath = soundFilePath + "\\" + soundName;
@@ -166,7 +166,7 @@ void DumpSound(UndertaleSound sound)
         process = false;
         audioExt = ".ogg";
         string source = externalOGG_Folder + soundName + audioExt;
-        string dest = winFolder + "Export_Sounds\\audio\\" + soundName + audioExt;
+        string dest = winFolder + "sounds" + "\\" + soundName + "\\" + soundName + audioExt;
         if (externalOGG_Copy == 1)
         {
             //if (groupedExport == 1)
@@ -174,7 +174,6 @@ void DumpSound(UndertaleSound sound)
             //    dest = winFolder + "Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName + audioExt;
             //    MakeFolder("Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content);
             //}
-            MakeFolder("Export_Sounds\\audio\\");
             System.IO.File.Copy(source, dest, false);
         }
     }
@@ -184,35 +183,10 @@ void DumpSound(UndertaleSound sound)
 
     using (StreamWriter writer = new StreamWriter(soundFilePath + ".yy"))
     {
-        /*
-       {
-  "resourceType": "GMSound",
-  "resourceVersion": "1.0",
-  "name": "snd_attack_arc_01",
-  "audioGroupId": {
-    "name": "audiogroup_default",
-    "path": "audiogroups/audiogroup_default",
-  },
-  "bitDepth": 1,
-  "bitRate": 128,
-  "compression": 0,
-  "conversionMode": 0,
-  "duration": 5.0,
-  "parent": {
-    "name": "SFX",
-    "path": "folders/Sounds/SFX.yy",
-  },
-  "preload": false,
-  "sampleRate": 44100,
-  "soundFile": "snd_attack_arc_01.wav",
-  "type": 0,
-  "volume": 1.0,
-} 
-        */
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMSound\",");
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-        writer.WriteLine("  \"name\": \""+ sound.Name.Content +"\",");
+        writer.WriteLine("  \"name\": \""+ sound.Name.Content + "\",");
         writer.WriteLine("  \"audioGroupId\": {");
         writer.WriteLine("    \"name\": \"audiogroup_default\",");
         writer.WriteLine("    \"path\": \"audiogroups/audiogroup_default\",");
@@ -229,7 +203,6 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("  \"soundFile\": \""+ sound.Name.Content + audioExt +"\",");
         writer.WriteLine("  \"volume\": "+ sound.Volume +",");
         writer.WriteLine("}");
-
     }
 
 
