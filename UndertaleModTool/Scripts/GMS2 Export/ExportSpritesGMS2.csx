@@ -157,7 +157,7 @@ void DumpSprite(UndertaleSprite sprite)
     writer.WriteLine("  \"type\": 0,");
     writer.WriteLine("  \"VTile\": false,");
     writer.WriteLine("  \"width\": "+ sprite.Width +",");
-    writer.WriteLine("}");
+    writer.Write("}");
 
   }
 
