@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 EnsureDataLoaded();
 
+// Pour avoir un "." au lieu d'une "," dans les conversion en décimal
+System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo) System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+//
+
 int maxCount;
 
 // Setup root export folder.
@@ -201,8 +208,8 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("  \"conversionMode\": 0,");
         writer.WriteLine("  \"preload\": "+ (sound.Preload ? "true" : "false") +",");
         writer.WriteLine("  \"soundFile\": \""+ sound.Name.Content + audioExt +"\",");
-        writer.WriteLine("  \"volume\": "+ sound.Volume +",");
-        writer.WriteLine("}");
+        writer.WriteLine("  \"volume\": "+ sound.Volume.ToString("0.0") +",");
+        writer.Write("}");
     }
 
 
