@@ -44,6 +44,28 @@ await DumpRooms();
 
 await StopProgressBarUpdater();
 HideProgressBar();
+
+// Export asset
+using (StreamWriter writer = new StreamWriter(roomsFolder + "asset_order.txt"))
+{
+    for (int i = 0; i < Data.Rooms.Count; i++)
+    {
+        UndertaleRoom room = Data.Rooms[i];
+        writer.WriteLine("    {\"id\":{\"name\":\"" + room.Name.Content + "\",\"path\":\"rooms/" + room.Name.Content + "/" + room.Name.Content + ".yy\",},},");
+    }
+}
+
+// Room order
+using (StreamWriter writer = new StreamWriter(roomsFolder + "room_order.txt"))
+{
+    for (int i = 0; i < Data.Rooms.Count; i++)
+    {
+        UndertaleRoom room = Data.Rooms[i];
+        writer.WriteLine("    {\"roomId\":{\"name\":\"" + room.Name.Content + "\",\"path\":\"rooms/" + room.Name.Content + "/" + room.Name.Content + ".yy\",},},");        
+    }
+}
+
+
 ScriptMessage("Export Complete.\n\nLocation: " + roomsFolder);
 
 
@@ -187,7 +209,23 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("  \"sequenceId\": null,");
         writer.WriteLine("  \"views\": [");
         foreach(var g in room.Views) {
-            writer.WriteLine("    {\"hborder\":"+g.BorderX+",\"hport\":"+g.PortHeight+",\"hspeed\":"+g.SpeedX+",\"hview\":"+g.ViewHeight+",\"inherit\":false,\"objectId\":"+(g.ObjectId is null ? "null" : "\""+g.ObjectId.Name.Content+"\"")+",\"vborder\":"+g.BorderY+",\"visible\":"+(g.Enabled ? "true": "false")+",\"vspeed\":"+g.SpeedY+",\"wport\":"+g.PortWidth+",\"wview\":"+g.ViewWidth+",\"xport\":"+g.PortX+",\"xview\":"+g.ViewX+",\"yport\":"+g.PortY+",\"yview\":"+g.ViewY+",},");
+            writer.Write("    {");
+            writer.Write("\"hborder\":" + g.BorderX + ",");
+            writer.Write("\"hport\":" + g.PortHeight + ",");
+            writer.Write("\"hspeed\":" + g.SpeedX + ",");
+            writer.Write("\"hview\":" + g.ViewHeight + ",");
+            writer.Write("\"inherit\":false,");
+            writer.Write("\"objectId\":" + (g.ObjectId is null ? "null" : "\"" + g.ObjectId.Name.Content + "\"") + ",");
+            writer.Write("\"vborder\":" + g.BorderY + ",");
+            writer.Write("\"visible\":" + (g.Enabled ? "true" : "false") + ",");
+            writer.Write("\"vspeed\":" + g.SpeedY + ",");
+            writer.Write("\"wport\":" + g.PortWidth + ",");
+            writer.Write("\"wview\":" + g.ViewWidth + ",");
+            writer.Write("\"xport\":" + g.PortX + ",");
+            writer.Write("\"xview\":" + g.ViewX + ",");
+            writer.Write("\"yport\":" + g.PortY + ",");
+            writer.Write("\"yview\":" + g.ViewY + ",");
+            writer.WriteLine("},");
         }
         writer.WriteLine("  ],");
         writer.WriteLine("  \"viewSettings\": {");
@@ -197,7 +235,7 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("    \"inheritViewSettings\": false,");
         writer.WriteLine("  },");
         writer.WriteLine("  \"volume\": 1.0,");
-        writer.WriteLine("}");
+        writer.Write("}");
 
     }
 
