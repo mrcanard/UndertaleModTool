@@ -104,7 +104,42 @@ void DumpRoom(UndertaleRoom room)
                 // pass
             } else if(layer.LayerType == UndertaleRoom.LayerType.Background) {
                 // Background
-                writer.WriteLine("    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\""+layer.LayerName.Content+"\",\"animationFPS\":"+layer.BackgroundData.AnimationSpeed.ToString("0.0")+",\"animationSpeedType\":"+(int) layer.BackgroundData.AnimationSpeedType+",\"colour\":4294967295,\"depth\":"+layer.LayerDepth+",\"effectEnabled\":"+(layer.EffectEnabled ? "true" : "false")+",\"effectType\":"+(layer.EffectType is null ? "null" : layer.EffectType.Content)+",\"gridX\":"+room.GridWidth+",\"gridY\":"+room.GridHeight+",\"hierarchyFrozen\":false,\"hspeed\":"+layer.HSpeed.ToString("0.0")+",\"htiled\":"+(layer.BackgroundData.TiledHorizontally ? "true" : "false")+",\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\""+layer.BackgroundData.Sprite.Name.Content+"\",\"path\":\"sprites/"+layer.BackgroundData.Sprite.Name.Content+"/"+layer.BackgroundData.Sprite.Name.Content+".yy\",},\"stretch\":"+(layer.BackgroundData.Stretch ? "true" : "false")+",\"userdefinedAnimFPS\":false,\"userdefinedDepth\":false,\"visible\":"+(layer.IsVisible ? "true" : "false")+",\"vspeed\":"+layer.VSpeed.ToString("0.0")+",\"vtiled\":"+(layer.BackgroundData.TiledVertically ? "true" : "false")+",\"x\":0,\"y\":0,},");
+                writer.Write("    {\"resourceType\":\"GMRBackgroundLayer\",");
+                writer.Write(\"resourceVersion\":\"1.0\",");
+                writer.Write("\"name\":\"" + layer.LayerName.Content + "\",");
+                writer.Write(\"animationFPS\":" + layer.BackgroundData.AnimationSpeed.ToString("0.0") + ",");
+                writer.Write(\"animationSpeedType\":" + (int)layer.BackgroundData.AnimationSpeedType + ",");
+                writer.Write(\"colour\":4294967295,");
+                writer.Write("\"depth\":" + layer.LayerDepth + ",");
+                writer.Write("\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",");
+                writer.Write("\"effectType\":" + (layer.EffectType is null ? "null" : layer.EffectType.Content) + ",");
+                writer.Write("\"gridX\":" + room.GridWidth + ",");
+                writer.Write(\"gridY\":" + room.GridHeight + ",");
+                writer.Write("\"hierarchyFrozen\":false,");
+                writer.Write("\"hspeed\":" + layer.HSpeed.ToString("0.0") + ",");
+                writer.Write("\"htiled\":" + (layer.BackgroundData.TiledHorizontally ? "true" : "false") + ",");
+                writer.Write("\"inheritLayerDepth\":false,");
+                writer.Write("\"inheritLayerSettings\":false,");
+                writer.Write("\"inheritSubLayers\":true,");
+                writer.Write("\"inheritVisibility\":true,");
+                writer.Write("\"layers\":[],");
+                writer.Write("\"properties\":[],");
+                writer.Write("\"spriteId\":");
+                // begin spriteId
+                writer.Write("{");
+                writer.Write("\"name\":\"" + layer.BackgroundData.Sprite.Name.Content + "\",");
+                writer.Write("\"path\":\"sprites/" + layer.BackgroundData.Sprite.Name.Content + "/" + layer.BackgroundData.Sprite.Name.Content + ".yy\",");
+                writer.Write("},");
+                // end spriteId
+                writer.Write("\"stretch\":" + (layer.BackgroundData.Stretch ? "true" : "false") + ",");
+                writer.Write("\"userdefinedAnimFPS\":false,");
+                writer.Write("\"userdefinedDepth\":false,");
+                writer.Write("\"visible\":" + (layer.IsVisible ? "true" : "false") + ",");
+                writer.Write("\"vspeed\":" + layer.VSpeed.ToString("0.0") + ",");
+                writer.Write("\"vtiled\":" + (layer.BackgroundData.TiledVertically ? "true" : "false") + ",");
+                writer.Write("\"x\":0,");
+                writer.Write("\"y\":0,");
+                writer.WriteLine("},");
             } else if(layer.LayerType == UndertaleRoom.LayerType.Assets) {
                 // Assets
                 writer.WriteLine("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\""+layer.LayerName.Content+"\",\"assets\":[");
