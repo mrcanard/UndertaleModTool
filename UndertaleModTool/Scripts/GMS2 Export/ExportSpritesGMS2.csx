@@ -42,7 +42,7 @@ using (StreamWriter writer = new StreamWriter(texFolder + "asset_order.txt"))
     for (int i = 0; i < Data.Sprites.Count; i++)
     {
         UndertaleSprite sprite = Data.Sprites[i];
-        writer.WriteLine("      { \"id\":{ \"name\":\""+sprite.Name.Content+ "\",\"path\":\"sprites/\"+sprite.Name.Content+\"/\"+sprite.Name.Content+\".yy\",},},");
+        writer.WriteLine("    {\"id\":{\"name\":\"" + sprite.Name.Content+ "\",\"path\":\"sprites/"+sprite.Name.Content+"/"+sprite.Name.Content+".yy\",},},");
     }
 }
 

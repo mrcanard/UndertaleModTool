@@ -29,6 +29,17 @@ worker.Cleanup();
 
 await StopProgressBarUpdater();
 HideProgressBar();
+
+// Export asset
+using (StreamWriter writer = new StreamWriter(fntFolder + "asset_order.txt"))
+{
+    for (int i = 0; i < Data.Fonts.Count; i++)
+    {
+        UndertaleFont font = Data.Fonts[i];
+        writer.WriteLine("    {\"id\":{\"name\":\"" + font.Name.Content + "\",\"path\":\"fonts/" + font.Name.Content + "/" + font.Name.Content + ".yy\",},},");
+    }
+}
+
 ScriptMessage("Export Complete.\n\nLocation: " + fntFolder);
 
 
