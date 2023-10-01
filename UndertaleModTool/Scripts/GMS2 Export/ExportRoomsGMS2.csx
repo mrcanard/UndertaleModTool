@@ -109,7 +109,7 @@ void DumpRoom(UndertaleRoom room)
                 writer.Write("\"name\":\"" + layer.LayerName.Content + "\",");
                 writer.Write("\"animationFPS\":" + layer.BackgroundData.AnimationSpeed.ToString("0.0") + ",");
                 writer.Write("\"animationSpeedType\":" + (int)layer.BackgroundData.AnimationSpeedType + ",");
-                writer.Write("\"colour\":4294967295,");
+                writer.Write("\"colour\":"+ (int) (layer.BackgroundData.Color ^ 0xFF000000) +",");
                 writer.Write("\"depth\":" + layer.LayerDepth + ",");
                 writer.Write("\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",");
                 writer.Write("\"effectType\":" + (layer.EffectType is null ? "null" : layer.EffectType.Content) + ",");
