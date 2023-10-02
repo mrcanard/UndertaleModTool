@@ -58,10 +58,10 @@ using (StreamWriter writer = new StreamWriter(roomsFolder + "asset_order.txt"))
 // Room order
 using (StreamWriter writer = new StreamWriter(roomsFolder + "room_order.txt"))
 {
-    for (int i = 0; i < Data.Rooms.Count; i++)
+    foreach (UndertaleResourceById<UndertaleRoom, UndertaleChunkROOM> _room in Data.GeneralInfo.RoomOrder)
     {
-        UndertaleRoom room = Data.Rooms[i];
-        writer.WriteLine("    {\"roomId\":{\"name\":\"" + room.Name.Content + "\",\"path\":\"rooms/" + room.Name.Content + "/" + room.Name.Content + ".yy\",},},");        
+        UndertaleRoom room = _room.Resource;
+        writer.WriteLine("    {\"roomId\":{\"name\":\"" + room.Name.Content + "\",\"path\":\"rooms/" + room.Name.Content + "/" + room.Name.Content + ".yy\",},},");
     }
 }
 
