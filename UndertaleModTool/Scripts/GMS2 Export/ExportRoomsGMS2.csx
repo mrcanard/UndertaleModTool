@@ -97,7 +97,18 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("  \"resourceType\": \"GMRoom\",");
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
         writer.WriteLine("  \"name\": \""+ room.Name.Content +"\",");
-        writer.WriteLine("  \"creationCodeFile\": \"\",");
+        // Begin CreationCodeId
+        if (room.CreationCodeId is null)
+        {
+            writer.WriteLine("  \"creationCodeFile\": \"\",");
+        }
+        else
+        {
+            writer.WriteLine("  \"creationCodeFile\": \"rooms/"+ room.Name.Content +"/RoomCreationCode.gml\",");
+            File.WriteAllText(roomsFolder + room.Name.Content + "\\" + "RoomCreationCode.gml", Decompiler.Decompile(room.CreationCodeId, DECOMPILE_CONTEXT.Value));
+
+        }
+        // End CreationCodeId
         writer.WriteLine("  \"inheritCode\": false,");
         writer.WriteLine("  \"inheritCreationOrder\": false,");
         writer.WriteLine("  \"inheritLayers\": false,");
