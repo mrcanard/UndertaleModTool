@@ -131,7 +131,7 @@ void DumpRoom(UndertaleRoom room)
                 writer.Write("\"name\":\"" + layer.LayerName.Content + "\",");
                 writer.Write("\"animationFPS\":" + layer.BackgroundData.AnimationSpeed.ToString("0.0") + ",");
                 writer.Write("\"animationSpeedType\":" + (int)layer.BackgroundData.AnimationSpeedType + ",");
-                writer.Write("\"colour\":"+ (int) (layer.BackgroundData.Color ^ 0xFF000000) +",");
+                writer.Write("\"colour\":"+ (int) (layer.BackgroundData.Color & 0x00FFFFFF) +",");
                 writer.Write("\"depth\":" + layer.LayerDepth + ",");
                 writer.Write("\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",");
                 writer.Write("\"effectType\":" + (layer.EffectType is null ? "null" : layer.EffectType.Content) + ",");
@@ -215,7 +215,15 @@ void DumpRoom(UndertaleRoom room)
             writer.Write("\"hspeed\":" + g.SpeedX + ",");
             writer.Write("\"hview\":" + g.ViewHeight + ",");
             writer.Write("\"inherit\":false,");
-            writer.Write("\"objectId\":" + (g.ObjectId is null ? "null" : "\"" + g.ObjectId.Name.Content + "\"") + ",");
+            // begin objectId
+            if(g.ObjectId is null)
+            {
+                writer.Write("\"objectId\":null,");
+            } else
+            {
+                writer.Write("\"objectId\":{\"name\":\"" + g.ObjectId.Name.Content + "\",\"path\":\"objects/" + g.ObjectId.Name.Content + "/" + g.ObjectId.Name.Content + ".yy\",},");
+            }
+            // end objectId
             writer.Write("\"vborder\":" + g.BorderY + ",");
             writer.Write("\"visible\":" + (g.Enabled ? "true" : "false") + ",");
             writer.Write("\"vspeed\":" + g.SpeedY + ",");
