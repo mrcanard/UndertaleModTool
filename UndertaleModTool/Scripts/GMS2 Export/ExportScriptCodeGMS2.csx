@@ -47,6 +47,17 @@ await DumpCode();
 
 await StopProgressBarUpdater();
 HideProgressBar();
+
+// Export asset
+using (StreamWriter writer = new StreamWriter(codeFolder + "asset_order.txt"))
+{
+    for (int i = 0; i < Data.Scripts.Count; i++)
+    {
+        UndertaleScript script = Data.Scripts[i];
+        writer.WriteLine("    {\"id\":{\"name\":\"" + script.Name.Content + "\",\"path\":\"scripts/" + script.Name.Content + "/" + script.Name.Content + ".yy\",},},");
+    }
+}
+
 ScriptMessage("Export Complete.\n\nLocation: " + codeFolder);
 
 
