@@ -21,6 +21,7 @@
       <None Remove="Resources\tabs_left_button.png" />
       <None Remove="Resources\tabs_right_button.png" />
       <None Remove="Resources\X_Down.png" />
+      <None Remove="Scripts\LOVE\RenameMusicAndSounds.csx" />
       <None Remove="Scripts\Resource Unpackers\ExportAssetOrderGMS1.csx" />
       <None Remove="Scripts\Resource Unpackers\ExportAssetOrderGMS2.csx" />
       <None Remove="Scripts\Resource Unpackers\ExportBackGroundGMS1.csx" />
