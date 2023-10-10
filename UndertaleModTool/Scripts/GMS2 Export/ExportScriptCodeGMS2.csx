@@ -54,7 +54,10 @@ using (StreamWriter writer = new StreamWriter(codeFolder + "asset_order.txt"))
     for (int i = 0; i < Data.Scripts.Count; i++)
     {
         UndertaleScript script = Data.Scripts[i];
-        writer.WriteLine("    {\"id\":{\"name\":\"" + script.Name.Content + "\",\"path\":\"scripts/" + script.Name.Content + "/" + script.Name.Content + ".yy\",},},");
+        if (!script.Name.Content.Contains("gml_Script_"))
+        {
+            writer.WriteLine("    {\"id\":{\"name\":\"" + script.Name.Content + "\",\"path\":\"scripts/" + script.Name.Content + "/" + script.Name.Content + ".yy\",},},");
+        }
     }
 }
 
