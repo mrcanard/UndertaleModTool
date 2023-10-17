@@ -56,7 +56,7 @@ await Task.Run(DumpSounds); // This runs sync, because it has to load audio grou
 
 
 // Export asset
-using (StreamWriter writer = new StreamWriter(texFolder + "asset_order.txt"))
+using (StreamWriter writer = new StreamWriter(ExportFolder + "asset_order.txt"))
 {
     for (int i = 0; i < Data.Sounds.Count; i++)
     {
