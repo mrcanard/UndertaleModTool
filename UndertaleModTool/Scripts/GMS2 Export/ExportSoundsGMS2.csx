@@ -54,6 +54,17 @@ StartProgressBarUpdater();
 
 await Task.Run(DumpSounds); // This runs sync, because it has to load audio groups.
 
+
+// Export asset
+using (StreamWriter writer = new StreamWriter(texFolder + "asset_order.txt"))
+{
+    for (int i = 0; i < Data.Sounds.Count; i++)
+    {
+        UndertaleSound sound = Data.Sounds[i];
+        writer.WriteLine("    {\"id\":{\"name\":\"" + sound.Name.Content+ "\",\"path\":\"sounds/"+sound.Name.Content+"/"+sound.Name.Content+".yy\",},},");
+    }
+}
+
 await StopProgressBarUpdater();
 HideProgressBar();
 //if (Directory.Exists(winFolder + "External_Sounds\\"))
