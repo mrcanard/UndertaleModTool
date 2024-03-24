@@ -179,7 +179,7 @@ void DumpGameObject(UndertaleGameObject game_object)
 		writer.WriteLine("  \"physicsShapePoints\": [],");
 		writer.WriteLine("  \"physicsStartAwake\": true,");
 		writer.WriteLine("  \"properties\": [],");
-		writer.WriteLine("  \"solid\": false,");
+		writer.WriteLine("  \"solid\": "+ (game_object.Solid ? "true" : "false") + ",");
 		if(game_object.Sprite is null) {
 			writer.WriteLine("  \"spriteId\": null,");
 		} else {
