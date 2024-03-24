@@ -27,10 +27,20 @@ if (Directory.Exists(texFolder))
 }
 Directory.CreateDirectory(texFolder);
 
+// Sprites
 SetProgressBar(null, "Sprites", 0, Data.Sprites.Count);
 StartProgressBarUpdater();
 
-await DumpSprites();
+// await DumpSprites();
+
+await StopProgressBarUpdater();
+HideProgressBar();
+
+// Backgrounds
+SetProgressBar(null, "Backgrounds", 0, Data.Backgrounds.Count);
+StartProgressBarUpdater();
+
+await DumpBackgrounds();
 worker.Cleanup();
 
 await StopProgressBarUpdater();
@@ -42,13 +52,19 @@ using (StreamWriter writer = new StreamWriter(texFolder + "asset_order.txt"))
     for (int i = 0; i < Data.Sprites.Count; i++)
     {
         UndertaleSprite sprite = Data.Sprites[i];
-        writer.WriteLine("    {\"id\":{\"name\":\"" + sprite.Name.Content+ "\",\"path\":\"sprites/"+sprite.Name.Content+"/"+sprite.Name.Content+".yy\",},},");
+        writer.WriteLine("    {\"id\":{\"name\":\"" + sprite.Name.Content + "\",\"path\":\"sprites/" + sprite.Name.Content + "/" + sprite.Name.Content + ".yy\",},},");
     }
+    for (int i = 0; i < Data.Backgrounds.Count; i++)
+    {
+        UndertaleBackground background = Data.Backgrounds[i];
+        writer.WriteLine("    {\"id\":{\"name\":\"" + background.Name.Content + "\",\"path\":\"sprites/" + background.Name.Content + "/" + background.Name.Content + ".yy\",},},");
+    }
+
 }
 
 ScriptMessage("Export Complete.\n\nLocation: " + texFolder);
 
-
+// --------------------------------------------------------------------- Functions ---------------------------------------------------------------------------
 string GetFolder(string path)
 {
   return Path.GetDirectoryName(path) + Path.DirectorySeparatorChar;
@@ -180,4 +196,42 @@ void DumpSprite(UndertaleSprite sprite)
   }
 
   IncrementProgressParallel();
+}
+
+// Backgrounds
+async Task DumpBackgrounds()
+{
+    await Task.Run(() => Parallel.ForEach(Data.Backgrounds, DumpBackground));
+}
+
+void DumpBackground(UndertaleBackground background)
+{
+    Directory.CreateDirectory(texFolder + background.Name.Content);
+    using (StreamWriter writer = new StreamWriter(texFolder + background.Name.Content + "\\" + background.Name.Content + ".yy"))
+    {
+
+        // BEGIN : Extraction Images
+        string layer_directory = texFolder + background.Name.Content + "\\" + "layers";
+        Directory.CreateDirectory(layer_directory);
+        // for (int i = 0; i < background.Textures.Count; i++)
+        // {
+            if (background.Texture != null)
+            {
+                // Extraction de l'image à la base du répertoire
+                worker.ExportAsPNG(background.Texture, texFolder + background.Name.Content + "\\" + background.Name.Content + ".png", null, padded); // Include padding to make sprites look neat!
+
+                // Création du répertoire dans "layers"
+                Directory.CreateDirectory(texFolder + background.Name.Content + "\\" + "layers" + "\\" + background.Name.Content);
+
+                // Extraction de l'image "layer"
+                worker.ExportAsPNG(background.Texture, texFolder + background.Name.Content + "\\" + "layers" + "\\" + background.Name.Content + "\\" + background.Name.Content + ".png", null, padded); // Include padding to make sprites look neat!
+            }
+        // }
+        // END : Extraction Images
+
+        writer.WriteLine("{}");
+
+    }
+
+    IncrementProgressParallel();
 }
