@@ -155,6 +155,13 @@ void DumpRoom(UndertaleRoom room)
             if(isTileLayer) {
                 writer.WriteLine("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Tiles_Depth_"+depth+"\",\"assets\":[");
                 // Tiles
+                foreach(var t in room.Tiles) {
+                    if(t.TileDepth == depth) {
+                        var resource_name = (t.spriteMode ? t.SpriteDefinition.Name.Content : t.BackgroundDefinition.Name.Content);
+                        writer.WriteLine("        {\"resourceType\":\"GMRGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"inst_"+t.InstanceID+"\",\"colour\":"+t.Color+",\"frozen\":false,\"h\":"+t.Height+",\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"spriteId\":{\"name\":\""+resource_name+"\",\"path\":\"sprites/"+resource_name+"/"+resource_name+".yy\",},\"u0\":"+t.SourceX+",\"u1\":"+(t.SourceX+t.Width)+",\"v0\":"+t.SourceY+",\"v1\":"+(t.SourceY+t.Height)+",\"w\":"+t.Width+",\"x\":"+t.X.ToString("0.0")+",\"y\":"+t.Y.ToString("0.0")+",},");
+                    }
+                }
+                // End Tiles
                 writer.WriteLine("    ],\"depth\":"+depth+",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},");
             } else {
                 writer.WriteLine("    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Instances_Depth_"+depth+"\",\"depth\":"+depth+",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":[");
