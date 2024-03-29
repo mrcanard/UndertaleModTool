@@ -166,7 +166,14 @@ void DumpRoom(UndertaleRoom room)
             } else {
                 writer.WriteLine("    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Instances_Depth_"+depth+"\",\"depth\":"+depth+",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":[");
                 // Instances
-                writer.WriteLine("    ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},");
+                foreach(var g in room.GameObjects) {
+                    if(g.ObjectDefinition.Depth == depth) {
+                        var resource_name = g.ObjectDefinition.Name.Content;
+                        writer.WriteLine("        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_"+g.InstanceID+"\",\"colour\":"+g.Color+",\"frozen\":false,\"hasCreationCode\":false,\"ignore\":false,\"imageIndex\":"+g.ImageIndex+",\"imageSpeed\":"+g.ImageSpeed+",\"inheritCode\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"isDnd\":false,\"objectId\":{\"name\":\""+resource_name+"\",\"path\":\"objects/"+resource_name+"/"+resource_name+".yy\",},\"properties\":[],\"rotation\":"+g.Rotation.ToString("0.0")+",\"scaleX\":"+g.ScaleX.ToString("0.0")+",\"scaleY\":"+g.ScaleY.ToString("0.0")+",\"x\":"+g.X.ToString("0.0")+",\"y\":"+g.Y.ToString("0.0")+",},");
+                    }
+                }
+                // End Instances
+                writer.WriteLine("      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},");
             }
         }
 
