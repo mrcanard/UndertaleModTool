@@ -78,7 +78,6 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  \"glyphs\": {");
         foreach (var g in font.Glyphs)
         {
-            // "35": { "character":35,"h":112,"offset":1,"shift":64,"w":62,"x":117,"y":344,},
             writer.WriteLine("    \"" + g.Character + "\": {\"character\":" + g.Character + ",\"h\":" + g.SourceHeight + ",\"offset\":" + g.Offset + ",\"shift\":" + g.Shift + ",\"w\":" + g.SourceWidth + ",\"x\":" + g.SourceX + ",\"y\":" + g.SourceY + ",},");
         }
         writer.WriteLine("  },");
