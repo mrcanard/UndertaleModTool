@@ -32,19 +32,6 @@ if (Directory.Exists(ExportFolder))
 var externalOGG_Copy = 1;
 string externalOGG_Folder = winFolder + "undertale_ogg\\";
 
-
-// Group by audio group check
-//var groupedExport = 0;
-//if (usesAGRP)
-//{
-//    bool groupedCheck = ScriptQuestion(@"Group sounds by audio group?
-//    ");
-//    if (groupedCheck)
-//        groupedExport = 1;
-//    if (!groupedCheck)
-//        groupedExport = 0;
-//}
-
 byte[] EMPTY_WAV_FILE_BYTES = System.Convert.FromBase64String("UklGRiQAAABXQVZFZm10IBAAAAABAAIAQB8AAAB9AAAEABAAZGF0YQAAAAA=");
 string DEFAULT_AUDIOGROUP_NAME = "audiogroup_default";
 
@@ -67,10 +54,6 @@ using (StreamWriter writer = new StreamWriter(ExportFolder + "asset_order.txt"))
 
 await StopProgressBarUpdater();
 HideProgressBar();
-//if (Directory.Exists(winFolder + "External_Sounds\\"))
-//    ScriptMessage("Sounds exported to " + winFolder + " in the 'Exported_Sounds' and 'External_Sounds' folders.");
-//else
-//    ScriptMessage("Sounds exported to " + winFolder + " in the 'Exported_Sounds' folder.");
 
 void IncProgressLocal()
 {
@@ -164,14 +147,6 @@ void DumpSound(UndertaleSound sound)
     // 3 = 101 = IsEmbedded, IsCompressed, Regular. '.ogg' type saved in win.
     // 4 = 110 = Regular.                           '.ogg' type saved outside win.
 
-    /*
-    if (groupedExport == 1)
-       soundFilePath = winFolder + "Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName;
-    else
-    if (groupedExport == 1)
-       MakeFolder("Export_Sounds\\" + sound.AudioGroup.Name.Content);
-    */
-
     bool process = true;
     if (flagEmbedded && !flagCompressed) // 1.
         audioExt = ".wav";
@@ -187,11 +162,6 @@ void DumpSound(UndertaleSound sound)
         string dest = winFolder + "sounds" + "\\" + soundName + "\\" + soundName + audioExt;
         if (externalOGG_Copy == 1)
         {
-            //if (groupedExport == 1)
-            //{
-            //    dest = winFolder + "Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName + audioExt;
-            //    MakeFolder("Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content);
-            //}
             System.IO.File.Copy(source, dest, false);
         }
     }
