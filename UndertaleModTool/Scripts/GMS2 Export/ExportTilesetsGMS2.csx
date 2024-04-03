@@ -39,9 +39,9 @@ void DumpTileset(UndertaleBackground tileset)
     Directory.CreateDirectory(texFolder + tileset.Name.Content + "_tileset");
 
     if (tileset.Texture != null)
-        worker.ExportAsPNG(tileset.Texture, texFolder + tileset.Name.Content + Path.DirectorySeparatorChar + "output_tileset.png");
+        worker.ExportAsPNG(tileset.Texture, texFolder + tileset.Name.Content + "_tileset" + Path.DirectorySeparatorChar + "output_tileset.png");
 
-    using (StreamWriter writer = new StreamWriter(texFolder + tileset.Name.Content + "\\" + tileset.Name.Content + "_tileset.yy"))
+    using (StreamWriter writer = new StreamWriter(texFolder + tileset.Name.Content + "_tileset" + Path.DirectorySeparatorChar + tileset.Name.Content + "_tileset.yy"))
     {
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMTileSet\",");
