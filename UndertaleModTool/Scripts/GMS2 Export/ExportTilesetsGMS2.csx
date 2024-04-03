@@ -9,13 +9,6 @@ EnsureDataLoaded();
 
 string texFolder = GetFolder(FilePath) + "tilesets" + Path.DirectorySeparatorChar;
 TextureWorker worker = new TextureWorker();
-/*
-if (Directory.Exists(texFolder))
-{
-    ScriptError("A texture export already exists. Please remove it.", "Error");
-    return;
-}
-*/
 
 Directory.CreateDirectory(texFolder);
 
@@ -43,12 +36,12 @@ async Task DumpTilesets()
 
 void DumpTileset(UndertaleBackground tileset)
 {
-    Directory.CreateDirectory(texFolder + tileset.Name.Content);
+    Directory.CreateDirectory(texFolder + tileset.Name.Content + "_tileset");
 
     if (tileset.Texture != null)
         worker.ExportAsPNG(tileset.Texture, texFolder + tileset.Name.Content + Path.DirectorySeparatorChar + "output_tileset.png");
 
-    using (StreamWriter writer = new StreamWriter(texFolder + tileset.Name.Content + "\\" + tileset.Name.Content + ".yy"))
+    using (StreamWriter writer = new StreamWriter(texFolder + tileset.Name.Content + "\\" + tileset.Name.Content + "_tileset.yy"))
     {
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMTileSet\",");
