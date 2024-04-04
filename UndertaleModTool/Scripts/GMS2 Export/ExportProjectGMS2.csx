@@ -160,12 +160,16 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.resource_or
     }
     // no tilesets
     // sounds
+    order = 0;
     for(int i=0; i < Data.Sounds.Count; i++) {
+        order++;
         var sound_name = Data.Sounds[i].Name.Content;
         writer.WriteLine("        {\"name\":\""+ sound_name +"\",\"order\":"+order+",\"path\":\"sounds/"+sound_name+"/"+sound_name+".yy\",},");
     }
     // scripts
+    order = 0;
     for(int i=0; i < Data.Scripts.Count; i++) {
+        order++;
         var script_name = Data.Scripts[i].Name.Content;
         writer.WriteLine("        {\"name\":\""+ script_name +"\",\"order\":"+order+",\"path\":\"scripts/"+script_name+"/"+script_name+".yy\",},");
     }
