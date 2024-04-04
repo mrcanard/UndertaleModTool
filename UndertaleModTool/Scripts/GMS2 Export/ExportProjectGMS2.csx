@@ -73,41 +73,31 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
         writer.WriteLine("    {\"id\":{\"name\":\""+ sound_name +"\",\"path\":\"sounds/"+ sound_name +"/"+ sound_name +".yy\",},},");
     }
     // scripts
-    order = 0;
     for(int i=0; i < Data.Scripts.Count; i++) {
-        order++;
         var script_name = Data.Scripts[i].Name.Content;
-        writer.WriteLine("        {\"name\":\""+ script_name +"\",\"order\":"+order+",\"path\":\"scripts/"+script_name+"/"+script_name+".yy\",},");
+        writer.WriteLine("    {\"id\":{\"name\":\""+ script_name +"\",\"path\":\"scripts/"+ script_name +"/"+ script_name +".yy\",},},");
     }
     // fonts
-    order = 0;
     for(int i=0; i < Data.Fonts.Count; i++) {
-        order++;
         var font_name = Data.Fonts[i].Name.Content;
-        writer.WriteLine("        {\"name\":\""+ font_name +"\",\"order\":"+order+",\"path\":\"fonts/"+font_name+"/"+font_name+".yy\",},");
+        writer.WriteLine("    {\"id\":{\"name\":\""+ font_name +"\",\"path\":\"fonts/"+ font_name +"/"+ font_name +".yy\",},},");
     }
     // objects
-    order = 0;
     for(int i=0; i < Data.GameObjects.Count; i++) {
-        order++;
         var game_object_name = Data.GameObjects[i].Name.Content;
-        writer.WriteLine("        {\"name\":\""+ game_object_name +"\",\"order\":"+order+",\"path\":\"objects/"+game_object_name+"/"+game_object_name+".yy\",},");
+        writer.WriteLine("    {\"id\":{\"name\":\""+ game_object_name +"\",\"path\":\"objects/"+ game_object_name +"/"+ game_object_name +".yy\",},},");
     }
     // rooms
-    order = 0;
     for(int i=0; i < Data.Rooms.Count; i++) {
-        order++;
         var room_name = Data.Rooms[i].Name.Content;
-        writer.WriteLine("        {\"name\":\""+ room_name +"\",\"order\":"+order+",\"path\":\"rooms/"+room_name+"/"+room_name+".yy\",},");
+        writer.WriteLine("    {\"id\":{\"name\":\""+ room_name +"\",\"path\":\"rooms/"+ room_name +"/"+ room_name +".yy\",},},");
     }
     // end resources
     writer.WriteLine("  ],");
     writer.WriteLine("  \"RoomOrderNodes\": [");
     // RoomOrderNodes
-
-    {"id":{"name":"abc_1111","path":"sprites/abc_1111/abc_1111.yy",},},
-    // end RoomOrderNodes
     writer.WriteLine("    {\"roomId\":{\"name\":\"TESTROOM\",\"path\":\"rooms/TESTROOM/TESTROOM.yy\",},},");
+    // end RoomOrderNodes
     writer.WriteLine("  ],");
     writer.WriteLine("  \"templateType\": null,");
     writer.WriteLine("  \"TextureGroups\": [");
