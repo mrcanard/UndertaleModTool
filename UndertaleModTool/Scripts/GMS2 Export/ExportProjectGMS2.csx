@@ -97,7 +97,7 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
     writer.WriteLine("  \"RoomOrderNodes\": [");
     // RoomOrderNodes
     for(int i=0; i < Data.GeneralInfo.RoomOrder.Count; i++) {
-        var room_name = Data.GeneralInfo.RoomOrder[i].Name.Content;
+        var room_name = Data.GeneralInfo.RoomOrder[i].Resource.Name.Content;
         writer.WriteLine("    {\"roomId\":{\"name\":\""+room_name+"\",\"path\":\"rooms/"+room_name+"/"+room_name+".yy\",},},");
     }
     // end RoomOrderNodes
