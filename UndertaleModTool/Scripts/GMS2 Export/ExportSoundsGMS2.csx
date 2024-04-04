@@ -179,14 +179,14 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("    \"name\": \"audiogroup_default\",");
         writer.WriteLine("    \"path\": \"audiogroups/audiogroup_default\",");
         writer.WriteLine("  },");
-        writer.WriteLine("  \"parent\": {");
-        writer.WriteLine("    \"name\": \"Sounds\",");
-        writer.WriteLine("    \"path\": \"folders/Sounds.yy\",");
-        writer.WriteLine("  },");
         writer.WriteLine("  \"bitDepth\": 1,");
         writer.WriteLine("  \"bitRate\": 128,");
         writer.WriteLine("  \"compression\": "+ (flagCompressed ? 1 : 0) +",");
         writer.WriteLine("  \"conversionMode\": 0,");
+        writer.WriteLine("  \"parent\": {");
+        writer.WriteLine("    \"name\": \"Sounds\",");
+        writer.WriteLine("    \"path\": \"folders/Sounds.yy\",");
+        writer.WriteLine("  },");
         writer.WriteLine("  \"preload\": "+ (sound.Preload ? "true" : "false") +",");
         writer.WriteLine("  \"soundFile\": \""+ sound.Name.Content + audioExt +"\",");
         writer.WriteLine("  \"volume\": "+ sound.Volume.ToString("0.0") +",");
