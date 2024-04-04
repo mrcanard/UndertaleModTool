@@ -136,7 +136,7 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.resource_or
     writer.WriteLine("    {\"name\":\"Sequences\",\"order\":10,\"path\":\"folders/Sequences.yy\",},");
     writer.WriteLine("    {\"name\":\"Shaders\",\"order\":7,\"path\":\"folders/Shaders.yy\",},");
     writer.WriteLine("    {\"name\":\"Sounds\",\"order\":4,\"path\":\"folders/Sounds.yy\",},");
-    writer.WriteLine("    {\"name\":\"tilesets\",\"order\":2472,\"path\":\"folders/Sprites/tilesets.yy\",},");
+    // writer.WriteLine("    {\"name\":\"tilesets\",\"order\":2472,\"path\":\"folders/Sprites/tilesets.yy\",},");
     writer.WriteLine("    {\"name\":\"Tile Sets\",\"order\":3,\"path\":\"folders/Tile Sets.yy\",},");
     writer.WriteLine("    {\"name\":\"Timelines\",\"order\":9,\"path\":\"folders/Timelines.yy\",},");
     writer.WriteLine("  ],");

@@ -266,8 +266,8 @@ void DumpBackground(UndertaleBackground background)
         writer.WriteLine("  \"nineSlice\": null,");
         writer.WriteLine("  \"origin\": 0,");
         writer.WriteLine("  \"parent\": {");
-        writer.WriteLine("    \"name\": \"tilesets\",");
-        writer.WriteLine("    \"path\": \"folders/Sprites/tilesets.yy\",");
+        writer.WriteLine("    \"name\": \"Sprites\",");
+        writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
         writer.WriteLine("  },");
         writer.WriteLine("  \"preMultiplyAlpha\": false,");
         writer.WriteLine("  \"sequence\": {");
