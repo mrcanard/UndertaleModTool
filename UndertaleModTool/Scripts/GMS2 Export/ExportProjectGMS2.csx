@@ -23,7 +23,7 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
     writer.WriteLine("  ],");
     writer.WriteLine("  \"configs\": {");
     writer.WriteLine("    \"children\": [],");
-    writer.WriteLine("    \"name\": \"Default\",");
+    writer.WriteLine("    \"name\": \""+Data.GeneralInfo.Config.Content+"\",");
     writer.WriteLine("  },");
     writer.WriteLine("  \"defaultScriptType\": 1,");
     writer.WriteLine("  \"Folders\": [");
@@ -96,12 +96,19 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
     writer.WriteLine("  ],");
     writer.WriteLine("  \"RoomOrderNodes\": [");
     // RoomOrderNodes
-    writer.WriteLine("    {\"roomId\":{\"name\":\"TESTROOM\",\"path\":\"rooms/TESTROOM/TESTROOM.yy\",},},");
+    for(int i=0; i < Data.GeneralInfo.RoomOrder.Count; i++) {
+        var room_name = Data.GeneralInfo.RoomOrder[i].Name.Content;
+        writer.WriteLine("    {\"roomId\":{\"name\":\""+room_name+"\",\"path\":\"rooms/"+room_name+"/"+room_name+".yy\",},},");
+    }
     // end RoomOrderNodes
     writer.WriteLine("  ],");
     writer.WriteLine("  \"templateType\": null,");
     writer.WriteLine("  \"TextureGroups\": [");
     writer.WriteLine("    {\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"1.3\",\"name\":\"Default\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":false,\"loadType\":\"default\",\"mipsToGenerate\":0,\"targets\":-1,},");
+    // for(int i=0; i < Data.TextureGroupInfo.Count; i++) {
+    //     var tgroup = Data.TextureGroupInfo[i];
+    //     writer.WriteLine("    {\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"1.3\",\"name\":\""+tgroup.Name.Content+"\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":false,\"loadType\":\"default\",\"mipsToGenerate\":0,\"targets\":-1,},");
+    // }
     writer.WriteLine("  ],");
     writer.WriteLine("}");
 
