@@ -174,7 +174,7 @@ void DumpRoom(UndertaleRoom room)
         foreach (var b in room.Backgrounds) {
             if(b.BackgroundDefinition != null) {
                 var resource_name = b.BackgroundDefinition.Name.Content;
-                writer.WriteLine("    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Colour\",\"animationFPS\":1.0,\"animationSpeedType\":1,\"colour\":4294967295,\"depth\":2147483600,\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"hspeed\":"+b.SpeedX+",\"htiled\":"+b.TiledHorizontally+",\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\""+resource_name+"\",\"path\":\"sprites/"+resource_name+"/"+resource_name+".yy\",},\"stretch\":"+b.Stretch+",\"userdefinedAnimFPS\":false,\"userdefinedDepth\":true,\"visible\":"+b.Enabled+",\"vspeed\":"+b.SpeedY+",\"vtiled\":"+b.TiledVertically+",\"x\":"+b.X+",\"y\":"+b.Y+",},");
+                writer.WriteLine("    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Colour\",\"animationFPS\":1.0,\"animationSpeedType\":1,\"colour\":4294967295,\"depth\":2147483600,\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"hspeed\":"+b.SpeedX+",\"htiled\":"+(b.TiledHorizontally ? "true" : "false") +",\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\""+resource_name+"\",\"path\":\"sprites/"+resource_name+"/"+resource_name+".yy\",},\"stretch\":"+(b.Stretch ? "true" : "false")+",\"userdefinedAnimFPS\":false,\"userdefinedDepth\":true,\"visible\":"+(b.Enabled ? "true" : "false")+",\"vspeed\":"+b.SpeedY+",\"vtiled\":"+(b.TiledVertically ? "true" : "false")+",\"x\":"+b.X+",\"y\":"+b.Y+",},");
 
             }
         }
@@ -213,7 +213,8 @@ void DumpRoom(UndertaleRoom room)
                 writer.Write("\"objectId\":null,");
             } else
             {
-                writer.Write("\"objectId\":{\"name\":\"" + g.ObjectId.Name.Content + "\",\"path\":\"objects/" + g.ObjectId.Name.Content + "/" + g.ObjectId.Name.Content + ".yy\",},");
+                var object_name = g.ObjectId.Name.Content;
+                writer.Write("\"objectId\":{\"name\":\""+object_name+"\",\"path\":\"objects/"+object_name+"/"+object_name+".yy\",},");
             }
             // end objectId
             writer.Write("\"vborder\":" + g.BorderY + ",");
