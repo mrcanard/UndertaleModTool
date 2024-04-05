@@ -295,7 +295,7 @@ void DumpBackground(UndertaleBackground background)
         writer.WriteLine("    \"timeUnits\": 1,");
         writer.WriteLine("    \"tracks\": [");
         writer.WriteLine("      {\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"1.0\",\"name\":\"frames\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
-        writer.WriteLine("            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+background.Name.Content+"\",\"path\":\"sprites/"+background.Name.Content+"/"+background.Name.Content+".yy\",},},},\"Disabled\":false,\"id\":\""+background.Name.Content+"\",\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
+        writer.WriteLine("            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""+background.Name.Content+"\",\"path\":\"sprites/"+background.Name.Content+"/"+background.Name.Content+".yy\",},},},\"Disabled\":false,\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},");
         writer.WriteLine("          ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},");
         writer.WriteLine("    ],");
         writer.WriteLine("    \"visibleRange\": null,");
