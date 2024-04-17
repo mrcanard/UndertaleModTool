@@ -105,15 +105,23 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine("  <type>0</type>"); // TODO type ??
         writer.WriteLine("  <xorig>"+ sprite.OriginX +"</xorig>");
         writer.WriteLine("  <yorigin>"+ sprite.OriginY +"</yorigin>");
-        if(sprite.SepMasks == UndertaleSprite.SepMaskType.Precise) {
-            writer.WriteLine("  <colkind>4</colkind>");
-        } else if(sprite.SepMasks == UndertaleSprite.SepMaskType.AxisAlignedRect) {
+        if(sprite.SepMasks == UndertaleSprite.SepMaskType.Precise) { // Precise Mask
             writer.WriteLine("  <colkind>0</colkind>");
-        } else {
+        } else if(sprite.SepMasks == UndertaleSprite.SepMaskType.AxisAlignedRect) { // Rectangle Mask
             writer.WriteLine("  <colkind>1</colkind>");
+        // } else if(sprite.SepMasks == UndertaleSprite.SepMaskType.Ellipse) { // Ellipse Mask
+        //     writer.WriteLine("  <colkind>2</colkind>");
+        } else if(sprite.SepMasks == UndertaleSprite.SepMaskType.RotatedRect) { // Diamond Mask
+            writer.WriteLine("  <colkind>3</colkind>");
+        } else {
+            writer.WriteLine("  <colkind>4</colkind>");
         }
         writer.WriteLine("  <coltolerance>0</coltolerance>");
-        writer.WriteLine("  <sepmasks>0</sepmasks>"); // TODO sepmasks ???
+        if(sprite.SepMasks == UndertaleSprite.SepMaskType.Precise) { // Si Precise alors -1 sinon 0
+            writer.WriteLine("  <sepmasks>-1</sepmasks>");
+        } else {
+            writer.WriteLine("  <sepmasks>0</sepmasks>");
+        }
         writer.WriteLine("  <bboxmode>"+ sprite.BBoxMode +"</bboxmode>");
         writer.WriteLine("  <bbox_left>"+ sprite.MarginLeft +"</bbox_left>");
         writer.WriteLine("  <bbox_right>"+ sprite.MarginRight +"</bbox_right>");
