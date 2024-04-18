@@ -14,7 +14,7 @@ string winFolder = GetFolder(FilePath); // The folder data.win is located in.
 bool usesAGRP               = (Data.AudioGroups.Count > 0);
 
 // Sound Folder
-string ExportFolder = winFolder + "Export_Sounds\\";
+string ExportFolder = winFolder + "sound\\";
 
 //Overwrite Folder Check One
 if (Directory.Exists(ExportFolder))
@@ -116,8 +116,8 @@ byte[] GetSoundData(UndertaleSound sound)
 
 void DumpSounds()
 {
-    MakeFolder("Export_Sounds");
-    MakeFolder("Export_Sounds\\audio");
+    MakeFolder("sound");
+    MakeFolder("sound\\audio");
     foreach (UndertaleSound sound in Data.Sounds)
         DumpSound(sound);
 }
@@ -137,12 +137,12 @@ void DumpSound(UndertaleSound sound)
     string audioExt = ".ogg";
     string soundFilePath;
     //if (groupedExport == 1)
-    //    soundFilePath = winFolder + "Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName;
+    //    soundFilePath = winFolder + "sound\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName;
     //else
-    soundFilePath = winFolder + "Export_Sounds\\audio\\" + soundName;
-    MakeFolder("Export_Sounds");
+    soundFilePath = winFolder + "sound\\audio\\" + soundName;
+    MakeFolder("sound");
     //if (groupedExport == 1)
-    //    MakeFolder("Export_Sounds\\" + sound.AudioGroup.Name.Content);
+    //    MakeFolder("sound\\" + sound.AudioGroup.Name.Content);
     bool process = true;
     if (flagEmbedded && !flagCompressed) // 1.
         audioExt = ".wav";
@@ -155,15 +155,15 @@ void DumpSound(UndertaleSound sound)
         process = false;
         audioExt = ".ogg";
         string source = externalOGG_Folder + soundName + audioExt;
-        string dest = winFolder + "Export_Sounds\\audio\\" + soundName + audioExt;
+        string dest = winFolder + "sound\\audio\\" + soundName + audioExt;
         if (externalOGG_Copy == 1)
         {
             //if (groupedExport == 1)
             //{
-            //    dest = winFolder + "Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName + audioExt;
-            //    MakeFolder("Export_Sounds\\audio\\" + sound.AudioGroup.Name.Content);
+            //    dest = winFolder + "sound\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName + audioExt;
+            //    MakeFolder("sound\\audio\\" + sound.AudioGroup.Name.Content);
             //}
-            MakeFolder("Export_Sounds\\audio\\");
+            MakeFolder("sound\\audio\\");
             System.IO.File.Copy(source, dest, false);
         }
     }
@@ -181,7 +181,11 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("  <volume>");
         writer.WriteLine("    <volume>" + (sound.Volume == 1 ? sound.Volume : sound.Volume.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)) + "</volume>");
         writer.WriteLine("  </volume>");
-        writer.WriteLine("  <pan>0</pan>");
+        if(sound.Pitch == 0) {
+            writer.WriteLine("  <pan>0</pan>");
+        } else {
+            writer.WriteLine("  <pan>" + sound.Pitch.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) +"</pan>");
+        }
         writer.WriteLine("  <bitRates>");
         writer.WriteLine("    <bitRate>192</bitRate>");
         writer.WriteLine("  </bitRates>");
