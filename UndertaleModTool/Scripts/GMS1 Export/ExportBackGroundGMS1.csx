@@ -12,7 +12,7 @@ EnsureDataLoaded();
 bool padded = true;
 
 
-string texFolder = GetFolder(FilePath) + "Export_Backgrounds" + Path.DirectorySeparatorChar;
+string texFolder = GetFolder(FilePath) + "background" + Path.DirectorySeparatorChar;
 string imageFolder = texFolder + "images\\";
 TextureWorker worker = new TextureWorker();
 if (Directory.Exists(texFolder))
