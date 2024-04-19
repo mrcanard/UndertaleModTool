@@ -28,7 +28,7 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.project.gmx
     }
     writer.WriteLine("  </sounds>");
     // Sprites
-    writer.WriteLine("  <sprites name=\"sprite\">");
+    writer.WriteLine("  <sprites name=\"sprites\">");
     for(int i=0; i < Data.Sprites.Count; i++) {
         var sprite_name = Data.Sprites[i].Name.Content;
         writer.WriteLine("    <sprite>sprites\\"+ sprite_name +"</sprite>");
