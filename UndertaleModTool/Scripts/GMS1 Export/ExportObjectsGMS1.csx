@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 EnsureDataLoaded();
 
-string objectsFolder = GetFolder(FilePath) + "Export_Objects" + Path.DirectorySeparatorChar;
+string objectsFolder = GetFolder(FilePath) + "objects" + Path.DirectorySeparatorChar;
 ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(() => new GlobalDecompileContext(Data, false));
 // if (Directory.Exists(objectsFolder))
 // {
