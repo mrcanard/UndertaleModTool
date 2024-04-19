@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 EnsureDataLoaded();
 
-string roomsFolder = GetFolder(FilePath) + "Export_Rooms" + Path.DirectorySeparatorChar;
+string roomsFolder = GetFolder(FilePath) + "rooms" + Path.DirectorySeparatorChar;
 ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(() => new GlobalDecompileContext(Data, false));
 if (Directory.Exists(roomsFolder))
 {
@@ -245,14 +245,6 @@ void DumpRoom(UndertaleRoom room)
         //writer.WriteLine("</object>");
 
     }
-
-    IncrementProgressParallel();
-}
-void DumpCachedCode(KeyValuePair<string, string> code)
-{
-    string path = Path.Combine(roomsFolder, code.Key + ".gml");
-
-    File.WriteAllText(path, code.Value);
 
     IncrementProgressParallel();
 }
