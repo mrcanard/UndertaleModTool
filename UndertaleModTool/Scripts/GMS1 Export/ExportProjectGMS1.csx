@@ -46,24 +46,28 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.project.gmx
     for(int i=0; i < Data.Paths.Count; i++) {
         var path_name = Data.Paths[i].Name.Content;
         writer.WriteLine("    <path>paths\\"+ path_name +"</path>");
+    }
     writer.WriteLine("  </paths>");
     // Scripts
     writer.WriteLine("  <scripts name=\"scripts\">");
     for(int i=0; i < Data.Scripts.Count; i++) {
         var script_name = Data.Scripts[i].Name.Content;
         writer.WriteLine("    <script>scripts\\"+ script_name +"</script>");
+    }
     writer.WriteLine("  </scripts>");
     // Fonts
     writer.WriteLine("  <fonts name=\"fonts\">");
     for(int i=0; i < Data.Fonts.Count; i++) {
         var font_name = Data.Fonts[i].Name.Content;
         writer.WriteLine("    <font>fonts\\"+ font_name +"</font>");
+    }
     writer.WriteLine("  </fonts>");
     // Objects
     writer.WriteLine("  <objects name=\"objects\">");
-    for(int i=0; i < Data.Objects.Count; i++) {
-        var object_name = Data.Objects[i].Name.Content;
+    for(int i=0; i < Data.GameObjects.Count; i++) {
+        var object_name = Data.GameObjects[i].Name.Content;
         writer.WriteLine("    <object>objects\\"+ object_name +"</object>");
+    }
     writer.WriteLine("  </objects>");
     // RoomOrderNodes
     writer.WriteLine("  <rooms name=\"rooms\">");
@@ -83,6 +87,5 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.project.gmx
     writer.WriteLine("  </TutorialState>");
     writer.WriteLine("</assets>");
 }
-
 
 ScriptMessage("Export Complete.\n\nLocation: " + rootFolder);
