@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 EnsureDataLoaded();
 
-string fntPaths = GetFolder(FilePath) + "Export_Paths" + Path.DirectorySeparatorChar;
+string fntPaths = GetFolder(FilePath) + "paths" + Path.DirectorySeparatorChar;
 TextureWorker worker = new TextureWorker();
 Directory.CreateDirectory(fntPaths);
 
