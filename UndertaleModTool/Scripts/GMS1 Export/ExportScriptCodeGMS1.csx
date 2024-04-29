@@ -65,15 +65,6 @@ using (StreamWriter writer = new StreamWriter(codeFolder + "asset_order.txt"))
         if (!script.Name.Content.Contains("gml_Script_"))
         {
             writer.WriteLine("    <script>scripts\\" + script.Name.Content + ".gml</script>");
-            // writer.WriteLine(
-            //     "    {\"id\":{\"name\":\""
-            //         + script.Name.Content
-            //         + "\",\"path\":\"scripts/"
-            //         + script.Name.Content
-            //         + "/"
-            //         + script.Name.Content
-            //         + ".yy\",},},"
-            // );
         }
     }
     writer.WriteLine("  </scripts>");
