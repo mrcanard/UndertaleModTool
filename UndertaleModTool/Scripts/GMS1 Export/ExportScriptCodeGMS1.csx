@@ -1,14 +1,16 @@
-﻿using System.Text;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 EnsureDataLoaded();
 
 string codeFolder = GetFolder(FilePath) + "scripts" + Path.DirectorySeparatorChar;
-ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(() => new GlobalDecompileContext(Data, false));
+ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(
+    () => new GlobalDecompileContext(Data, false)
+);
 
 if (Directory.Exists(codeFolder))
 {
@@ -40,7 +42,12 @@ if (exportFromCache)
     await StopProgressBarUpdater();
 }
 
-SetProgressBar(null, "Code Entries", 0, exportFromCache ? Data.GMLCache.Count + Data.GMLCacheFailed.Count : toDump.Count);
+SetProgressBar(
+    null,
+    "Code Entries",
+    0,
+    exportFromCache ? Data.GMLCache.Count + Data.GMLCacheFailed.Count : toDump.Count
+);
 StartProgressBarUpdater();
 
 await DumpCode();
@@ -48,27 +55,36 @@ await DumpCode();
 await StopProgressBarUpdater();
 HideProgressBar();
 
-// // Export asset
-// using (StreamWriter writer = new StreamWriter(codeFolder + "asset_order.txt"))
-// {
-//     for (int i = 0; i < Data.Scripts.Count; i++)
-//     {
-//         UndertaleScript script = Data.Scripts[i];
-//         if (!script.Name.Content.Contains("gml_Script_"))
-//         {
-//             writer.WriteLine("    {\"id\":{\"name\":\"" + script.Name.Content + "\",\"path\":\"scripts/" + script.Name.Content + "/" + script.Name.Content + ".yy\",},},");
-//         }
-//     }
-// }
+// Export asset
+using (StreamWriter writer = new StreamWriter(codeFolder + "asset_order.txt"))
+{
+    writer.WriteLine("  <scripts name=\"scripts\">");
+    for (int i = 0; i < Data.Scripts.Count; i++)
+    {
+        UndertaleScript script = Data.Scripts[i];
+        if (!script.Name.Content.Contains("gml_Script_"))
+        {
+            writer.WriteLine("    <script>scripts\\" + script.Name.Content + ".gml</script>");
+            // writer.WriteLine(
+            //     "    {\"id\":{\"name\":\""
+            //         + script.Name.Content
+            //         + "\",\"path\":\"scripts/"
+            //         + script.Name.Content
+            //         + "/"
+            //         + script.Name.Content
+            //         + ".yy\",},},"
+            // );
+        }
+    }
+    writer.WriteLine("  </scripts>");
+}
 
-// ScriptMessage("Export Complete.\n\nLocation: " + codeFolder);
-
+ScriptMessage("Export Complete.\n\nLocation: " + codeFolder);
 
 string GetFolder(string path)
 {
     return Path.GetDirectoryName(path) + Path.DirectorySeparatorChar;
 }
-
 
 async Task DumpCode()
 {
@@ -80,22 +96,28 @@ async Task DumpCode()
 
 void DumpCode(UndertaleScript script)
 {
-
     if (script.Code is not null)
     {
-        if(! script.Name.Content.Contains("gml_Script_")) {
-
+        if (!script.Name.Content.Contains("gml_Script_"))
+        {
             // Extraction .gml
             // Directory.CreateDirectory(Path.Combine(codeFolder, script.Name.Content));
             string path = Path.Combine(codeFolder, script.Name.Content + ".gml");
             try
             {
-                File.WriteAllText(path, (script.Code != null ? Decompiler.Decompile(script.Code, DECOMPILE_CONTEXT.Value) : ""));
+                File.WriteAllText(
+                    path,
+                    (
+                        script.Code != null
+                            ? Decompiler.Decompile(script.Code, DECOMPILE_CONTEXT.Value)
+                            : ""
+                    )
+                );
             }
             catch (Exception e)
             {
                 File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
-            }        
+            }
 
             // // Extraction .yy
             // using (StreamWriter writer = new StreamWriter(codeFolder + script.Name.Content + "\\" + script.Name.Content + ".yy"))
