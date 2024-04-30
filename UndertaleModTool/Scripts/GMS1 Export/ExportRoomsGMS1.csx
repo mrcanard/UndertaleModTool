@@ -47,7 +47,7 @@ using (StreamWriter writer = new StreamWriter(roomsFolder + "asset_order.txt"))
     writer.WriteLine("  <rooms name=\"rooms\">");
     for (int i = 0; i < Data.Rooms.Count; i++)
     {
-        UndertaleRoom script = Data.Rooms[i];
+        UndertaleRoom room = Data.Rooms[i];
         writer.WriteLine("    <room>rooms\\" + room.Name.Content + "</room>");
     }
     writer.WriteLine("  </rooms>");
