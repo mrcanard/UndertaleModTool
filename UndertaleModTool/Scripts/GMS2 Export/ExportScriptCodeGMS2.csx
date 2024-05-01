@@ -99,7 +99,7 @@ void DumpCode(UndertaleScript script)
     {
         if (!(script.Name.Content.StartsWith("gml_")))
         {
-            SetProgressBar(null, "Code Entries : " + script.Name.Content, 0, 1);
+            // SetProgressBar(null, "Code Entries : " + script.Name.Content, 0, 1);
             // Extraction .gml
             Directory.CreateDirectory(Path.Combine(codeFolder, script.Name.Content));
             string path = Path.Combine(
