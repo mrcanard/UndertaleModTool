@@ -1,24 +1,26 @@
 // Original script by Kneesnap, updated by Grossley
-using System.Text;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 EnsureDataLoaded();
 
 // Pour avoir un "." au lieu d'une "," dans les conversion en décimal
-System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo) System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)
+    System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
 customCulture.NumberFormat.NumberDecimalSeparator = ".";
 
 System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
 //
 
 int maxCount;
 
 // Setup root export folder.
 string winFolder = GetFolder(FilePath); // The folder data.win is located in.
-bool usesAGRP               = (Data.AudioGroups.Count > 0);
+bool usesAGRP = (Data.AudioGroups.Count > 0);
 
 // Sound Folder
 string ExportFolder = winFolder + "sounds\\";
@@ -32,7 +34,9 @@ if (Directory.Exists(ExportFolder))
 var externalOGG_Copy = 1;
 string externalOGG_Folder = winFolder + "undertale_ogg\\";
 
-byte[] EMPTY_WAV_FILE_BYTES = System.Convert.FromBase64String("UklGRiQAAABXQVZFZm10IBAAAAABAAIAQB8AAAB9AAAEABAAZGF0YQAAAAA=");
+byte[] EMPTY_WAV_FILE_BYTES = System.Convert.FromBase64String(
+    "UklGRiQAAABXQVZFZm10IBAAAAABAAIAQB8AAAB9AAAEABAAZGF0YQAAAAA="
+);
 string DEFAULT_AUDIOGROUP_NAME = "audiogroup_default";
 
 maxCount = Data.Sounds.Count;
@@ -41,14 +45,21 @@ StartProgressBarUpdater();
 
 await Task.Run(DumpSounds); // This runs sync, because it has to load audio groups.
 
-
 // Export asset
 using (StreamWriter writer = new StreamWriter(ExportFolder + "asset_order.txt"))
 {
     for (int i = 0; i < Data.Sounds.Count; i++)
     {
         UndertaleSound sound = Data.Sounds[i];
-        writer.WriteLine("    {\"id\":{\"name\":\"" + sound.Name.Content+ "\",\"path\":\"sounds/"+sound.Name.Content+"/"+sound.Name.Content+".yy\",},},");
+        writer.WriteLine(
+            "    {\"id\":{\"name\":\""
+                + sound.Name.Content
+                + "\",\"path\":\"sounds/"
+                + sound.Name.Content
+                + "/"
+                + sound.Name.Content
+                + ".yy\",},},"
+        );
     }
 }
 
@@ -78,7 +89,8 @@ IList<UndertaleEmbeddedAudio> GetAudioGroupData(UndertaleSound sound)
     if (loadedAudioGroups == null)
         loadedAudioGroups = new Dictionary<string, IList<UndertaleEmbeddedAudio>>();
 
-    string audioGroupName = sound.AudioGroup != null ? sound.AudioGroup.Name.Content : DEFAULT_AUDIOGROUP_NAME;
+    string audioGroupName =
+        sound.AudioGroup != null ? sound.AudioGroup.Name.Content : DEFAULT_AUDIOGROUP_NAME;
     if (loadedAudioGroups.ContainsKey(audioGroupName))
         return loadedAudioGroups[audioGroupName];
 
@@ -90,13 +102,22 @@ IList<UndertaleEmbeddedAudio> GetAudioGroupData(UndertaleSound sound)
     {
         UndertaleData data = null;
         using (var stream = new FileStream(groupFilePath, FileMode.Open, FileAccess.Read))
-            data = UndertaleIO.Read(stream, warning => ScriptMessage("A warning occured while trying to load " + audioGroupName + ":\n" + warning));
+            data = UndertaleIO.Read(
+                stream,
+                warning =>
+                    ScriptMessage(
+                        "A warning occured while trying to load " + audioGroupName + ":\n" + warning
+                    )
+            );
 
         loadedAudioGroups[audioGroupName] = data.EmbeddedAudio;
         return data.EmbeddedAudio;
-    } catch (Exception e)
+    }
+    catch (Exception e)
     {
-        ScriptMessage("An error occured while trying to load " + audioGroupName + ":\n" + e.Message);
+        ScriptMessage(
+            "An error occured while trying to load " + audioGroupName + ":\n" + e.Message
+        );
         return null;
     }
 }
@@ -117,7 +138,7 @@ byte[] GetSoundData(UndertaleSound sound)
 
 void DumpSounds()
 {
-    MakeFolder("Export_Sounds");
+    // MakeFolder("Export_Sounds");
     // MakeFolder("Export_Sounds\\audio");
     foreach (UndertaleSound sound in Data.Sounds)
         DumpSound(sound);
@@ -128,7 +149,9 @@ void DumpSound(UndertaleSound sound)
     string soundName = sound.Name.Content;
     bool flagCompressed = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsCompressed);
     bool flagEmbedded = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsEmbedded);
-    bool flagDecompressedOnLoad = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsDecompressedOnLoad);
+    bool flagDecompressedOnLoad = sound.Flags.HasFlag(
+        UndertaleSound.AudioEntryFlags.IsDecompressedOnLoad
+    );
     bool flagRegular = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.Regular);
 
     string audioExt = ".ogg";
@@ -174,26 +197,24 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMSound\",");
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-        writer.WriteLine("  \"name\": \""+ sound.Name.Content + "\",");
+        writer.WriteLine("  \"name\": \"" + sound.Name.Content + "\",");
         writer.WriteLine("  \"audioGroupId\": {");
         writer.WriteLine("    \"name\": \"audiogroup_default\",");
         writer.WriteLine("    \"path\": \"audiogroups/audiogroup_default\",");
         writer.WriteLine("  },");
         writer.WriteLine("  \"bitDepth\": 1,");
         writer.WriteLine("  \"bitRate\": 128,");
-        writer.WriteLine("  \"compression\": "+ (flagCompressed ? 1 : 0) +",");
+        writer.WriteLine("  \"compression\": " + (flagCompressed ? 1 : 0) + ",");
         writer.WriteLine("  \"conversionMode\": 0,");
         writer.WriteLine("  \"parent\": {");
         writer.WriteLine("    \"name\": \"Sounds\",");
         writer.WriteLine("    \"path\": \"folders/Sounds.yy\",");
         writer.WriteLine("  },");
-        writer.WriteLine("  \"preload\": "+ (sound.Preload ? "true" : "false") +",");
-        writer.WriteLine("  \"soundFile\": \""+ sound.Name.Content + audioExt +"\",");
-        writer.WriteLine("  \"volume\": "+ sound.Volume.ToString("0.0") +",");
+        writer.WriteLine("  \"preload\": " + (sound.Preload ? "true" : "false") + ",");
+        writer.WriteLine("  \"soundFile\": \"" + sound.Name.Content + audioExt + "\",");
+        writer.WriteLine("  \"volume\": " + sound.Volume.ToString("0.0") + ",");
         writer.Write("}");
     }
 
-
     IncProgressLocal();
 }
-
