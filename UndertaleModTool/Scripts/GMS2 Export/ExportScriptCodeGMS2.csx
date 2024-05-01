@@ -49,7 +49,7 @@ using (StreamWriter writer = new StreamWriter(codeFolder + "asset_order.txt"))
     {
         UndertaleScript script = Data.Scripts[i];
 
-        if (!(script.Name.Content.StartsWith("gml_") || script.Name.Content.StartsWith("__")))
+        if (!(script.Name.Content.StartsWith("gml_")))
         {
             writer.WriteLine(
                 "    {\"id\":{\"name\":\""
@@ -97,7 +97,7 @@ void DumpCode(UndertaleScript script)
 {
     if (script.Code is not null)
     {
-        if (!(script.Name.Content.StartsWith("gml_") || script.Name.Content.StartsWith("__")))
+        if (!(script.Name.Content.StartsWith("gml_")))
         {
             SetProgressBar(null, "Code Entries : " + script.Name.Content, 0, 1);
             // Extraction .gml
