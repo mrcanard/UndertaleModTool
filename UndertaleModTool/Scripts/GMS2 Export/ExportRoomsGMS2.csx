@@ -45,9 +45,15 @@ if (!exportFromCache)
 SetProgressBar(null, "Room Entries", 0, toDump.Count);
 StartProgressBarUpdater();
 
-await DumpRooms();
+// await DumpRooms();
 
-await StopProgressBarUpdater();
+// await StopProgressBarUpdater();
+
+foreach (UndertaleRoom room in Data.Rooms)
+{
+    DumpRoom(room);
+}
+
 HideProgressBar();
 
 // Export asset
@@ -107,6 +113,7 @@ void DumpRoom(UndertaleRoom room)
 {
     Directory.CreateDirectory(roomsFolder + room.Name.Content);
 
+    SetProgressBar(null, "Room Entries : " + room.Name.Content, 0, 1);
     using (
         StreamWriter writer = new StreamWriter(
             roomsFolder + room.Name.Content + "\\" + room.Name.Content + ".yy"
