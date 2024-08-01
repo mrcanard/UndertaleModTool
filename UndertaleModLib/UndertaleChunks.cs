@@ -754,7 +754,10 @@ namespace UndertaleModLib
             if (reader.ReadUInt32() > 0) // Font count
             {
                 uint firstFontPointer = reader.ReadUInt32();
-                reader.AbsPosition = firstFontPointer + 56; // Two more values: SDFSpread and LineHeight. 48 + 4 + 4 = 56.
+                reader.AbsPosition = firstFontPointer + 52; // Also the LineHeight value. 48 + 4 = 52.
+                if (reader.undertaleData.IsNonLTSVersionAtLeast(2023, 2)) // SDFSpread is present from 2023.2 non-LTS onward
+                    reader.AbsPosition += 4;                              // (detected by PSEM/PSYS chunk existence)
+
                 uint glyphsLength = reader.ReadUInt32();
                 GMS2023_6 = true;
                 if ((glyphsLength * 4) > this.Length)
@@ -1010,7 +1013,7 @@ namespace UndertaleModLib
                     case LayerType.Assets:
                         reader.Position += 6 * 4;
                         int tileOffset = reader.ReadInt32();
-                        if (tileOffset != reader.AbsPosition + 8)
+                        if (tileOffset != reader.AbsPosition + 8 && tileOffset != reader.AbsPosition + 12)
                             reader.undertaleData.SetGMS2Version(2022, 1);
                         break;
                     case LayerType.Tiles:
@@ -1459,6 +1462,8 @@ namespace UndertaleModLib
         public override string Name => "TXTR";
 
         private static bool checkedFor2022_3;
+        private static bool checkedFor2_0_6;
+
         private void CheckFor2022_3And5(UndertaleReader reader)
         {
             // Detect GM2022.3
@@ -1580,7 +1585,10 @@ namespace UndertaleModLib
         {
             bool atLeastGMS2_0 = reader.undertaleData.IsGameMaker2();
             if (!atLeastGMS2_0 || reader.undertaleData.IsVersionAtLeast(2, 0, 6))
+            {
+                checkedFor2_0_6 = true;
                 return;
+            }
 
             long returnPos = reader.Position;
             bool noGeneratedMips = false;
@@ -1617,6 +1625,7 @@ namespace UndertaleModLib
                 reader.undertaleData.SetGMS2Version(2, 0, 6);
 
             reader.Position = returnPos;
+            checkedFor2_0_6 = true;
         }
 
         internal override void UnserializeChunk(UndertaleReader reader)
@@ -1624,7 +1633,8 @@ namespace UndertaleModLib
             if (!checkedFor2022_3)
                 CheckFor2022_3And5(reader);
 
-            CheckForGMS2_0_6(reader);
+            if (!checkedFor2_0_6)
+                CheckForGMS2_0_6(reader);
 
             base.UnserializeChunk(reader);
             reader.SwitchReaderType(false);
@@ -1648,8 +1658,10 @@ namespace UndertaleModLib
         internal override uint UnserializeObjectCount(UndertaleReader reader)
         {
             checkedFor2022_3 = false;
+            checkedFor2_0_6 = false;
 
             CheckFor2022_3And5(reader);
+            CheckForGMS2_0_6(reader);
 
             // Texture blobs are already included in the count
             return base.UnserializeObjectCount(reader);
