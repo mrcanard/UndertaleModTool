@@ -30,11 +30,16 @@ if(Data.IsGameMaker2()) {
     ExportFolder = winFolder + "sound" + Path.DirectorySeparatorChar;
 }
 
+Console.WriteLine(winFolder);
+Console.WriteLine(ExportFolder);
+
 //Overwrite Folder Check One
 if (Directory.Exists(ExportFolder))
 {
     Directory.Delete(ExportFolder, true);
 }
+
+Directory.CreateDirectory(ExportFolder);
 
 var externalOGG_Copy = 1;
 string externalOGG_Folder = winFolder + "undertale_ogg/";

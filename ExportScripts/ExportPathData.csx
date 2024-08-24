@@ -76,7 +76,7 @@ void DumpPath(UndertalePath path)
     if(Data.IsGameMaker2()) {
         Directory.CreateDirectory(fntPaths + path.Name.Content);
 
-        using (StreamWriter writer = new StreamWriter(fntPaths + path.Name.Content + "\\" + path.Name.Content + ".yy"))
+        using (StreamWriter writer = new StreamWriter(fntPaths + path.Name.Content + Path.DirectorySeparatorChar + path.Name.Content + ".yy"))
         {
             writer.WriteLine("{");
             writer.WriteLine("  \"resourceType\": \"GMPath\",");
