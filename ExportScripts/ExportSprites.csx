@@ -657,7 +657,7 @@ else
     padded = true;
 
     texFolder = GetFolder(FilePath) + "background" + Path.DirectorySeparatorChar;
-    string imageFolder = texFolder + "images\\";
+    string imageFolder = texFolder + "images" + Path.DirectorySeparatorChar;
     if (Directory.Exists(texFolder))
     {
         Directory.Delete(texFolder, true);
