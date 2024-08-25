@@ -97,12 +97,12 @@ if(Data.IsGameMaker2()) {
         Directory.CreateDirectory(texFolder + sprite.Name.Content);
         using (
             StreamWriter writer = new StreamWriter(
-                texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + ".yy"
+                texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + sprite.Name.Content + ".yy"
             )
         )
               {
                   // BEGIN : Extraction Images
-                  string layer_directory = texFolder + sprite.Name.Content + "\\" + "layers";
+                  string layer_directory = texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + "layers";
                   Directory.CreateDirectory(layer_directory);
                   for (int i = 0; i < sprite.Textures.Count; i++)
                   {
@@ -111,7 +111,7 @@ if(Data.IsGameMaker2()) {
                           // Extraction de l'image à la base du répertoire
                           worker.ExportAsPNG(
                               sprite.Textures[i].Texture,
-                              texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + "_" + i + ".png",
+                              texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + sprite.Name.Content + "_" + i + ".png",
                               null,
                               padded
                           ); // Include padding to make sprites look neat!
@@ -120,9 +120,9 @@ if(Data.IsGameMaker2()) {
                           Directory.CreateDirectory(
                               texFolder
                               + sprite.Name.Content
-                              + "\\"
+                              + Path.DirectorySeparatorChar
                               + "layers"
-                              + "\\"
+                              + Path.DirectorySeparatorChar
                               + sprite.Name.Content
                               + "_"
                               + i
@@ -133,13 +133,13 @@ if(Data.IsGameMaker2()) {
                               sprite.Textures[i].Texture,
                               texFolder
                               + sprite.Name.Content
-                              + "\\"
+                              + Path.DirectorySeparatorChar
                               + "layers"
-                              + "\\"
+                              + Path.DirectorySeparatorChar
                               + sprite.Name.Content
                               + "_"
                               + i
-                              + "\\"
+                              + Path.DirectorySeparatorChar
                               + sprite.Name.Content
                               + "_"
                               + "layer"
@@ -311,12 +311,12 @@ if(Data.IsGameMaker2()) {
         Directory.CreateDirectory(texFolder + background.Name.Content);
         using (
             StreamWriter writer = new StreamWriter(
-                texFolder + background.Name.Content + "\\" + background.Name.Content + ".yy"
+                texFolder + background.Name.Content + Path.DirectorySeparatorChar + background.Name.Content + ".yy"
             )
         )
               {
                   // BEGIN : Extraction Images
-                  string layer_directory = texFolder + background.Name.Content + "\\" + "layers";
+                  string layer_directory = texFolder + background.Name.Content + Path.DirectorySeparatorChar + "layers";
                   Directory.CreateDirectory(layer_directory);
                   // for (int i = 0; i < background.Textures.Count; i++)
                   // {
@@ -325,7 +325,7 @@ if(Data.IsGameMaker2()) {
                       // Extraction de l'image à la base du répertoire
                       worker.ExportAsPNG(
                           background.Texture,
-                          texFolder + background.Name.Content + "\\" + background.Name.Content + ".png",
+                          texFolder + background.Name.Content + Path.DirectorySeparatorChar + background.Name.Content + ".png",
                           null,
                           padded
                       ); // Include padding to make sprites look neat!
@@ -334,9 +334,9 @@ if(Data.IsGameMaker2()) {
                       Directory.CreateDirectory(
                           texFolder
                           + background.Name.Content
-                          + "\\"
+                          + Path.DirectorySeparatorChar
                           + "layers"
-                          + "\\"
+                          + Path.DirectorySeparatorChar
                           + background.Name.Content
                       );
 
@@ -345,11 +345,11 @@ if(Data.IsGameMaker2()) {
                           background.Texture,
                           texFolder
                           + background.Name.Content
-                          + "\\"
+                          + Path.DirectorySeparatorChar
                           + "layers"
-                          + "\\"
+                          + Path.DirectorySeparatorChar
                           + background.Name.Content
-                          + "\\"
+                          + Path.DirectorySeparatorChar
                           + background.Name.Content
                           + ".png",
                           null,
@@ -552,11 +552,6 @@ if(Data.IsGameMaker2()) {
                     padded
                 ); // Include padding to make sprites look neat!
 
-                // // Création du répertoire dans "layers"
-                // Directory.CreateDirectory(texFolder + sprite.Name.Content + "\\" + "layers" + "\\" + sprite.Name.Content + "_" + i);
-
-                // // Extraction de l'image "layer"
-                // worker.ExportAsPNG(sprite.Textures[i].Texture,texFolder + sprite.Name.Content + "\\" + "layers" + "\\" + sprite.Name.Content + "_"+ i + "\\" + sprite.Name.Content + "_" + "layer" + ".png", null, padded); // Include padding to make sprites look neat!
             }
         }
         // END : Extraction Images
