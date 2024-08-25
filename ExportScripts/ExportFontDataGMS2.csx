@@ -26,7 +26,7 @@ if(Data.IsGameMaker2()) {
     StartProgressBarUpdater();
 
     await DumpFonts();
-    worker.Cleanup();
+    //worker.Cleanup();
 
     await StopProgressBarUpdater();
     HideProgressBar();
@@ -203,7 +203,7 @@ if(Data.IsGameMaker2()) {
     StartProgressBarUpdater();
 
     await DumpFonts();
-    worker.Cleanup();
+    //worker.Cleanup();
 
     await StopProgressBarUpdater();
     HideProgressBar();
