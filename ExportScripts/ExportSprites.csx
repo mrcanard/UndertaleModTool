@@ -43,7 +43,7 @@ if(Data.IsGameMaker2()) {
     StartProgressBarUpdater();
 
     await DumpBackgrounds();
-    worker.Cleanup();
+    // worker.Cleanup();
 
     await StopProgressBarUpdater();
     HideProgressBar();
