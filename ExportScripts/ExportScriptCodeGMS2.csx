@@ -128,7 +128,11 @@ if (Data.IsGameMaker2())
                 // Extraction .yy
                 using (
                     StreamWriter writer = new StreamWriter(
-                        codeFolder + script.Name.Content + "\\" + script.Name.Content + ".yy"
+                        codeFolder
+                            + script.Name.Content
+                            + Path.DirectorySeparatorChar
+                            + script.Name.Content
+                            + ".yy"
                     )
                 )
                 {
@@ -253,24 +257,6 @@ else
                 {
                     File.WriteAllText(path, "/*\nDECOMPILER FAILED!\n\n" + e.ToString() + "\n*/");
                 }
-
-                // // Extraction .yy
-                // using (StreamWriter writer = new StreamWriter(codeFolder + script.Name.Content + "\\" + script.Name.Content + ".yy"))
-                // {
-
-                //     writer.WriteLine("{");
-                //     writer.WriteLine("  \"resourceType\": \"GMScript\",");
-                //     writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-                //     writer.WriteLine("  \"name\": \""+script.Name.Content+"\",");
-                //     writer.WriteLine("  \"isCompatibility\": false,");
-                //     writer.WriteLine("  \"isDnD\": false,");
-                //     writer.WriteLine("  \"parent\": {");
-                //     writer.WriteLine("    \"name\": \"Scripts\",");
-                //     writer.WriteLine("    \"path\": \"folders/Scripts.yy\",");
-                //     writer.WriteLine("  },");
-                //     writer.Write("}");
-
-                // }
             }
         }
 
