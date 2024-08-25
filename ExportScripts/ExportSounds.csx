@@ -14,7 +14,7 @@ customCulture.NumberFormat.NumberDecimalSeparator = ".";
 
 System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
-//
+String EscapeLine = "\r\n";
 
 int maxCount;
 
@@ -24,9 +24,12 @@ bool usesAGRP = (Data.AudioGroups.Count > 0);
 
 // Sound Folder
 string ExportFolder;
-if(Data.IsGameMaker2()) {
+if (Data.IsGameMaker2())
+{
     ExportFolder = winFolder + "sounds" + Path.DirectorySeparatorChar;
-} else {
+}
+else
+{
     ExportFolder = winFolder + "sound" + Path.DirectorySeparatorChar;
 }
 
@@ -56,36 +59,38 @@ StartProgressBarUpdater();
 await Task.Run(DumpSounds); // This runs sync, because it has to load audio groups.
 
 // Export asset
-if(Data.IsGameMaker2()) {
+if (Data.IsGameMaker2())
+{
     using (StreamWriter writer = new StreamWriter(ExportFolder + "asset_order.txt"))
     {
         for (int i = 0; i < Data.Sounds.Count; i++)
         {
             UndertaleSound sound = Data.Sounds[i];
-            writer.WriteLine(
+            writer.Write(
                 "    {\"id\":{\"name\":\""
-                + sound.Name.Content
-                + "\",\"path\":\"sounds/"
-                + sound.Name.Content
-                + "/"
-                + sound.Name.Content
-                + ".yy\",},},"
+                    + sound.Name.Content
+                    + "\",\"path\":\"sounds/"
+                    + sound.Name.Content
+                    + "/"
+                    + sound.Name.Content
+                    + ".yy\",},},"
+                    + EscapeLine
             );
         }
     }
-
-} else {
+}
+else
+{
     using (StreamWriter writer = new StreamWriter(ExportFolder + "asset_order.txt"))
     {
-        writer.WriteLine("  <sounds name=\"sound\">");
+        writer.Write("  <sounds name=\"sound\">" + EscapeLine);
         for (int i = 0; i < Data.Sounds.Count; i++)
         {
             UndertaleSound sound = Data.Sounds[i];
-            writer.WriteLine("    <sound>sound\\" + sound.Name.Content + "</sound>");
+            writer.Write("    <sound>sound\\" + sound.Name.Content + "</sound>" + EscapeLine);
         }
-        writer.WriteLine("  </sounds>");
+        writer.Write("  </sounds>" + EscapeLine);
     }
-
 }
 
 await StopProgressBarUpdater();
@@ -127,13 +132,13 @@ IList<UndertaleEmbeddedAudio> GetAudioGroupData(UndertaleSound sound)
     {
         UndertaleData data = null;
         using (var stream = new FileStream(groupFilePath, FileMode.Open, FileAccess.Read))
-        data = UndertaleIO.Read(
-        stream,
-        warning =>
-        ScriptMessage(
-            "A warning occured while trying to load " + audioGroupName + ":\n" + warning
-        )
-        );
+            data = UndertaleIO.Read(
+                stream,
+                warning =>
+                    ScriptMessage(
+                        "A warning occured while trying to load " + audioGroupName + ":\n" + warning
+                    )
+            );
 
         loadedAudioGroups[audioGroupName] = data.EmbeddedAudio;
         return data.EmbeddedAudio;
@@ -169,7 +174,8 @@ void DumpSounds()
 
 void DumpSound(UndertaleSound sound)
 {
-    if(Data.IsGameMaker2()) {
+    if (Data.IsGameMaker2())
+    {
         string soundName = sound.Name.Content;
         bool flagCompressed = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsCompressed);
         bool flagEmbedded = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsEmbedded);
@@ -206,7 +212,14 @@ void DumpSound(UndertaleSound sound)
             process = false;
             audioExt = ".ogg";
             string source = externalOGG_Folder + soundName + audioExt;
-            string dest = winFolder + "sounds" + Path.DirectorySeparatorChar + soundName + Path.DirectorySeparatorChar + soundName + audioExt;
+            string dest =
+                winFolder
+                + "sounds"
+                + Path.DirectorySeparatorChar
+                + soundName
+                + Path.DirectorySeparatorChar
+                + soundName
+                + audioExt;
             if (externalOGG_Copy == 1)
             {
                 System.IO.File.Copy(source, dest, false);
@@ -218,29 +231,32 @@ void DumpSound(UndertaleSound sound)
 
         using (StreamWriter writer = new StreamWriter(soundFilePath + ".yy"))
         {
-            writer.WriteLine("{");
-            writer.WriteLine("  \"resourceType\": \"GMSound\",");
-            writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-            writer.WriteLine("  \"name\": \"" + sound.Name.Content + "\",");
-            writer.WriteLine("  \"audioGroupId\": {");
-            writer.WriteLine("    \"name\": \"audiogroup_default\",");
-            writer.WriteLine("    \"path\": \"audiogroups/audiogroup_default\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"bitDepth\": 1,");
-            writer.WriteLine("  \"bitRate\": 128,");
-            writer.WriteLine("  \"compression\": " + (flagCompressed ? 1 : 0) + ",");
-            writer.WriteLine("  \"conversionMode\": 0,");
-            writer.WriteLine("  \"parent\": {");
-            writer.WriteLine("    \"name\": \"Sounds\",");
-            writer.WriteLine("    \"path\": \"folders/Sounds.yy\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"preload\": " + (sound.Preload ? "true" : "false") + ",");
-            writer.WriteLine("  \"soundFile\": \"" + sound.Name.Content + audioExt + "\",");
-            writer.WriteLine("  \"volume\": " + sound.Volume.ToString("0.0") + ",");
+            writer.Write("{" + EscapeLine);
+            writer.Write("  \"resourceType\": \"GMSound\"," + EscapeLine);
+            writer.Write("  \"resourceVersion\": \"1.0\"," + EscapeLine);
+            writer.Write("  \"name\": \"" + sound.Name.Content + "\"," + EscapeLine);
+            writer.Write("  \"audioGroupId\": {" + EscapeLine);
+            writer.Write("    \"name\": \"audiogroup_default\"," + EscapeLine);
+            writer.Write("    \"path\": \"audiogroups/audiogroup_default\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"bitDepth\": 1," + EscapeLine);
+            writer.Write("  \"bitRate\": 128," + EscapeLine);
+            writer.Write("  \"compression\": " + (flagCompressed ? 1 : 0) + "," + EscapeLine);
+            writer.Write("  \"conversionMode\": 0," + EscapeLine);
+            writer.Write("  \"parent\": {" + EscapeLine);
+            writer.Write("    \"name\": \"Sounds\"," + EscapeLine);
+            writer.Write("    \"path\": \"folders/Sounds.yy\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"preload\": " + (sound.Preload ? "true" : "false") + "," + EscapeLine);
+            writer.Write(
+                "  \"soundFile\": \"" + sound.Name.Content + audioExt + "\"," + EscapeLine
+            );
+            writer.Write("  \"volume\": " + sound.Volume.ToString("0.0") + "," + EscapeLine);
             writer.Write("}");
         }
-
-    } else {
+    }
+    else
+    {
         string soundName = sound.Name.Content;
         bool flagCompressed = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsCompressed);
         bool flagEmbedded = sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.IsEmbedded);
@@ -254,7 +270,13 @@ void DumpSound(UndertaleSound sound)
         //if (groupedExport == 1)
         //    soundFilePath = winFolder + "sound\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName;
         //else
-        soundFilePath = winFolder + "sound" + Path.DirectorySeparatorChar + "audio" + Path.DirectorySeparatorChar + soundName;
+        soundFilePath =
+            winFolder
+            + "sound"
+            + Path.DirectorySeparatorChar
+            + "audio"
+            + Path.DirectorySeparatorChar
+            + soundName;
         MakeFolder("sound");
         //if (groupedExport == 1)
         //    MakeFolder("sound\\" + sound.AudioGroup.Name.Content);
@@ -270,7 +292,14 @@ void DumpSound(UndertaleSound sound)
             process = false;
             audioExt = ".ogg";
             string source = externalOGG_Folder + soundName + audioExt;
-            string dest = winFolder + "sound" + Path.DirectorySeparatorChar + "audio" + Path.DirectorySeparatorChar + soundName + audioExt;
+            string dest =
+                winFolder
+                + "sound"
+                + Path.DirectorySeparatorChar
+                + "audio"
+                + Path.DirectorySeparatorChar
+                + soundName
+                + audioExt;
             if (externalOGG_Copy == 1)
             {
                 //if (groupedExport == 1)
@@ -278,14 +307,18 @@ void DumpSound(UndertaleSound sound)
                 //    dest = winFolder + "sound\\audio\\" + sound.AudioGroup.Name.Content + "\\" + soundName + audioExt;
                 //    MakeFolder("sound\\audio\\" + sound.AudioGroup.Name.Content);
                 //}
-                MakeFolder("sound" + Path.DirectorySeparatorChar + "audio" + Path.DirectorySeparatorChar);
+                MakeFolder(
+                    "sound" + Path.DirectorySeparatorChar + "audio" + Path.DirectorySeparatorChar
+                );
                 System.IO.File.Copy(source, dest, false);
             }
         }
         if (process && !File.Exists(soundFilePath + audioExt))
             File.WriteAllBytes(soundFilePath + audioExt, GetSoundData(sound));
 
-        using (StreamWriter writer = new StreamWriter(ExportFolder + sound.Name.Content + ".sound.gmx"))
+        using (
+            StreamWriter writer = new StreamWriter(ExportFolder + sound.Name.Content + ".sound.gmx")
+        )
         {
             writer.WriteLine(
                 "<!--This Document is generated by GameMaker, if you edit it by hand then you do so at your own risk!-->"
@@ -298,15 +331,15 @@ void DumpSound(UndertaleSound sound)
             writer.WriteLine("  <volume>");
             writer.WriteLine(
                 "    <volume>"
-                + (
-                    sound.Volume == 1
-                    ? sound.Volume
-                    : sound.Volume.ToString(
-                        "0.00",
-                        System.Globalization.CultureInfo.InvariantCulture
+                    + (
+                        sound.Volume == 1
+                            ? sound.Volume
+                            : sound.Volume.ToString(
+                                "0.00",
+                                System.Globalization.CultureInfo.InvariantCulture
+                            )
                     )
-                )
-                + "</volume>"
+                    + "</volume>"
             );
             writer.WriteLine("  </volume>");
             if (sound.Pitch == 0)
@@ -317,11 +350,11 @@ void DumpSound(UndertaleSound sound)
             {
                 writer.WriteLine(
                     "  <pan>"
-                    + sound.Pitch.ToString(
-                        "0.00",
-                        System.Globalization.CultureInfo.InvariantCulture
-                    )
-                    + "</pan>"
+                        + sound.Pitch.ToString(
+                            "0.00",
+                            System.Globalization.CultureInfo.InvariantCulture
+                        )
+                        + "</pan>"
                 );
             }
             writer.WriteLine("  <bitRates>");
@@ -344,7 +377,6 @@ void DumpSound(UndertaleSound sound)
             writer.WriteLine("  <audioGroup>0</audioGroup>");
             writer.WriteLine("</sound>");
         }
-
     }
 
     IncrementProgressParallel();
