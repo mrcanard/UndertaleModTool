@@ -35,9 +35,9 @@ if (Data.IsGameMaker2())
     //     exportFromCache = ScriptQuestion("Export from the cache?");
 
     List<UndertaleRoom> toDump;
+    toDump = new();
     if (!exportFromCache)
     {
-        toDump = new();
         foreach (UndertaleRoom room in Data.Rooms)
         {
             toDump.Add(room);
@@ -121,7 +121,11 @@ if (Data.IsGameMaker2())
         SetProgressBar(null, "Room Entries : " + room.Name.Content, 0, 1);
         using (
             StreamWriter writer = new StreamWriter(
-                roomsFolder + room.Name.Content + "\\" + room.Name.Content + ".yy"
+                roomsFolder
+                    + room.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + room.Name.Content
+                    + ".yy"
             )
         )
         {
@@ -142,7 +146,10 @@ if (Data.IsGameMaker2())
                         + "/RoomCreationCode.gml\","
                 );
                 File.WriteAllText(
-                    roomsFolder + room.Name.Content + "\\" + "RoomCreationCode.gml",
+                    roomsFolder
+                        + room.Name.Content
+                        + Path.DirectorySeparatorChar
+                        + "RoomCreationCode.gml",
                     Decompiler.Decompile(room.CreationCodeId, DECOMPILE_CONTEXT.Value)
                 );
             }
@@ -403,7 +410,7 @@ if (Data.IsGameMaker2())
             writer.WriteLine(
                 "    \"clearDisplayBuffer\": "
                     + (
-                        room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.ClearDisplayBuffer)
+                        room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.DoNotClearDisplayBuffer)
                             ? "true"
                             : "false"
                     )
@@ -455,9 +462,9 @@ else
     //     exportFromCache = ScriptQuestion("Export from the cache?");
 
     List<UndertaleRoom> toDump;
+    toDump = new();
     if (!exportFromCache)
     {
-        toDump = new();
         foreach (UndertaleRoom room in Data.Rooms)
         {
             toDump.Add(room);
@@ -536,7 +543,7 @@ else
             bool flagEnableViews = room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.EnableViews);
             bool flagShowColor = room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.ShowColor);
             bool flagClearDisplayBuffer = room.Flags.HasFlag(
-                UndertaleRoom.RoomEntryFlags.ClearDisplayBuffer
+                UndertaleRoom.RoomEntryFlags.DoNotClearDisplayBuffer
             );
 
             writer.WriteLine("  <enableViews>" + (flagEnableViews ? -1 : 0) + "</enableViews>");
