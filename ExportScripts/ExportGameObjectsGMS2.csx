@@ -212,10 +212,10 @@ if (Data.IsGameMaker2())
             writer.WriteLine("    \"path\": \"folders/Objects.yy\",");
             writer.WriteLine("  },");
             /*
-            writer.WriteLine("  \"parent\": {");
-            writer.WriteLine("    \"name\": \"Blocks\",");
-            writer.WriteLine("    \"path\": \"folders/Objects/Environment/Blocks.yy\",");
-            writer.WriteLine("  },");
+              writer.WriteLine("  \"parent\": {");
+              writer.WriteLine("    \"name\": \"Blocks\",");
+              writer.WriteLine("    \"path\": \"folders/Objects/Environment/Blocks.yy\",");
+              writer.WriteLine("  },");
             */
             if (game_object.ParentId is null)
             {
