@@ -27,9 +27,9 @@ if (Data.IsGameMaker2())
         exportFromCache = ScriptQuestion("Export from the cache?");
 
     List<UndertaleGameObject> toDump;
+    toDump = new();
     if (!exportFromCache)
     {
-        toDump = new();
         foreach (UndertaleGameObject game_object in Data.GameObjects)
         {
             toDump.Add(game_object);
@@ -325,9 +325,9 @@ else
     //     exportFromCache = ScriptQuestion("Export from the cache?");
 
     List<UndertaleGameObject> toDump;
+    toDump = new();
     if (!exportFromCache)
     {
-        toDump = new();
         foreach (UndertaleGameObject game_object in Data.GameObjects)
         {
             toDump.Add(game_object);
