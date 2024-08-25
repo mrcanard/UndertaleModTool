@@ -26,9 +26,9 @@ if (Data.IsGameMaker2())
         exportFromCache = ScriptQuestion("Export from the cache?");
 
     List<UndertaleScript> toDump;
+    toDump = new();
     if (!exportFromCache)
     {
-        toDump = new();
         foreach (UndertaleScript script in Data.Scripts)
         {
             //if (code.ParentEntry != null)
@@ -92,10 +92,10 @@ if (Data.IsGameMaker2())
 
         //     Decompiler.BuildSubFunctionCache(Data);
 
-        await Task.Run(() => Parallel.ForEach(toDump, DumpCode));
+        await Task.Run(() => Parallel.ForEach(toDump, DumpCodeScript));
     }
 
-    void DumpCode(UndertaleScript script)
+    void DumpCodeScript(UndertaleScript script)
     {
         if (script.Code is not null)
         {
@@ -172,9 +172,9 @@ else
         exportFromCache = ScriptQuestion("Export from the cache?");
 
     List<UndertaleScript> toDump;
+    toDump = new();
     if (!exportFromCache)
     {
-        toDump = new();
         foreach (UndertaleScript script in Data.Scripts)
         {
             //if (code.ParentEntry != null)
@@ -230,10 +230,10 @@ else
         if (Data.KnownSubFunctions is null) //if we run script before opening any code
             Decompiler.BuildSubFunctionCache(Data);
 
-        await Task.Run(() => Parallel.ForEach(toDump, DumpCode));
+        await Task.Run(() => Parallel.ForEach(toDump, DumpCodeScript));
     }
 
-    void DumpCode(UndertaleScript script)
+    void DumpCodeScript(UndertaleScript script)
     {
         if (script.Code is not null)
         {
