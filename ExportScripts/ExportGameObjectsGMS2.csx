@@ -387,7 +387,11 @@ if (Data.IsGameMaker2())
 
         using (
             StreamWriter writer = new StreamWriter(
-                objectsFolder + game_object.Name.Content + "\\" + game_object.Name.Content + ".yy"
+                objectsFolder
+                    + game_object.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + game_object.Name.Content
+                    + ".yy"
             )
         )
         {
@@ -426,7 +430,7 @@ if (Data.IsGameMaker2())
                         fileGMLName =
                             objectsFolder
                             + game_object.Name.Content
-                            + "\\"
+                            + Path.DirectorySeparatorChar
                             + stringValue
                             + "_"
                             + collisionObjectName
@@ -440,7 +444,7 @@ if (Data.IsGameMaker2())
                         fileGMLName =
                             objectsFolder
                             + game_object.Name.Content
-                            + "\\"
+                            + Path.DirectorySeparatorChar
                             + stringValue
                             + "_"
                             + e2.EventSubtype
