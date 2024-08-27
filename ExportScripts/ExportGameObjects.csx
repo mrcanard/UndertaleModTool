@@ -14,11 +14,7 @@ if (Data.IsGameMaker2())
         () => new GlobalDecompileContext(Data, false)
     );
 
-    // if (Directory.Exists(objectsFolder))
-    // {
-    //     ScriptError("An object export already exists. Please remove it.", "Error");
-    //     return;
-    // }
+    String EscapeLine = "\r\n";
 
     Directory.CreateDirectory(objectsFolder);
 
@@ -62,7 +58,7 @@ if (Data.IsGameMaker2())
         for (int i = 0; i < Data.GameObjects.Count; i++)
         {
             UndertaleGameObject game_object = Data.GameObjects[i];
-            writer.WriteLine(
+            writer.Write(
                 "    {\"id\":{\"name\":\""
                     + game_object.Name.Content
                     + "\",\"path\":\"objects/"
@@ -70,6 +66,7 @@ if (Data.IsGameMaker2())
                     + "/"
                     + game_object.Name.Content
                     + ".yy\",},},"
+                    + EscapeLine
             );
         }
     }
@@ -95,15 +92,19 @@ if (Data.IsGameMaker2())
 
         using (
             StreamWriter writer = new StreamWriter(
-                objectsFolder + game_object.Name.Content + "\\" + game_object.Name.Content + ".yy"
+                objectsFolder
+                    + game_object.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + game_object.Name.Content
+                    + ".yy"
             )
         )
         {
-            writer.WriteLine("{");
-            writer.WriteLine("  \"resourceType\": \"GMObject\",");
-            writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-            writer.WriteLine("  \"name\": \"" + game_object.Name.Content + "\",");
-            writer.WriteLine("  \"eventList\": [");
+            writer.Write("{" + EscapeLine);
+            writer.Write("  \"resourceType\": \"GMObject\"," + EscapeLine);
+            writer.Write("  \"resourceVersion\": \"1.0\"," + EscapeLine);
+            writer.Write("  \"name\": \"" + game_object.Name.Content + "\"," + EscapeLine);
+            writer.Write("  \"eventList\": [" + EscapeLine);
 
             var i = 0;
             foreach (var e1 in game_object.Events)
@@ -116,7 +117,7 @@ if (Data.IsGameMaker2())
                         var collisionObjectName = Data.GameObjects[(int)e2.EventSubtype]
                             .Name
                             .Content;
-                        writer.WriteLine(
+                        writer.Write(
                             "    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":{\"name\":\""
                                 + collisionObjectName
                                 + "\",\"path\":\"objects/"
@@ -126,6 +127,7 @@ if (Data.IsGameMaker2())
                                 + ".yy\",},\"eventNum\":0,\"eventType\":"
                                 + i
                                 + ",\"isDnD\":false,},"
+                                + EscapeLine
                         );
 
                         // Création fichier .gml : BUG
@@ -134,7 +136,7 @@ if (Data.IsGameMaker2())
                         fileGMLName =
                             objectsFolder
                             + game_object.Name.Content
-                            + "\\"
+                            + Path.DirectorySeparatorChar
                             + stringValue
                             + "_"
                             + collisionObjectName
@@ -148,7 +150,7 @@ if (Data.IsGameMaker2())
                         fileGMLName =
                             objectsFolder
                             + game_object.Name.Content
-                            + "\\"
+                            + Path.DirectorySeparatorChar
                             + stringValue
                             + "_"
                             + e2.EventSubtype
@@ -159,12 +161,13 @@ if (Data.IsGameMaker2())
                             continue;
                         }
 
-                        writer.WriteLine(
+                        writer.Write(
                             "    {\"resourceType\":\"GMEvent\",\"resourceVersion\":\"1.0\",\"name\":\"\",\"collisionObjectId\":null,\"eventNum\":"
                                 + e2.EventSubtype
                                 + ",\"eventType\":"
                                 + i
                                 + ",\"isDnD\":false,},"
+                                + EscapeLine
                         );
                     }
 
@@ -188,7 +191,7 @@ if (Data.IsGameMaker2())
                                 );
                                 using (StreamWriter sw = File.AppendText(path))
                                 {
-                                    sw.WriteLine("");
+                                    sw.WriteLine(EscapeLine);
                                 }
                             }
                             catch (Exception e)
@@ -204,92 +207,108 @@ if (Data.IsGameMaker2())
                 i++;
             }
 
-            writer.WriteLine("  ],");
-            writer.WriteLine("  \"managed\": true,");
-            writer.WriteLine("  \"overriddenProperties\": [],");
-            writer.WriteLine("  \"parent\": {");
-            writer.WriteLine("    \"name\": \"Objects\",");
-            writer.WriteLine("    \"path\": \"folders/Objects.yy\",");
-            writer.WriteLine("  },");
+            writer.Write("  ]," + EscapeLine);
+            writer.Write("  \"managed\": true," + EscapeLine);
+            writer.Write("  \"overriddenProperties\": []," + EscapeLine);
+            writer.Write("  \"parent\": {" + EscapeLine);
+            writer.Write("    \"name\": \"Objects\"," + EscapeLine);
+            writer.Write("    \"path\": \"folders/Objects.yy\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
             /*
-              writer.WriteLine("  \"parent\": {");
-              writer.WriteLine("    \"name\": \"Blocks\",");
-              writer.WriteLine("    \"path\": \"folders/Objects/Environment/Blocks.yy\",");
-              writer.WriteLine("  },");
+              writer.Write("  \"parent\": {"+ EscapeLine);
+              writer.Write("    \"name\": \"Blocks\","+ EscapeLine);
+              writer.Write("    \"path\": \"folders/Objects/Environment/Blocks.yy\","+ EscapeLine);
+              writer.Write("  },"+ EscapeLine);
             */
             if (game_object.ParentId is null)
             {
-                writer.WriteLine("  \"parentObjectId\": null,");
+                writer.Write("  \"parentObjectId\": null," + EscapeLine);
             }
             else
             {
-                writer.WriteLine("  \"parentObjectId\": {");
-                writer.WriteLine("    \"name\": \"" + game_object.ParentId.Name.Content + "\",");
-                writer.WriteLine(
+                writer.Write("  \"parentObjectId\": {" + EscapeLine);
+                writer.Write(
+                    "    \"name\": \"" + game_object.ParentId.Name.Content + "\"," + EscapeLine
+                );
+                writer.Write(
                     "    \"path\": \"objects/"
                         + game_object.ParentId.Name.Content
                         + "/"
                         + game_object.ParentId.Name.Content
                         + ".yy\","
+                        + EscapeLine
                 );
-                writer.WriteLine("  },");
+                writer.Write("  }," + EscapeLine);
             }
-            writer.WriteLine(
-                "  \"persistent\": " + (game_object.Persistent ? "true" : "false") + ","
+            writer.Write(
+                "  \"persistent\": "
+                    + (game_object.Persistent ? "true" : "false")
+                    + ","
+                    + EscapeLine
             );
-            writer.WriteLine("  \"physicsAngularDamping\": 0.1,");
-            writer.WriteLine("  \"physicsDensity\": 0.5,");
-            writer.WriteLine("  \"physicsFriction\": 0.2,");
-            writer.WriteLine("  \"physicsGroup\": " + game_object.Group + ",");
-            writer.WriteLine("  \"physicsKinematic\": false,");
-            writer.WriteLine("  \"physicsLinearDamping\": 0.1,");
-            writer.WriteLine("  \"physicsObject\": false,");
-            writer.WriteLine("  \"physicsRestitution\": 0.1,");
-            writer.WriteLine("  \"physicsSensor\": false,");
-            writer.WriteLine("  \"physicsShape\": " + (int)game_object.CollisionShape + ",");
-            writer.WriteLine("  \"physicsShapePoints\": [],");
-            writer.WriteLine("  \"physicsStartAwake\": true,");
-            writer.WriteLine("  \"properties\": [],");
-            writer.WriteLine("  \"solid\": " + (game_object.Solid ? "true" : "false") + ",");
+            writer.Write("  \"physicsAngularDamping\": 0.1," + EscapeLine);
+            writer.Write("  \"physicsDensity\": 0.5," + EscapeLine);
+            writer.Write("  \"physicsFriction\": 0.2," + EscapeLine);
+            writer.Write("  \"physicsGroup\": " + game_object.Group + "," + EscapeLine);
+            writer.Write("  \"physicsKinematic\": false," + EscapeLine);
+            writer.Write("  \"physicsLinearDamping\": 0.1," + EscapeLine);
+            writer.Write("  \"physicsObject\": false," + EscapeLine);
+            writer.Write("  \"physicsRestitution\": 0.1," + EscapeLine);
+            writer.Write("  \"physicsSensor\": false," + EscapeLine);
+            writer.Write(
+                "  \"physicsShape\": " + (int)game_object.CollisionShape + "," + EscapeLine
+            );
+            writer.Write("  \"physicsShapePoints\": []," + EscapeLine);
+            writer.Write("  \"physicsStartAwake\": true," + EscapeLine);
+            writer.Write("  \"properties\": []," + EscapeLine);
+            writer.Write(
+                "  \"solid\": " + (game_object.Solid ? "true" : "false") + "," + EscapeLine
+            );
             if (game_object.Sprite is null)
             {
-                writer.WriteLine("  \"spriteId\": null,");
+                writer.Write("  \"spriteId\": null," + EscapeLine);
             }
             else
             {
-                writer.WriteLine("  \"spriteId\": {");
-                writer.WriteLine("    \"name\": \"" + game_object.Sprite.Name.Content + "\",");
-                writer.WriteLine(
+                writer.Write("  \"spriteId\": {" + EscapeLine);
+                writer.Write(
+                    "    \"name\": \"" + game_object.Sprite.Name.Content + "\"," + EscapeLine
+                );
+                writer.Write(
                     "    \"path\": \"sprites/"
                         + game_object.Sprite.Name.Content
                         + "/"
                         + game_object.Sprite.Name.Content
                         + ".yy\","
+                        + EscapeLine
                 );
-                writer.WriteLine("  },");
+                writer.Write("  }," + EscapeLine);
             }
 
             if (game_object.TextureMaskId is null)
             {
-                writer.WriteLine("  \"spriteMaskId\": null,");
+                writer.Write("  \"spriteMaskId\": null," + EscapeLine);
             }
             else
             {
-                writer.WriteLine("  \"spriteMaskId\": {");
-                writer.WriteLine(
-                    "    \"name\": \"" + game_object.TextureMaskId.Name.Content + "\","
+                writer.Write("  \"spriteMaskId\": {" + EscapeLine);
+                writer.Write(
+                    "    \"name\": \"" + game_object.TextureMaskId.Name.Content + "\"," + EscapeLine
                 );
-                writer.WriteLine(
+                writer.Write(
                     "    \"path\": \"sprites/"
                         + game_object.TextureMaskId.Name.Content
                         + "/"
                         + game_object.TextureMaskId.Name.Content
                         + ".yy\","
+                        + EscapeLine
                 );
-                writer.WriteLine("  },");
+                writer.Write("  }," + EscapeLine);
             }
 
-            writer.WriteLine("  \"visible\": " + (game_object.Visible ? "true" : "false") + ",");
+            writer.Write(
+                "  \"visible\": " + (game_object.Visible ? "true" : "false") + "," + EscapeLine
+            );
             writer.Write("}");
         }
 
