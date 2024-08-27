@@ -14,6 +14,8 @@ if (Data.IsGameMaker2())
         () => new GlobalDecompileContext(Data, false)
     );
 
+    String EscapeLine = "\r\n";
+
     if (Directory.Exists(codeFolder))
     {
         Directory.Delete(codeFolder, true);
@@ -53,7 +55,7 @@ if (Data.IsGameMaker2())
 
             if (!(script.Name.Content.StartsWith("gml_")))
             {
-                writer.WriteLine(
+                writer.Write(
                     "    {\"id\":{\"name\":\""
                         + script.Name.Content
                         + "\",\"path\":\"scripts/"
@@ -61,6 +63,7 @@ if (Data.IsGameMaker2())
                         + "/"
                         + script.Name.Content
                         + ".yy\",},},"
+                        + EscapeLine
                 );
             }
         }
@@ -136,16 +139,16 @@ if (Data.IsGameMaker2())
                     )
                 )
                 {
-                    writer.WriteLine("{");
-                    writer.WriteLine("  \"resourceType\": \"GMScript\",");
-                    writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-                    writer.WriteLine("  \"name\": \"" + script.Name.Content + "\",");
-                    writer.WriteLine("  \"isCompatibility\": false,");
-                    writer.WriteLine("  \"isDnD\": false,");
-                    writer.WriteLine("  \"parent\": {");
-                    writer.WriteLine("    \"name\": \"Scripts\",");
-                    writer.WriteLine("    \"path\": \"folders/Scripts.yy\",");
-                    writer.WriteLine("  },");
+                    writer.Write("{" + EscapeLine);
+                    writer.Write("  \"resourceType\": \"GMScript\"," + EscapeLine);
+                    writer.Write("  \"resourceVersion\": \"1.0\"," + EscapeLine);
+                    writer.Write("  \"name\": \"" + script.Name.Content + "\"," + EscapeLine);
+                    writer.Write("  \"isCompatibility\": false," + EscapeLine);
+                    writer.Write("  \"isDnD\": false," + EscapeLine);
+                    writer.Write("  \"parent\": {" + EscapeLine);
+                    writer.Write("    \"name\": \"Scripts\"," + EscapeLine);
+                    writer.Write("    \"path\": \"folders/Scripts.yy\"," + EscapeLine);
+                    writer.Write("  }," + EscapeLine);
                     writer.Write("}");
                 }
                 IncrementProgressParallel();
