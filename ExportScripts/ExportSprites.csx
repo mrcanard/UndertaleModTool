@@ -17,8 +17,7 @@ if (Data.IsGameMaker2())
 
     System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
-    //
-    // bool padded = (!ScriptQuestion("Export all sprites unpadded?"));
+    String EscapeLine = "\r\n";
 
     bool padded = true;
 
@@ -55,7 +54,7 @@ if (Data.IsGameMaker2())
         for (int i = 0; i < Data.Sprites.Count; i++)
         {
             UndertaleSprite sprite = Data.Sprites[i];
-            writer.WriteLine(
+            writer.Write(
                 "    {\"id\":{\"name\":\""
                     + sprite.Name.Content
                     + "\",\"path\":\"sprites/"
@@ -63,12 +62,13 @@ if (Data.IsGameMaker2())
                     + "/"
                     + sprite.Name.Content
                     + ".yy\",},},"
+                    + EscapeLine
             );
         }
         for (int i = 0; i < Data.Backgrounds.Count; i++)
         {
             UndertaleBackground background = Data.Backgrounds[i];
-            writer.WriteLine(
+            writer.Write(
                 "    {\"id\":{\"name\":\""
                     + background.Name.Content
                     + "\",\"path\":\"sprites/"
@@ -76,6 +76,7 @@ if (Data.IsGameMaker2())
                     + "/"
                     + background.Name.Content
                     + ".yy\",},},"
+                    + EscapeLine
             );
         }
     }
@@ -106,6 +107,7 @@ if (Data.IsGameMaker2())
             )
         )
         {
+            Console.WriteLine(sprite.Name.Content);
             // BEGIN : Extraction Images
             string layer_directory =
                 texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + "layers";
@@ -163,111 +165,124 @@ if (Data.IsGameMaker2())
             }
             // END : Extraction Images
 
-            writer.WriteLine("{");
-            writer.WriteLine("  \"resourceType\": \"GMSprite\",");
-            writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-            writer.WriteLine("  \"name\": \"" + sprite.Name.Content + "\",");
-            writer.WriteLine("  \"bbox_bottom\": " + sprite.MarginBottom + ",");
-            writer.WriteLine("  \"bbox_left\": " + sprite.MarginLeft + ",");
-            writer.WriteLine("  \"bbox_right\": " + sprite.MarginRight + ",");
-            writer.WriteLine("  \"bbox_top\": " + sprite.MarginTop + ",");
-            writer.WriteLine("  \"bboxMode\": " + sprite.BBoxMode + ",");
+            writer.Write("{" + EscapeLine);
+            writer.Write("  \"resourceType\": \"GMSprite\"," + EscapeLine);
+            writer.Write("  \"resourceVersion\": \"1.0\"," + EscapeLine);
+            writer.Write("  \"name\": \"" + sprite.Name.Content + "\"," + EscapeLine);
+            writer.Write("  \"bbox_bottom\": " + sprite.MarginBottom + "," + EscapeLine);
+            writer.Write("  \"bbox_left\": " + sprite.MarginLeft + "," + EscapeLine);
+            writer.Write("  \"bbox_right\": " + sprite.MarginRight + "," + EscapeLine);
+            writer.Write("  \"bbox_top\": " + sprite.MarginTop + "," + EscapeLine);
+            writer.Write("  \"bboxMode\": " + sprite.BBoxMode + "," + EscapeLine);
             if (sprite.SepMasks == UndertaleSprite.SepMaskType.Precise)
             {
-                writer.WriteLine("  \"collisionKind\": 4,");
+                writer.Write("  \"collisionKind\": 4," + EscapeLine);
             }
             else if (sprite.SepMasks == UndertaleSprite.SepMaskType.AxisAlignedRect)
             {
-                writer.WriteLine("  \"collisionKind\": 0,");
+                writer.Write("  \"collisionKind\": 0," + EscapeLine);
             }
             else
             {
-                writer.WriteLine("  \"collisionKind\": 1,");
+                writer.Write("  \"collisionKind\": 1," + EscapeLine);
             }
-            writer.WriteLine("  \"collisionTolerance\": 0,");
-            writer.WriteLine("  \"DynamicTexturePage\": false,");
-            writer.WriteLine("  \"edgeFiltering\": false,");
-            writer.WriteLine("  \"For3D\": false,");
+            writer.Write("  \"collisionTolerance\": 0," + EscapeLine);
+            writer.Write("  \"DynamicTexturePage\": false," + EscapeLine);
+            writer.Write("  \"edgeFiltering\": false," + EscapeLine);
+            writer.Write("  \"For3D\": false," + EscapeLine);
             // BEGIN : frames
-            writer.WriteLine("  \"frames\": [");
+            writer.Write("  \"frames\": [" + EscapeLine);
             for (int i = 0; i < sprite.Textures.Count; i++)
             {
                 if (sprite.Textures[i]?.Texture != null)
                 {
-                    writer.WriteLine(
+                    writer.Write(
                         "    {\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"1.1\",\"name\":\""
                             + sprite.Name.Content
                             + "_"
                             + i
                             + "\",},"
+                            + EscapeLine
                     );
                 }
             }
-            writer.WriteLine("  ],");
+            writer.Write("  ]," + EscapeLine);
             // END : frames
-            writer.WriteLine("  \"gridX\": 0,");
-            writer.WriteLine("  \"gridY\": 0,");
-            writer.WriteLine("  \"height\": " + sprite.Height + ",");
-            writer.WriteLine("  \"HTile\": false,");
+            writer.Write("  \"gridX\": 0," + EscapeLine);
+            writer.Write("  \"gridY\": 0," + EscapeLine);
+            writer.Write("  \"height\": " + sprite.Height + "," + EscapeLine);
+            writer.Write("  \"HTile\": false," + EscapeLine);
             // BEGIN : layers
-            writer.WriteLine("  \"layers\": [");
-            writer.WriteLine(
+            writer.Write("  \"layers\": [" + EscapeLine);
+            writer.Write(
                 "    {\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"1.0\",\"name\":\""
                     + sprite.Name.Content
                     + "_"
                     + "layer"
                     + "\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},"
+                    + EscapeLine
             );
-            writer.WriteLine("  ],");
+            writer.Write("  ]," + EscapeLine);
             // END : layers
-            writer.WriteLine("  \"nineSlice\": null,");
-            writer.WriteLine("  \"origin\": 0,");
-            writer.WriteLine("  \"parent\": {");
-            writer.WriteLine("    \"name\": \"Sprites\",");
-            writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"preMultiplyAlpha\": false,");
-            writer.WriteLine("  \"sequence\": {");
-            writer.WriteLine("    \"resourceType\": \"GMSequence\",");
-            writer.WriteLine("    \"resourceVersion\": \"1.4\",");
-            writer.WriteLine("    \"name\": \"" + sprite.Name.Content + "\",");
-            writer.WriteLine("    \"autoRecord\": true,");
-            writer.WriteLine("    \"backdropHeight\": 1080,");
-            writer.WriteLine("    \"backdropImageOpacity\": 0.5,");
-            writer.WriteLine("    \"backdropImagePath\": \"\",");
-            writer.WriteLine("    \"backdropWidth\": 1920,");
-            writer.WriteLine("    \"backdropXOffset\": 0.0,");
-            writer.WriteLine("    \"backdropYOffset\": 0.0,");
-            writer.WriteLine(
+            writer.Write("  \"nineSlice\": null," + EscapeLine);
+            writer.Write("  \"origin\": 0," + EscapeLine);
+            writer.Write("  \"parent\": {" + EscapeLine);
+            writer.Write("    \"name\": \"Sprites\"," + EscapeLine);
+            writer.Write("    \"path\": \"folders/Sprites.yy\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"preMultiplyAlpha\": false," + EscapeLine);
+            writer.Write("  \"sequence\": {" + EscapeLine);
+            writer.Write("    \"resourceType\": \"GMSequence\"," + EscapeLine);
+            writer.Write("    \"resourceVersion\": \"1.4\"," + EscapeLine);
+            writer.Write("    \"name\": \"" + sprite.Name.Content + "\"," + EscapeLine);
+            writer.Write("    \"autoRecord\": true," + EscapeLine);
+            writer.Write("    \"backdropHeight\": 1080," + EscapeLine);
+            writer.Write("    \"backdropImageOpacity\": 0.5," + EscapeLine);
+            writer.Write("    \"backdropImagePath\": \"\"," + EscapeLine);
+            writer.Write("    \"backdropWidth\": 1920," + EscapeLine);
+            writer.Write("    \"backdropXOffset\": 0.0," + EscapeLine);
+            writer.Write("    \"backdropYOffset\": 0.0," + EscapeLine);
+            writer.Write(
                 "    \"events\": {\"resourceType\":\"KeyframeStore<MessageEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},"
+                    + EscapeLine
             );
-            writer.WriteLine("    \"eventStubScript\": null,");
-            writer.WriteLine("    \"eventToFunction\": {},");
-            writer.WriteLine("    \"length\": " + sprite.Textures.Count.ToString("0.0") + ",");
-            writer.WriteLine("    \"lockOrigin\": false,");
-            writer.WriteLine(
+            writer.Write("    \"eventStubScript\": null," + EscapeLine);
+            writer.Write("    \"eventToFunction\": {}," + EscapeLine);
+            writer.Write(
+                "    \"length\": " + sprite.Textures.Count.ToString("0.0") + "," + EscapeLine
+            );
+            writer.Write("    \"lockOrigin\": false," + EscapeLine);
+            writer.Write(
                 "    \"moments\": {\"resourceType\":\"KeyframeStore<MomentsEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},"
+                    + EscapeLine
             );
-            writer.WriteLine("    \"playback\": 1,");
-            writer.WriteLine(
-                "    \"playbackSpeed\": " + sprite.GMS2PlaybackSpeed.ToString("0.0") + ","
+            writer.Write("    \"playback\": 1," + EscapeLine);
+            writer.Write(
+                "    \"playbackSpeed\": "
+                    + sprite.GMS2PlaybackSpeed.ToString("0.0")
+                    + ","
+                    + EscapeLine
             );
-            writer.WriteLine(
-                "    \"playbackSpeedType\": " + (ushort)sprite.GMS2PlaybackSpeedType + ","
+            writer.Write(
+                "    \"playbackSpeedType\": "
+                    + (ushort)sprite.GMS2PlaybackSpeedType
+                    + ","
+                    + EscapeLine
             );
-            writer.WriteLine("    \"showBackdrop\": true,");
-            writer.WriteLine("    \"showBackdropImage\": false,");
-            writer.WriteLine("    \"timeUnits\": 1,");
+            writer.Write("    \"showBackdrop\": true," + EscapeLine);
+            writer.Write("    \"showBackdropImage\": false," + EscapeLine);
+            writer.Write("    \"timeUnits\": 1," + EscapeLine);
             // BEGIN : tracks
-            writer.WriteLine("    \"tracks\": [");
-            writer.WriteLine(
+            writer.Write("    \"tracks\": [" + EscapeLine);
+            writer.Write(
                 "      {\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"1.0\",\"name\":\"frames\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":["
+                    + EscapeLine
             );
             for (int i = 0; i < sprite.Textures.Count; i++)
             {
                 if (sprite.Textures[i]?.Texture != null)
                 {
-                    writer.WriteLine(
+                    writer.Write(
                         "            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""
                             + sprite.Name.Content
                             + "_"
@@ -279,28 +294,30 @@ if (Data.IsGameMaker2())
                             + ".yy\",},},},\"Disabled\":false,\"IsCreationKey\":false,\"Key\":"
                             + i.ToString("0.0")
                             + ",\"Length\":1.0,\"Stretch\":false,},"
+                            + EscapeLine
                     );
                 }
             }
-            writer.WriteLine(
+            writer.Write(
                 "      ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},"
+                    + EscapeLine
             );
-            writer.WriteLine("    ],");
+            writer.Write("    ]," + EscapeLine);
             // END : tracks
-            writer.WriteLine("    \"visibleRange\": null,");
-            writer.WriteLine("    \"volume\": 1.0,");
-            writer.WriteLine("    \"xorigin\": " + sprite.OriginX + ",");
-            writer.WriteLine("    \"yorigin\": " + sprite.OriginY + ",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"swatchColours\": null,");
-            writer.WriteLine("  \"swfPrecision\": 2.525,");
-            writer.WriteLine("  \"textureGroupId\": {");
-            writer.WriteLine("    \"name\": \"Default\",");
-            writer.WriteLine("    \"path\": \"texturegroups/Default\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"type\": 0,");
-            writer.WriteLine("  \"VTile\": false,");
-            writer.WriteLine("  \"width\": " + sprite.Width + ",");
+            writer.Write("    \"visibleRange\": null," + EscapeLine);
+            writer.Write("    \"volume\": 1.0," + EscapeLine);
+            writer.Write("    \"xorigin\": " + sprite.OriginX + "," + EscapeLine);
+            writer.Write("    \"yorigin\": " + sprite.OriginY + "," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"swatchColours\": null," + EscapeLine);
+            writer.Write("  \"swfPrecision\": 2.525," + EscapeLine);
+            writer.Write("  \"textureGroupId\": {" + EscapeLine);
+            writer.Write("    \"name\": \"Default\"," + EscapeLine);
+            writer.Write("    \"path\": \"texturegroups/Default\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"type\": 0," + EscapeLine);
+            writer.Write("  \"VTile\": false," + EscapeLine);
+            writer.Write("  \"width\": " + sprite.Width + "," + EscapeLine);
             writer.Write("}");
         }
 
@@ -331,6 +348,8 @@ if (Data.IsGameMaker2())
             )
         )
         {
+            Console.WriteLine(background.Name.Content);
+
             // BEGIN : Extraction Images
             string layer_directory =
                 texFolder + background.Name.Content + Path.DirectorySeparatorChar + "layers";
@@ -380,77 +399,82 @@ if (Data.IsGameMaker2())
             // }
             // END : Extraction Images
 
-            writer.WriteLine("{");
-            writer.WriteLine("  \"resourceType\": \"GMSprite\",");
-            writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-            writer.WriteLine("  \"name\": \"" + background.Name.Content + "\",");
-            writer.WriteLine("  \"bbox_bottom\": 63,");
-            writer.WriteLine("  \"bbox_left\": 0,");
-            writer.WriteLine("  \"bbox_right\": 63,");
-            writer.WriteLine("  \"bbox_top\": 0,");
-            writer.WriteLine("  \"bboxMode\": 0,");
-            writer.WriteLine("  \"collisionKind\": 1,");
-            writer.WriteLine("  \"collisionTolerance\": 0,");
-            writer.WriteLine("  \"DynamicTexturePage\": false,");
-            writer.WriteLine("  \"edgeFiltering\": false,");
-            writer.WriteLine("  \"For3D\": false,");
-            writer.WriteLine("  \"frames\": [");
-            writer.WriteLine(
+            writer.Write("{" + EscapeLine);
+            writer.Write("  \"resourceType\": \"GMSprite\"," + EscapeLine);
+            writer.Write("  \"resourceVersion\": \"1.0\"," + EscapeLine);
+            writer.Write("  \"name\": \"" + background.Name.Content + "\"," + EscapeLine);
+            writer.Write("  \"bbox_bottom\": 63," + EscapeLine);
+            writer.Write("  \"bbox_left\": 0," + EscapeLine);
+            writer.Write("  \"bbox_right\": 63," + EscapeLine);
+            writer.Write("  \"bbox_top\": 0," + EscapeLine);
+            writer.Write("  \"bboxMode\": 0," + EscapeLine);
+            writer.Write("  \"collisionKind\": 1," + EscapeLine);
+            writer.Write("  \"collisionTolerance\": 0," + EscapeLine);
+            writer.Write("  \"DynamicTexturePage\": false," + EscapeLine);
+            writer.Write("  \"edgeFiltering\": false," + EscapeLine);
+            writer.Write("  \"For3D\": false," + EscapeLine);
+            writer.Write("  \"frames\": [" + EscapeLine);
+            writer.Write(
                 "    {\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"1.1\",\"name\":\""
                     + background.Name.Content
                     + "\",},"
+                    + EscapeLine
             );
-            writer.WriteLine("  ],");
-            writer.WriteLine("  \"gridX\": 0,");
-            writer.WriteLine("  \"gridY\": 0,");
-            writer.WriteLine("  \"height\": " + background.Texture.TargetHeight + ",");
-            writer.WriteLine("  \"HTile\": false,");
-            writer.WriteLine("  \"layers\": [");
-            writer.WriteLine(
+            writer.Write("  ]," + EscapeLine);
+            writer.Write("  \"gridX\": 0," + EscapeLine);
+            writer.Write("  \"gridY\": 0," + EscapeLine);
+            writer.Write("  \"height\": " + background.Texture.TargetHeight + "," + EscapeLine);
+            writer.Write("  \"HTile\": false," + EscapeLine);
+            writer.Write("  \"layers\": [" + EscapeLine);
+            writer.Write(
                 "    {\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"1.0\",\"name\":\""
                     + background.Name.Content
                     + "\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},"
+                    + EscapeLine
             );
-            writer.WriteLine("  ],");
-            writer.WriteLine("  \"nineSlice\": null,");
-            writer.WriteLine("  \"origin\": 0,");
-            writer.WriteLine("  \"parent\": {");
-            writer.WriteLine("    \"name\": \"tilesets\",");
-            writer.WriteLine("    \"path\": \"folders/Sprites/tilesets.yy\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"preMultiplyAlpha\": false,");
-            writer.WriteLine("  \"sequence\": {");
-            writer.WriteLine("    \"resourceType\": \"GMSequence\",");
-            writer.WriteLine("    \"resourceVersion\": \"1.4\",");
-            writer.WriteLine("    \"name\": \"\",");
-            writer.WriteLine("    \"autoRecord\": true,");
-            writer.WriteLine("    \"backdropHeight\": 1080,");
-            writer.WriteLine("    \"backdropImageOpacity\": 0.5,");
-            writer.WriteLine("    \"backdropImagePath\": \"\",");
-            writer.WriteLine("    \"backdropWidth\": 1920,");
-            writer.WriteLine("    \"backdropXOffset\": 0.0,");
-            writer.WriteLine("    \"backdropYOffset\": 0.0,");
-            writer.WriteLine(
+            writer.Write("  ]," + EscapeLine);
+            writer.Write("  \"nineSlice\": null," + EscapeLine);
+            writer.Write("  \"origin\": 0," + EscapeLine);
+            writer.Write("  \"parent\": {" + EscapeLine);
+            writer.Write("    \"name\": \"tilesets\"," + EscapeLine);
+            writer.Write("    \"path\": \"folders/Sprites/tilesets.yy\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"preMultiplyAlpha\": false," + EscapeLine);
+            writer.Write("  \"sequence\": {" + EscapeLine);
+            writer.Write("    \"resourceType\": \"GMSequence\"," + EscapeLine);
+            writer.Write("    \"resourceVersion\": \"1.4\"," + EscapeLine);
+            writer.Write("    \"name\": \"\"," + EscapeLine);
+            writer.Write("    \"autoRecord\": true," + EscapeLine);
+            writer.Write("    \"backdropHeight\": 1080," + EscapeLine);
+            writer.Write("    \"backdropImageOpacity\": 0.5," + EscapeLine);
+            writer.Write("    \"backdropImagePath\": \"\"," + EscapeLine);
+            writer.Write("    \"backdropWidth\": 1920," + EscapeLine);
+            writer.Write("    \"backdropXOffset\": 0.0," + EscapeLine);
+            writer.Write("    \"backdropYOffset\": 0.0," + EscapeLine);
+            writer.Write(
                 "    \"events\": {\"resourceType\":\"KeyframeStore<MessageEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},"
+                    + EscapeLine
             );
-            writer.WriteLine("    \"eventStubScript\": null,");
-            writer.WriteLine("    \"eventToFunction\": {},");
-            writer.WriteLine("    \"length\": 1.0,");
-            writer.WriteLine("    \"lockOrigin\": false,");
-            writer.WriteLine(
+            writer.Write("    \"eventStubScript\": null," + EscapeLine);
+            writer.Write("    \"eventToFunction\": {}," + EscapeLine);
+            writer.Write("    \"length\": 1.0," + EscapeLine);
+            writer.Write("    \"lockOrigin\": false," + EscapeLine);
+            writer.Write(
                 "    \"moments\": {\"resourceType\":\"KeyframeStore<MomentsEventKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[],},"
+                    + EscapeLine
             );
-            writer.WriteLine("    \"playback\": 1,");
-            writer.WriteLine("    \"playbackSpeed\": 1.0,");
-            writer.WriteLine("    \"playbackSpeedType\": 1,");
-            writer.WriteLine("    \"showBackdrop\": true,");
-            writer.WriteLine("    \"showBackdropImage\": false,");
-            writer.WriteLine("    \"timeUnits\": 1,");
-            writer.WriteLine("    \"tracks\": [");
-            writer.WriteLine(
+            writer.Write("    \"playback\": 1," + EscapeLine);
+            writer.Write("    \"playbackSpeed\": 1.0," + EscapeLine);
+            writer.Write("    \"playbackSpeedType\": 1," + EscapeLine);
+            writer.Write("    \"showBackdrop\": true," + EscapeLine);
+            writer.Write("    \"showBackdropImage\": false," + EscapeLine);
+            writer.Write("    \"timeUnits\": 1," + EscapeLine);
+            writer.Write("    \"tracks\": [" + EscapeLine);
+            writer.Write(
                 "      {\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"1.0\",\"name\":\"frames\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":["
+                    + EscapeLine
             );
-            writer.WriteLine(
+            writer.Write(
                 "            {\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"1.0\",\"Channels\":{\"0\":{\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"1.0\",\"Id\":{\"name\":\""
                     + background.Name.Content
                     + "\",\"path\":\"sprites/"
@@ -458,25 +482,27 @@ if (Data.IsGameMaker2())
                     + "/"
                     + background.Name.Content
                     + ".yy\",},},},\"Disabled\":false,\"IsCreationKey\":false,\"Key\":0.0,\"Length\":1.0,\"Stretch\":false,},"
+                    + EscapeLine
             );
-            writer.WriteLine(
+            writer.Write(
                 "          ],},\"modifiers\":[],\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},"
+                    + EscapeLine
             );
-            writer.WriteLine("    ],");
-            writer.WriteLine("    \"visibleRange\": null,");
-            writer.WriteLine("    \"volume\": 1.0,");
-            writer.WriteLine("    \"xorigin\": 0,");
-            writer.WriteLine("    \"yorigin\": 0,");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"swatchColours\": null,");
-            writer.WriteLine("  \"swfPrecision\": 2.525,");
-            writer.WriteLine("  \"textureGroupId\": {");
-            writer.WriteLine("    \"name\": \"Default\",");
-            writer.WriteLine("    \"path\": \"texturegroups/Default\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"type\": 0,");
-            writer.WriteLine("  \"VTile\": false,");
-            writer.WriteLine("  \"width\": " + background.Texture.TargetWidth + ",");
+            writer.Write("    ]," + EscapeLine);
+            writer.Write("    \"visibleRange\": null," + EscapeLine);
+            writer.Write("    \"volume\": 1.0," + EscapeLine);
+            writer.Write("    \"xorigin\": 0," + EscapeLine);
+            writer.Write("    \"yorigin\": 0," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"swatchColours\": null," + EscapeLine);
+            writer.Write("  \"swfPrecision\": 2.525," + EscapeLine);
+            writer.Write("  \"textureGroupId\": {" + EscapeLine);
+            writer.Write("    \"name\": \"Default\"," + EscapeLine);
+            writer.Write("    \"path\": \"texturegroups/Default\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"type\": 0," + EscapeLine);
+            writer.Write("  \"VTile\": false," + EscapeLine);
+            writer.Write("  \"width\": " + background.Texture.TargetWidth + "," + EscapeLine);
             writer.Write("}");
         }
 
