@@ -16,7 +16,7 @@ if (Data.IsGameMaker2())
 
     System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
-    //
+    String EscapeLine = "\r\n";
 
     string roomsFolder = GetFolder(FilePath) + "rooms" + Path.DirectorySeparatorChar;
     ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDecompileContext>(
@@ -64,7 +64,7 @@ if (Data.IsGameMaker2())
         for (int i = 0; i < Data.Rooms.Count; i++)
         {
             UndertaleRoom room = Data.Rooms[i];
-            writer.WriteLine(
+            writer.Write(
                 "    {\"id\":{\"name\":\""
                     + room.Name.Content
                     + "\",\"path\":\"rooms/"
@@ -72,6 +72,7 @@ if (Data.IsGameMaker2())
                     + "/"
                     + room.Name.Content
                     + ".yy\",},},"
+                    + EscapeLine
             );
         }
     }
@@ -87,7 +88,7 @@ if (Data.IsGameMaker2())
         )
         {
             UndertaleRoom room = _room.Resource;
-            writer.WriteLine(
+            writer.Write(
                 "    {\"roomId\":{\"name\":\""
                     + room.Name.Content
                     + "\",\"path\":\"rooms/"
@@ -95,6 +96,7 @@ if (Data.IsGameMaker2())
                     + "/"
                     + room.Name.Content
                     + ".yy\",},},"
+                    + EscapeLine
             );
         }
     }
@@ -129,21 +131,22 @@ if (Data.IsGameMaker2())
             )
         )
         {
-            writer.WriteLine("{");
-            writer.WriteLine("  \"resourceType\": \"GMRoom\",");
-            writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-            writer.WriteLine("  \"name\": \"" + room.Name.Content + "\",");
+            writer.Write("{" + EscapeLine);
+            writer.Write("  \"resourceType\": \"GMRoom\"," + EscapeLine);
+            writer.Write("  \"resourceVersion\": \"1.0\"," + EscapeLine);
+            writer.Write("  \"name\": \"" + room.Name.Content + "\"," + EscapeLine);
             // Begin CreationCodeId
             if (room.CreationCodeId is null)
             {
-                writer.WriteLine("  \"creationCodeFile\": \"\",");
+                writer.Write("  \"creationCodeFile\": \"\"," + EscapeLine);
             }
             else
             {
-                writer.WriteLine(
+                writer.Write(
                     "  \"creationCodeFile\": \"rooms/"
                         + room.Name.Content
                         + "/RoomCreationCode.gml\","
+                        + EscapeLine
                 );
                 File.WriteAllText(
                     roomsFolder
@@ -154,13 +157,13 @@ if (Data.IsGameMaker2())
                 );
             }
             // End CreationCodeId
-            writer.WriteLine("  \"inheritCode\": false,");
-            writer.WriteLine("  \"inheritCreationOrder\": false,");
-            writer.WriteLine("  \"inheritLayers\": false,");
-            writer.WriteLine("  \"instanceCreationOrder\": [");
+            writer.Write("  \"inheritCode\": false," + EscapeLine);
+            writer.Write("  \"inheritCreationOrder\": false," + EscapeLine);
+            writer.Write("  \"inheritLayers\": false," + EscapeLine);
+            writer.Write("  \"instanceCreationOrder\": [" + EscapeLine);
             foreach (var g in room.GameObjects)
             {
-                writer.WriteLine(
+                writer.Write(
                     "    {\"name\":\"inst_"
                         + g.InstanceID
                         + "\",\"path\":\"rooms/"
@@ -168,11 +171,12 @@ if (Data.IsGameMaker2())
                         + "/"
                         + room.Name.Content
                         + ".yy\",},"
+                        + EscapeLine
                 );
             }
-            writer.WriteLine("  ],");
-            writer.WriteLine("  \"isDnd\": false,");
-            writer.WriteLine("  \"layers\": [");
+            writer.Write("  ]," + EscapeLine);
+            writer.Write("  \"isDnd\": false," + EscapeLine);
+            writer.Write("  \"layers\": [" + EscapeLine);
 
             // Composition depth
             var depthList = new SortedSet<int>();
@@ -202,10 +206,11 @@ if (Data.IsGameMaker2())
 
                 if (isTileLayer)
                 {
-                    writer.WriteLine(
+                    writer.Write(
                         "    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Tiles_Depth_"
                             + depth
                             + "\",\"assets\":["
+                            + EscapeLine
                     );
                     // Tiles
                     foreach (var t in room.Tiles)
@@ -217,7 +222,7 @@ if (Data.IsGameMaker2())
                                     ? t.SpriteDefinition.Name.Content
                                     : t.BackgroundDefinition.Name.Content
                             );
-                            writer.WriteLine(
+                            writer.Write(
                                 "        {\"resourceType\":\"GMRGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"inst_"
                                     + t.InstanceID
                                     + "\",\"colour\":"
@@ -245,24 +250,27 @@ if (Data.IsGameMaker2())
                                     + ",\"y\":"
                                     + t.Y.ToString("0.0")
                                     + ",},"
+                                    + EscapeLine
                             );
                         }
                     }
                     // End Tiles
-                    writer.WriteLine(
+                    writer.Write(
                         "    ],\"depth\":"
                             + depth
                             + ",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},"
+                            + EscapeLine
                     );
                 }
                 else
                 {
-                    writer.WriteLine(
+                    writer.Write(
                         "    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Instances_Depth_"
                             + depth
                             + "\",\"depth\":"
                             + depth
                             + ",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":["
+                            + EscapeLine
                     );
                     // Instances
                     foreach (var g in room.GameObjects)
@@ -270,7 +278,7 @@ if (Data.IsGameMaker2())
                         if (g.ObjectDefinition.Depth == depth)
                         {
                             var resource_name = g.ObjectDefinition.Name.Content;
-                            writer.WriteLine(
+                            writer.Write(
                                 "        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_"
                                     + g.InstanceID
                                     + "\",\"colour\":"
@@ -296,12 +304,14 @@ if (Data.IsGameMaker2())
                                     + ",\"y\":"
                                     + g.Y.ToString("0.0")
                                     + ",},"
+                                    + EscapeLine
                             );
                         }
                     }
                     // End Instances
-                    writer.WriteLine(
+                    writer.Write(
                         "      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},"
+                            + EscapeLine
                     );
                 }
             }
@@ -312,7 +322,7 @@ if (Data.IsGameMaker2())
                 if (b.BackgroundDefinition != null)
                 {
                     var resource_name = b.BackgroundDefinition.Name.Content;
-                    writer.WriteLine(
+                    writer.Write(
                         "    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Colour\",\"animationFPS\":1.0,\"animationSpeedType\":1,\"colour\":4294967295,\"depth\":2147483600,\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"hspeed\":"
                             + b.SpeedX
                             + ",\"htiled\":"
@@ -336,49 +346,57 @@ if (Data.IsGameMaker2())
                             + ",\"y\":"
                             + b.Y
                             + ",},"
+                            + EscapeLine
                     );
                 }
             }
 
-            writer.WriteLine("  ],");
-            writer.WriteLine("  \"parent\": {");
-            writer.WriteLine("    \"name\": \"Rooms\",");
-            writer.WriteLine("    \"path\": \"folders/Rooms.yy\",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"parentRoom\": null,");
-            writer.WriteLine("  \"physicsSettings\": {");
-            writer.WriteLine("    \"inheritPhysicsSettings\": false,");
-            writer.WriteLine("    \"PhysicsWorld\": " + (room.World ? "true" : "false") + ",");
-            writer.WriteLine(
-                "    \"PhysicsWorldGravityX\": " + room.GravityX.ToString("0.0") + ","
+            writer.Write("  ]," + EscapeLine);
+            writer.Write("  \"parent\": {" + EscapeLine);
+            writer.Write("    \"name\": \"Rooms\"," + EscapeLine);
+            writer.Write("    \"path\": \"folders/Rooms.yy\"," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"parentRoom\": null," + EscapeLine);
+            writer.Write("  \"physicsSettings\": {" + EscapeLine);
+            writer.Write("    \"inheritPhysicsSettings\": false," + EscapeLine);
+            writer.Write(
+                "    \"PhysicsWorld\": " + (room.World ? "true" : "false") + "," + EscapeLine
             );
-            writer.WriteLine(
-                "    \"PhysicsWorldGravityY\": " + room.GravityY.ToString("0.0") + ","
+            writer.Write(
+                "    \"PhysicsWorldGravityX\": " + room.GravityX.ToString("0.0") + "," + EscapeLine
             );
-            writer.WriteLine(
-                "    \"PhysicsWorldPixToMetres\": " + room.MetersPerPixel.ToString("0.0") + ","
+            writer.Write(
+                "    \"PhysicsWorldGravityY\": " + room.GravityY.ToString("0.0") + "," + EscapeLine
             );
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"roomSettings\": {");
-            writer.WriteLine("    \"Height\": " + room.Height + ",");
-            writer.WriteLine("    \"inheritRoomSettings\": false,");
-            writer.WriteLine("    \"persistent\": " + (room.Persistent ? "true" : "false") + ",");
-            writer.WriteLine("    \"Width\": " + room.Width + ",");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"sequenceId\": null,");
-            writer.WriteLine("  \"views\": [");
+            writer.Write(
+                "    \"PhysicsWorldPixToMetres\": "
+                    + room.MetersPerPixel.ToString("0.0")
+                    + ","
+                    + EscapeLine
+            );
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"roomSettings\": {" + EscapeLine);
+            writer.Write("    \"Height\": " + room.Height + "," + EscapeLine);
+            writer.Write("    \"inheritRoomSettings\": false," + EscapeLine);
+            writer.Write(
+                "    \"persistent\": " + (room.Persistent ? "true" : "false") + "," + EscapeLine
+            );
+            writer.Write("    \"Width\": " + room.Width + "," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"sequenceId\": null," + EscapeLine);
+            writer.Write("  \"views\": [" + EscapeLine);
             foreach (var g in room.Views)
             {
-                writer.Write("    {");
-                writer.Write("\"hborder\":" + g.BorderX + ",");
-                writer.Write("\"hport\":" + g.PortHeight + ",");
-                writer.Write("\"hspeed\":" + g.SpeedX + ",");
-                writer.Write("\"hview\":" + g.ViewHeight + ",");
+                writer.Write("    {" + EscapeLine);
+                writer.Write("\"hborder\":" + g.BorderX + "," + EscapeLine);
+                writer.Write("\"hport\":" + g.PortHeight + "," + EscapeLine);
+                writer.Write("\"hspeed\":" + g.SpeedX + "," + EscapeLine);
+                writer.Write("\"hview\":" + g.ViewHeight + "," + EscapeLine);
                 writer.Write("\"inherit\":false,");
                 // begin objectId
                 if (g.ObjectId is null)
                 {
-                    writer.Write("\"objectId\":null,");
+                    writer.Write("\"objectId\":null," + EscapeLine);
                 }
                 else
                 {
@@ -391,23 +409,24 @@ if (Data.IsGameMaker2())
                             + "/"
                             + object_name
                             + ".yy\",},"
+                            + EscapeLine
                     );
                 }
                 // end objectId
-                writer.Write("\"vborder\":" + g.BorderY + ",");
-                writer.Write("\"visible\":" + (g.Enabled ? "true" : "false") + ",");
-                writer.Write("\"vspeed\":" + g.SpeedY + ",");
-                writer.Write("\"wport\":" + g.PortWidth + ",");
-                writer.Write("\"wview\":" + g.ViewWidth + ",");
-                writer.Write("\"xport\":" + g.PortX + ",");
-                writer.Write("\"xview\":" + g.ViewX + ",");
-                writer.Write("\"yport\":" + g.PortY + ",");
-                writer.Write("\"yview\":" + g.ViewY + ",");
-                writer.WriteLine("},");
+                writer.Write("\"vborder\":" + g.BorderY + "," + EscapeLine);
+                writer.Write("\"visible\":" + (g.Enabled ? "true" : "false") + "," + EscapeLine);
+                writer.Write("\"vspeed\":" + g.SpeedY + "," + EscapeLine);
+                writer.Write("\"wport\":" + g.PortWidth + "," + EscapeLine);
+                writer.Write("\"wview\":" + g.ViewWidth + "," + EscapeLine);
+                writer.Write("\"xport\":" + g.PortX + "," + EscapeLine);
+                writer.Write("\"xview\":" + g.ViewX + "," + EscapeLine);
+                writer.Write("\"yport\":" + g.PortY + "," + EscapeLine);
+                writer.Write("\"yview\":" + g.ViewY + "," + EscapeLine);
+                writer.Write("}," + EscapeLine);
             }
-            writer.WriteLine("  ],");
-            writer.WriteLine("  \"viewSettings\": {");
-            writer.WriteLine(
+            writer.Write("  ]," + EscapeLine);
+            writer.Write("  \"viewSettings\": {" + EscapeLine);
+            writer.Write(
                 "    \"clearDisplayBuffer\": "
                     + (
                         room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.DoNotClearDisplayBuffer)
@@ -415,9 +434,10 @@ if (Data.IsGameMaker2())
                             : "false"
                     )
                     + ","
+                    + EscapeLine
             );
-            writer.WriteLine("    \"clearViewBackground\": false,");
-            writer.WriteLine(
+            writer.Write("    \"clearViewBackground\": false," + EscapeLine);
+            writer.Write(
                 "    \"enableViews\": "
                     + (
                         room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.EnableViews)
@@ -425,11 +445,12 @@ if (Data.IsGameMaker2())
                             : "false"
                     )
                     + ","
+                    + EscapeLine
             );
-            writer.WriteLine("    \"inheritViewSettings\": false,");
-            writer.WriteLine("  },");
-            writer.WriteLine("  \"volume\": 1.0,");
-            writer.Write("}");
+            writer.Write("    \"inheritViewSettings\": false," + EscapeLine);
+            writer.Write("  }," + EscapeLine);
+            writer.Write("  \"volume\": 1.0," + EscapeLine);
+            writer.Write("}" + EscapeLine);
         }
 
         IncrementProgressParallel();
