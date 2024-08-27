@@ -387,16 +387,16 @@ if (Data.IsGameMaker2())
             writer.Write("  \"views\": [" + EscapeLine);
             foreach (var g in room.Views)
             {
-                writer.Write("    {" + EscapeLine);
-                writer.Write("\"hborder\":" + g.BorderX + "," + EscapeLine);
-                writer.Write("\"hport\":" + g.PortHeight + "," + EscapeLine);
-                writer.Write("\"hspeed\":" + g.SpeedX + "," + EscapeLine);
-                writer.Write("\"hview\":" + g.ViewHeight + "," + EscapeLine);
+                writer.Write("    {");
+                writer.Write("\"hborder\":" + g.BorderX + ",");
+                writer.Write("\"hport\":" + g.PortHeight + ",");
+                writer.Write("\"hspeed\":" + g.SpeedX + ",");
+                writer.Write("\"hview\":" + g.ViewHeight + ",");
                 writer.Write("\"inherit\":false,");
                 // begin objectId
                 if (g.ObjectId is null)
                 {
-                    writer.Write("\"objectId\":null," + EscapeLine);
+                    writer.Write("\"objectId\":null,");
                 }
                 else
                 {
@@ -409,20 +409,19 @@ if (Data.IsGameMaker2())
                             + "/"
                             + object_name
                             + ".yy\",},"
-                            + EscapeLine
                     );
                 }
                 // end objectId
-                writer.Write("\"vborder\":" + g.BorderY + "," + EscapeLine);
-                writer.Write("\"visible\":" + (g.Enabled ? "true" : "false") + "," + EscapeLine);
-                writer.Write("\"vspeed\":" + g.SpeedY + "," + EscapeLine);
-                writer.Write("\"wport\":" + g.PortWidth + "," + EscapeLine);
-                writer.Write("\"wview\":" + g.ViewWidth + "," + EscapeLine);
-                writer.Write("\"xport\":" + g.PortX + "," + EscapeLine);
-                writer.Write("\"xview\":" + g.ViewX + "," + EscapeLine);
-                writer.Write("\"yport\":" + g.PortY + "," + EscapeLine);
-                writer.Write("\"yview\":" + g.ViewY + "," + EscapeLine);
-                writer.Write("}," + EscapeLine);
+                writer.Write("\"vborder\":" + g.BorderY + ",");
+                writer.Write("\"visible\":" + (g.Enabled ? "true" : "false") + ",");
+                writer.Write("\"vspeed\":" + g.SpeedY + ",");
+                writer.Write("\"wport\":" + g.PortWidth + ",");
+                writer.Write("\"wview\":" + g.ViewWidth + ",");
+                writer.Write("\"xport\":" + g.PortX + ",");
+                writer.Write("\"xview\":" + g.ViewX + ",");
+                writer.Write("\"yport\":" + g.PortY + ",");
+                writer.Write("\"yview\":" + g.ViewY + ",");
+                writer.WriteLine("},");
             }
             writer.Write("  ]," + EscapeLine);
             writer.Write("  \"viewSettings\": {" + EscapeLine);
@@ -430,8 +429,8 @@ if (Data.IsGameMaker2())
                 "    \"clearDisplayBuffer\": "
                     + (
                         room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.DoNotClearDisplayBuffer)
-                            ? "true"
-                            : "false"
+                            ? "false"
+                            : "true"
                     )
                     + ","
                     + EscapeLine
@@ -450,7 +449,7 @@ if (Data.IsGameMaker2())
             writer.Write("    \"inheritViewSettings\": false," + EscapeLine);
             writer.Write("  }," + EscapeLine);
             writer.Write("  \"volume\": 1.0," + EscapeLine);
-            writer.Write("}" + EscapeLine);
+            writer.Write("}");
         }
 
         IncrementProgressParallel();
@@ -573,7 +572,7 @@ else
             );
             writer.WriteLine(
                 "  <clearDisplayBuffer>"
-                    + (flagClearDisplayBuffer ? -1 : 0)
+                    + (flagClearDisplayBuffer ? 0 : -1)
                     + "</clearDisplayBuffer>"
             );
             writer.WriteLine("  <makerSettings>");
