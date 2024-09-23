@@ -6,7 +6,7 @@
 *** TODO Jeux test GameMaker
 **** Tower Defense
 ***** DONE ExportFontDataGMS2
-***** TODO ExportGameObjectsGMS2
+***** DONE ExportGameObjectsGMS2
 ***** TODO ExportObjectDepthGMS2
 ***** TODO ExportPathDataGMS2
 ***** TODO ExportProjectGMS2
