@@ -25,7 +25,7 @@ SetProgressBar(null, "Fonts", 0, Data.Fonts.Count);
 StartProgressBarUpdater();
 
 await DumpFonts();
-worker.Cleanup();
+// worker.Cleanup();
 
 await StopProgressBarUpdater();
 HideProgressBar();
@@ -87,6 +87,9 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  \"italic\": " + (font.Italic ? "true" : "false") + ",");
         writer.WriteLine("  \"kerningPairs\": [],");
         writer.WriteLine("  \"last\": 0,");
+        if(Data.IsVersionAtLeast(2023, 6)) {
+            writer.WriteLine("  \"lineHeight\": " + font.LineHeight + ",");
+        }
         writer.WriteLine("  \"maintainGms1Font\": false,");
         writer.WriteLine("  \"parent\": {");
         writer.WriteLine("    \"name\": \"Fonts\",");
@@ -98,6 +101,9 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  ],");
         writer.WriteLine("  \"regenerateBitmap\": false,");
         writer.WriteLine("  \"sampleText\": \"abcdef ABCDEF\\n0123456789 .,<>\\\"'&!?\\nthe quick brown fox jumps over the lazy dog\\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\\nDefault character: ▯ (9647)\",");
+        if(Data.IsNonLTSVersionAtLeast(2023, 2)) {
+            writer.WriteLine("  \"sdfSpread\": " + font.SDFSpread + ",");
+        }
         writer.WriteLine("  \"size\": " + (font.EmSize + 0.0f) + ".0,");
         writer.WriteLine("  \"styleName\": \"Regular\",");
         writer.WriteLine("  \"textureGroupId\": {");
@@ -105,6 +111,7 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("    \"path\": \"texturegroups/Default\",");
         writer.WriteLine("  },");
         writer.WriteLine("  \"TTFName\": \"\",");
+        writer.WriteLine("  \"usesSDF\": " + (font.SDFSpread == 0 ? "false" : "true") + ",");
         writer.Write("}");
     }
 

@@ -5,7 +5,7 @@
 ** Jeux à tester
 *** TODO Jeux test GameMaker
 **** Tower Defense
-***** TODO ExportFontDataGMS2
+***** DONE ExportFontDataGMS2
 ***** TODO ExportGameObjectsGMS2
 ***** TODO ExportObjectDepthGMS2
 ***** TODO ExportPathDataGMS2
@@ -29,3 +29,4 @@
 *** TODO Hyper Light Drifter
 *** TODO Katana Zero
 *** TODO DeltaRune Chapter 1
+*** TODO Minit
