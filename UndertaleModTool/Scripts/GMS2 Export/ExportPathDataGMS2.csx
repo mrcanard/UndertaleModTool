@@ -34,7 +34,7 @@ SetProgressBar(null, "Paths", 0, Data.Paths.Count);
 StartProgressBarUpdater();
 
 await DumpPaths();
-worker.Cleanup();
+// worker.Cleanup();
 
 await StopProgressBarUpdater();
 HideProgressBar();
