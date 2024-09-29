@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+// using System.Windows.Forms;
 using UndertaleModLib.Util;
 
 EnsureDataLoaded();
@@ -75,7 +75,7 @@ void DumpPath(UndertalePath path)
 
     using (
         StreamWriter writer = new StreamWriter(
-            fntPaths + path.Name.Content + "\\" + path.Name.Content + ".yy"
+            fntPaths + path.Name.Content + Path.DirectorySeparatorChar + path.Name.Content + ".yy"
         )
     )
     {

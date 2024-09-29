@@ -4,10 +4,10 @@ Working
 * GameMaker v2
 ** Jeux à tester
 *** TODO Jeux test GameMaker
-**** Tower Defense [2/12]
+**** Tower Defense [3/12]
 ***** DONE ExportFontDataGMS2
 ***** DONE ExportGameObjectsGMS2
-***** TODO ExportPathDataGMS2
+***** DONE ExportPathDataGMS2
 ***** TODO ExportRoomsGMS2
 ***** TODO ExportScriptCodeGMS2
 ***** TODO ExportSequencesGMS2
