@@ -67,7 +67,7 @@ void DumpSequence(UndertaleSequence sequence)
 
     Directory.CreateDirectory(sequencesFolder + sequence.Name.Content);
 
-    using (StreamWriter writer = new StreamWriter(sequencesFolder + sequence.Name.Content + "\\" + sequence.Name.Content + ".yy"))
+    using (StreamWriter writer = new StreamWriter(sequencesFolder + sequence.Name.Content + Path.DirectorySeparatorChar + sequence.Name.Content + ".yy"))
     {
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMSequence\",");
