@@ -116,7 +116,7 @@ void DumpRoom(UndertaleRoom room)
     SetProgressBar(null, "Room Entries : " + room.Name.Content, 0, 1);
     using (
         StreamWriter writer = new StreamWriter(
-            roomsFolder + room.Name.Content + "\\" + room.Name.Content + ".yy"
+            roomsFolder + room.Name.Content + Path.DirectorySeparatorChar + room.Name.Content + ".yy"
         )
     )
     {
@@ -135,7 +135,7 @@ void DumpRoom(UndertaleRoom room)
                 "  \"creationCodeFile\": \"rooms/" + room.Name.Content + "/RoomCreationCode.gml\","
             );
             File.WriteAllText(
-                roomsFolder + room.Name.Content + "\\" + "RoomCreationCode.gml",
+                roomsFolder + room.Name.Content + Path.DirectorySeparatorChar + "RoomCreationCode.gml",
                 Decompiler.Decompile(room.CreationCodeId, DECOMPILE_CONTEXT.Value)
             );
         }
@@ -392,9 +392,9 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine(
             "    \"clearDisplayBuffer\": "
                 + (
-                    room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.ClearDisplayBuffer)
-                        ? "true"
-                        : "false"
+                    room.Flags.HasFlag(UndertaleRoom.RoomEntryFlags.DoNotClearDisplayBuffer)
+                        ? "false"
+                        : "true"
                 )
                 + ","
         );

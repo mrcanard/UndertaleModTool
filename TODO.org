@@ -8,7 +8,6 @@ Working
 ***** DONE ExportFontDataGMS2
 ***** DONE ExportGameObjectsGMS2
 ***** DONE ExportPathDataGMS2
-***** TODO ExportRoomsGMS2
 ***** TODO ExportScriptCodeGMS2
 ***** TODO ExportSequencesGMS2
 ***** TODO ExportShaderGMS2
@@ -17,7 +16,7 @@ Working
 ***** TODO ExportTilesetsGMS2
 ***** TODO ExportObjectDepthGMS2
 ***** TODO ExportProjectGMS2
-
+***** TODO ExportRoomsGMS2
 *** TODO GatoRoboto
 *** TODO Faith
 *** TODO The Eternal Castle
