@@ -1,13 +1,13 @@
 * GameMaker v1
 ** Undertale
-   Working
+Working
 * GameMaker v2
 ** Jeux à tester
 *** TODO Jeux test GameMaker
-**** Tower Defense
+**** Tower Defense [2/12]
 ***** DONE ExportFontDataGMS2
 ***** DONE ExportGameObjectsGMS2
-***** DONE ExportPathDataGMS2
+***** TODO ExportPathDataGMS2
 ***** TODO ExportRoomsGMS2
 ***** TODO ExportScriptCodeGMS2
 ***** TODO ExportSequencesGMS2
