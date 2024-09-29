@@ -9,16 +9,16 @@ Working
 ***** DONE ExportGameObjectsGMS2
 ***** DONE ExportPathDataGMS2
 ***** DONE ExportScriptCodeGMS2
-***** TODO ExportSequencesGMS2
-****** tracks
-******* resourceType : GMGraphicTrack
-******** resourceVersion : 1.0
 ***** TODO ExportShaderGMS2
 ***** TODO ExportSoundsGMS2
 ***** TODO ExportSpritesGMS2
 ***** TODO ExportTilesetsGMS2
 ***** TODO ExportObjectDepthGMS2
 ***** TODO ExportProjectGMS2
+***** TODO ExportSequencesGMS2
+****** tracks
+******* resourceType : GMGraphicTrack
+******** resourceVersion : 1.0
 ***** TODO ExportRoomsGMS2
 *** TODO GatoRoboto
 *** TODO Faith
