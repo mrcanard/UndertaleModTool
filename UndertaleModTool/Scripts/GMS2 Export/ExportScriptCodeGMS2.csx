@@ -126,7 +126,7 @@ void DumpCode(UndertaleScript script)
             // Extraction .yy
             using (
                 StreamWriter writer = new StreamWriter(
-                    codeFolder + script.Name.Content + "\\" + script.Name.Content + ".yy"
+                    codeFolder + script.Name.Content + Path.DirectorySeparatorChar + script.Name.Content + ".yy"
                 )
             )
             {
