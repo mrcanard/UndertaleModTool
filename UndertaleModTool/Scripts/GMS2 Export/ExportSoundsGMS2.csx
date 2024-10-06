@@ -1,8 +1,6 @@
 // Original script by Kneesnap, updated by Grossley
 using System;
 using System.IO;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 EnsureDataLoaded();
@@ -23,7 +21,7 @@ string winFolder = GetFolder(FilePath); // The folder data.win is located in.
 bool usesAGRP = (Data.AudioGroups.Count > 0);
 
 // Sound Folder
-string ExportFolder = winFolder + "sounds\\";
+string ExportFolder = winFolder + "sounds" + Path.DirectorySeparatorChar;
 
 //Overwrite Folder Check One
 if (Directory.Exists(ExportFolder))
@@ -32,7 +30,7 @@ if (Directory.Exists(ExportFolder))
 }
 
 var externalOGG_Copy = 1;
-string externalOGG_Folder = winFolder + "undertale_ogg\\";
+string externalOGG_Folder = winFolder + "undertale_ogg" + Path.DirectorySeparatorChar;
 
 byte[] EMPTY_WAV_FILE_BYTES = System.Convert.FromBase64String(
     "UklGRiQAAABXQVZFZm10IBAAAAABAAIAQB8AAAB9AAAEABAAZGF0YQAAAAA="
@@ -139,7 +137,7 @@ byte[] GetSoundData(UndertaleSound sound)
 void DumpSounds()
 {
     // MakeFolder("Export_Sounds");
-    // MakeFolder("Export_Sounds\\audio");
+    // MakeFolder("Export_Sounds/audio");
     foreach (UndertaleSound sound in Data.Sounds)
         DumpSound(sound);
 }
@@ -158,11 +156,11 @@ void DumpSound(UndertaleSound sound)
     string soundFilePath;
 
     // Création du répertoire pour le son
-    soundFilePath = winFolder + "sounds\\" + soundName;
+    soundFilePath = winFolder + "sounds" + Path.DirectorySeparatorChar + soundName;
     MakeFolder("sounds");
     Directory.CreateDirectory(soundFilePath);
 
-    soundFilePath = soundFilePath + "\\" + soundName;
+    soundFilePath = soundFilePath + Path.DirectorySeparatorChar + soundName;
 
     // Compression, Streamed, Unpack on Load.
     // 1 = 000 = IsEmbedded, Regular.               '.wav' type saved in win.
@@ -182,7 +180,7 @@ void DumpSound(UndertaleSound sound)
         process = false;
         audioExt = ".ogg";
         string source = externalOGG_Folder + soundName + audioExt;
-        string dest = winFolder + "sounds" + "\\" + soundName + "\\" + soundName + audioExt;
+        string dest = winFolder + "sounds" + Path.DirectorySeparatorChar + soundName + Path.DirectorySeparatorChar + soundName + audioExt;
         if (externalOGG_Copy == 1)
         {
             System.IO.File.Copy(source, dest, false);
@@ -211,7 +209,9 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("    \"path\": \"folders/Sounds.yy\",");
         writer.WriteLine("  },");
         writer.WriteLine("  \"preload\": " + (sound.Preload ? "true" : "false") + ",");
+        writer.WriteLine("  \"sampleRate\": 44100,");
         writer.WriteLine("  \"soundFile\": \"" + sound.Name.Content + audioExt + "\",");
+        writer.WriteLine("  \"type\": "+ (sound.Type == null ? "0" : sound.Type) +",");
         writer.WriteLine("  \"volume\": " + sound.Volume.ToString("0.0") + ",");
         writer.Write("}");
     }
