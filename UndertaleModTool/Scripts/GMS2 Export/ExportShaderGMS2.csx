@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using UndertaleModLib.Util;
 
 EnsureDataLoaded();
@@ -32,7 +31,7 @@ SetProgressBar(null, "Shaders", 0, Data.Shaders.Count);
 StartProgressBarUpdater();
 
 await DumpShaders();
-worker.Cleanup();
+// worker.Cleanup();
 
 await StopProgressBarUpdater();
 HideProgressBar();
@@ -73,7 +72,7 @@ void DumpShader(UndertaleShader shader)
 
     using (
         StreamWriter writer = new StreamWriter(
-            shaderPaths + shader.Name.Content + "\\" + shader.Name.Content + ".yy"
+            shaderPaths + shader.Name.Content + Path.DirectorySeparatorChar + shader.Name.Content + ".yy"
         )
     )
     {
@@ -94,11 +93,11 @@ void DumpShader(UndertaleShader shader)
         case UndertaleShader.ShaderType.GLSL_ES:
             // Vertex Source
             string path_vsh =
-                shaderPaths + shader.Name.Content + "\\" + shader.Name.Content + ".vsh";
+                shaderPaths + shader.Name.Content + Path.DirectorySeparatorChar + shader.Name.Content + ".vsh";
             File.WriteAllText(path_vsh, shader.GLSL_ES_Vertex.Content);
             // Fragment Source
             string path_fsh =
-                shaderPaths + shader.Name.Content + "\\" + shader.Name.Content + ".fsh";
+                shaderPaths + shader.Name.Content + Path.DirectorySeparatorChar + shader.Name.Content + ".fsh";
             File.WriteAllText(path_fsh, shader.GLSL_ES_Fragment.Content);
             break;
 
