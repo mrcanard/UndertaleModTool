@@ -11,11 +11,11 @@ Working
 ***** DONE ExportScriptCodeGMS2
 ***** DONE ExportShaderGMS2
 ***** DONE ExportSoundsGMS2
-***** TODO ExportSpritesGMS2
-***** TODO ExportProjectGMS2
+***** DONE ExportSpritesGMS2
 ***** TODO ExportTilesetsGMS2
 ***** TODO ExportObjectDepthGMS2
 ***** TODO ExportSequencesGMS2
+***** TODO ExportProjectGMS2
 ****** tracks
 ******* resourceType : GMGraphicTrack
 ******** resourceVersion : 1.0
