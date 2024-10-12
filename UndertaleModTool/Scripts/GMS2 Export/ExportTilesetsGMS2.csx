@@ -16,7 +16,7 @@ SetProgressBar(null, "Tilesets", 0, Data.Backgrounds.Count);
 StartProgressBarUpdater();
 
 await DumpTilesets();
-worker.Cleanup();
+// worker.Cleanup();
 
 await StopProgressBarUpdater();
 HideProgressBar();
