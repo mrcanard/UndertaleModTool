@@ -42,7 +42,7 @@ SetProgressBar(null, "Backgrounds", 0, Data.Backgrounds.Count);
 StartProgressBarUpdater();
 
 await DumpBackgrounds();
-worker.Cleanup();
+// worker.Cleanup();
 
 await StopProgressBarUpdater();
 HideProgressBar();
@@ -96,12 +96,12 @@ void DumpSprite(UndertaleSprite sprite)
     Directory.CreateDirectory(texFolder + sprite.Name.Content);
     using (
         StreamWriter writer = new StreamWriter(
-            texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + ".yy"
+            texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + sprite.Name.Content + ".yy"
         )
     )
     {
         // BEGIN : Extraction Images
-        string layer_directory = texFolder + sprite.Name.Content + "\\" + "layers";
+        string layer_directory = texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + "layers";
         Directory.CreateDirectory(layer_directory);
         for (int i = 0; i < sprite.Textures.Count; i++)
         {
@@ -110,7 +110,7 @@ void DumpSprite(UndertaleSprite sprite)
                 // Extraction de l'image à la base du répertoire
                 worker.ExportAsPNG(
                     sprite.Textures[i].Texture,
-                    texFolder + sprite.Name.Content + "\\" + sprite.Name.Content + "_" + i + ".png",
+                    texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + sprite.Name.Content + "_" + i + ".png",
                     null,
                     padded
                 ); // Include padding to make sprites look neat!
@@ -119,9 +119,9 @@ void DumpSprite(UndertaleSprite sprite)
                 Directory.CreateDirectory(
                     texFolder
                         + sprite.Name.Content
-                        + "\\"
+                        + Path.DirectorySeparatorChar
                         + "layers"
-                        + "\\"
+                        + Path.DirectorySeparatorChar
                         + sprite.Name.Content
                         + "_"
                         + i
@@ -132,13 +132,13 @@ void DumpSprite(UndertaleSprite sprite)
                     sprite.Textures[i].Texture,
                     texFolder
                         + sprite.Name.Content
-                        + "\\"
+                        + Path.DirectorySeparatorChar
                         + "layers"
-                        + "\\"
+                        + Path.DirectorySeparatorChar
                         + sprite.Name.Content
                         + "_"
                         + i
-                        + "\\"
+                        + Path.DirectorySeparatorChar
                         + sprite.Name.Content
                         + "_"
                         + "layer"
@@ -310,12 +310,12 @@ void DumpBackground(UndertaleBackground background)
     Directory.CreateDirectory(texFolder + background.Name.Content);
     using (
         StreamWriter writer = new StreamWriter(
-            texFolder + background.Name.Content + "\\" + background.Name.Content + ".yy"
+            texFolder + background.Name.Content + Path.DirectorySeparatorChar + background.Name.Content + ".yy"
         )
     )
     {
         // BEGIN : Extraction Images
-        string layer_directory = texFolder + background.Name.Content + "\\" + "layers";
+        string layer_directory = texFolder + background.Name.Content + Path.DirectorySeparatorChar + "layers";
         Directory.CreateDirectory(layer_directory);
         // for (int i = 0; i < background.Textures.Count; i++)
         // {
@@ -324,7 +324,7 @@ void DumpBackground(UndertaleBackground background)
             // Extraction de l'image à la base du répertoire
             worker.ExportAsPNG(
                 background.Texture,
-                texFolder + background.Name.Content + "\\" + background.Name.Content + ".png",
+                texFolder + background.Name.Content + Path.DirectorySeparatorChar + background.Name.Content + ".png",
                 null,
                 padded
             ); // Include padding to make sprites look neat!
@@ -333,9 +333,9 @@ void DumpBackground(UndertaleBackground background)
             Directory.CreateDirectory(
                 texFolder
                     + background.Name.Content
-                    + "\\"
+                    + Path.DirectorySeparatorChar
                     + "layers"
-                    + "\\"
+                    + Path.DirectorySeparatorChar
                     + background.Name.Content
             );
 
@@ -344,11 +344,11 @@ void DumpBackground(UndertaleBackground background)
                 background.Texture,
                 texFolder
                     + background.Name.Content
-                    + "\\"
+                    + Path.DirectorySeparatorChar
                     + "layers"
-                    + "\\"
+                    + Path.DirectorySeparatorChar
                     + background.Name.Content
-                    + "\\"
+                    + Path.DirectorySeparatorChar
                     + background.Name.Content
                     + ".png",
                 null,

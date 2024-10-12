@@ -11,8 +11,8 @@ Working
 ***** DONE ExportScriptCodeGMS2
 ***** DONE ExportShaderGMS2
 ***** DONE ExportSoundsGMS2
-***** TODO ExportProjectGMS2
 ***** TODO ExportSpritesGMS2
+***** TODO ExportProjectGMS2
 ***** TODO ExportTilesetsGMS2
 ***** TODO ExportObjectDepthGMS2
 ***** TODO ExportSequencesGMS2
