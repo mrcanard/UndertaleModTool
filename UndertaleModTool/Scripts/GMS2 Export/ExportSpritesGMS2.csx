@@ -167,6 +167,10 @@ void DumpSprite(UndertaleSprite sprite)
         {
             writer.WriteLine("  \"collisionKind\": 0,");
         }
+        else if (sprite.SepMasks == UndertaleSprite.SepMaskType.RotatedRect)
+        {
+            writer.WriteLine("  \"collisionKind\": 5,");
+        }
         else
         {
             writer.WriteLine("  \"collisionKind\": 1,");
@@ -201,25 +205,25 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine(
             "    {\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"1.0\",\"name\":\""
                 + sprite.Name.Content
-                + "_"
-                + "layer"
-                + "\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},"
-        );
-        writer.WriteLine("  ],");
-        // END : layers
-        writer.WriteLine("  \"nineSlice\": null,");
-        writer.WriteLine("  \"origin\": 0,");
-        writer.WriteLine("  \"parent\": {");
-        writer.WriteLine("    \"name\": \"Sprites\",");
-        writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
-        writer.WriteLine("  },");
-        writer.WriteLine("  \"preMultiplyAlpha\": false,");
-        writer.WriteLine("  \"sequence\": {");
-        writer.WriteLine("    \"resourceType\": \"GMSequence\",");
-        writer.WriteLine("    \"resourceVersion\": \"1.4\",");
-        writer.WriteLine("    \"name\": \"" + sprite.Name.Content + "\",");
-        writer.WriteLine("    \"autoRecord\": true,");
-        writer.WriteLine("    \"backdropHeight\": 1080,");
+              + "_"
+              + "layer"
+              + "\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},"
+      );
+      writer.WriteLine("  ],");
+      // END : layers
+      writer.WriteLine("  \"nineSlice\": null,");
+      writer.WriteLine("  \"origin\": 0,");
+      writer.WriteLine("  \"parent\": {");
+      writer.WriteLine("    \"name\": \"Sprites\",");
+      writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
+      writer.WriteLine("  },");
+      writer.WriteLine("  \"preMultiplyAlpha\": false,");
+      writer.WriteLine("  \"sequence\": {");
+      writer.WriteLine("    \"resourceType\": \"GMSequence\",");
+      writer.WriteLine("    \"resourceVersion\": \"1.4\",");
+      writer.WriteLine("    \"name\": \"" + sprite.Name.Content + "\",");
+      writer.WriteLine("    \"autoRecord\": true,");
+      writer.WriteLine("    \"backdropHeight\": 1080,");
         writer.WriteLine("    \"backdropImageOpacity\": 0.5,");
         writer.WriteLine("    \"backdropImagePath\": \"\",");
         writer.WriteLine("    \"backdropWidth\": 1920,");
