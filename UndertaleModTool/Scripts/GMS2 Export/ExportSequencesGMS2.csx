@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using UndertaleModLib.Models;
 
 EnsureDataLoaded();
 
@@ -62,6 +63,36 @@ async Task DumpSequences()
     await Task.Run(() => Parallel.ForEach(toDump, DumpSequence));
 }
 
+void DumpTracks(StreamWriter writer,UndertaleModLib.UndertaleSimpleList<UndertaleSequence.Track> tracks, int tabnum = 2) {
+    String mytab = new String('\t', tabnum);
+
+        foreach(var track in tracks) {
+          switch(track.ModelName.Content)
+          {
+            case "GMGraphicTrack":
+              writer.WriteLine(track.ModelName.Content); // GMGraphicTrack
+              writer.WriteLine(track.Name.Content); // spr_arc_long
+              writer.WriteLine(track.BuiltinName); // 0
+              writer.WriteLine(track.Traits); // None
+              writer.WriteLine(track.IsCreationTrack); // False
+              writer.WriteLine(track.Tags.Count); // 0
+              writer.WriteLine(track.OwnedResources.Count); // 0
+              writer.WriteLine(track.Tracks.Count); // 5
+              writer.WriteLine(mytab + "{\"resourceType\":\"GMGraphicTrack\",\"resourceVersion\":\"1.0\",\"name\":\"spr_arc_long\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"resourceType\":\"KeyframeStore<AssetSpriteKeyframe>\",\"resourceVersion\":\"1.0\",\"Keyframes\":[");
+              // Keyframes
+              writer.WriteLine(mytab + "],},\"modifiers\":[],\"trackColour\":4292102386,\"tracks\":[");
+              // Tracks
+              writer.WriteLine(mytab + "],\"traits\":0,}");
+              break;
+
+            default:
+              writer.WriteLine(track.ModelName.Content);
+              break;
+          }
+        }
+ 
+}
+
 void DumpSequence(UndertaleSequence sequence)
 {
 
@@ -107,19 +138,7 @@ void DumpSequence(UndertaleSequence sequence)
         writer.WriteLine("  \"timeUnits\": 1,");
         writer.WriteLine("  \"tracks\": [");
 
-        foreach(var track in sequence.Tracks) {
-          switch(track.ModelName.Content)
-          {
-            case "GMGraphicTrack":
-              writer.WriteLine(track.ModelName.Content);
-              break;
-
-            default:
-              writer.WriteLine(track.ModelName.Content);
-              break;
-          }
-        }
-        
+        DumpTracks(writer, sequence.Tracks); 
 
         writer.WriteLine("  ],");
         writer.WriteLine("  \"visibleRange\": null,");
