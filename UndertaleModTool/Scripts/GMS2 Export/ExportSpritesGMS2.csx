@@ -42,6 +42,7 @@ SetProgressBar(null, "Backgrounds", 0, Data.Backgrounds.Count);
 StartProgressBarUpdater();
 
 await DumpBackgrounds();
+
 // worker.Cleanup();
 
 await StopProgressBarUpdater();
@@ -96,12 +97,17 @@ void DumpSprite(UndertaleSprite sprite)
     Directory.CreateDirectory(texFolder + sprite.Name.Content);
     using (
         StreamWriter writer = new StreamWriter(
-            texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + sprite.Name.Content + ".yy"
+            texFolder
+                + sprite.Name.Content
+                + Path.DirectorySeparatorChar
+                + sprite.Name.Content
+                + ".yy"
         )
     )
     {
         // BEGIN : Extraction Images
-        string layer_directory = texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + "layers";
+        string layer_directory =
+            texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + "layers";
         Directory.CreateDirectory(layer_directory);
         for (int i = 0; i < sprite.Textures.Count; i++)
         {
@@ -110,7 +116,13 @@ void DumpSprite(UndertaleSprite sprite)
                 // Extraction de l'image à la base du répertoire
                 worker.ExportAsPNG(
                     sprite.Textures[i].Texture,
-                    texFolder + sprite.Name.Content + Path.DirectorySeparatorChar + sprite.Name.Content + "_" + i + ".png",
+                    texFolder
+                        + sprite.Name.Content
+                        + Path.DirectorySeparatorChar
+                        + sprite.Name.Content
+                        + "_"
+                        + i
+                        + ".png",
                     null,
                     padded
                 ); // Include padding to make sprites look neat!
@@ -205,25 +217,25 @@ void DumpSprite(UndertaleSprite sprite)
         writer.WriteLine(
             "    {\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"1.0\",\"name\":\""
                 + sprite.Name.Content
-              + "_"
-              + "layer"
-              + "\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},"
-      );
-      writer.WriteLine("  ],");
-      // END : layers
-      writer.WriteLine("  \"nineSlice\": null,");
-      writer.WriteLine("  \"origin\": 0,");
-      writer.WriteLine("  \"parent\": {");
-      writer.WriteLine("    \"name\": \"Sprites\",");
-      writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
-      writer.WriteLine("  },");
-      writer.WriteLine("  \"preMultiplyAlpha\": false,");
-      writer.WriteLine("  \"sequence\": {");
-      writer.WriteLine("    \"resourceType\": \"GMSequence\",");
-      writer.WriteLine("    \"resourceVersion\": \"1.4\",");
-      writer.WriteLine("    \"name\": \"" + sprite.Name.Content + "\",");
-      writer.WriteLine("    \"autoRecord\": true,");
-      writer.WriteLine("    \"backdropHeight\": 1080,");
+                + "_"
+                + "layer"
+                + "\",\"blendMode\":0,\"displayName\":\"default\",\"isLocked\":false,\"opacity\":100.0,\"visible\":true,},"
+        );
+        writer.WriteLine("  ],");
+        // END : layers
+        writer.WriteLine("  \"nineSlice\": null,");
+        writer.WriteLine("  \"origin\": 0,");
+        writer.WriteLine("  \"parent\": {");
+        writer.WriteLine("    \"name\": \"Sprites\",");
+        writer.WriteLine("    \"path\": \"folders/Sprites.yy\",");
+        writer.WriteLine("  },");
+        writer.WriteLine("  \"preMultiplyAlpha\": false,");
+        writer.WriteLine("  \"sequence\": {");
+        writer.WriteLine("    \"resourceType\": \"GMSequence\",");
+        writer.WriteLine("    \"resourceVersion\": \"1.4\",");
+        writer.WriteLine("    \"name\": \"" + sprite.Name.Content + "\",");
+        writer.WriteLine("    \"autoRecord\": true,");
+        writer.WriteLine("    \"backdropHeight\": 1080,");
         writer.WriteLine("    \"backdropImageOpacity\": 0.5,");
         writer.WriteLine("    \"backdropImagePath\": \"\",");
         writer.WriteLine("    \"backdropWidth\": 1920,");
@@ -314,12 +326,17 @@ void DumpBackground(UndertaleBackground background)
     Directory.CreateDirectory(texFolder + background.Name.Content);
     using (
         StreamWriter writer = new StreamWriter(
-            texFolder + background.Name.Content + Path.DirectorySeparatorChar + background.Name.Content + ".yy"
+            texFolder
+                + background.Name.Content
+                + Path.DirectorySeparatorChar
+                + background.Name.Content
+                + ".yy"
         )
     )
     {
         // BEGIN : Extraction Images
-        string layer_directory = texFolder + background.Name.Content + Path.DirectorySeparatorChar + "layers";
+        string layer_directory =
+            texFolder + background.Name.Content + Path.DirectorySeparatorChar + "layers";
         Directory.CreateDirectory(layer_directory);
         // for (int i = 0; i < background.Textures.Count; i++)
         // {
@@ -328,7 +345,11 @@ void DumpBackground(UndertaleBackground background)
             // Extraction de l'image à la base du répertoire
             worker.ExportAsPNG(
                 background.Texture,
-                texFolder + background.Name.Content + Path.DirectorySeparatorChar + background.Name.Content + ".png",
+                texFolder
+                    + background.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + background.Name.Content
+                    + ".png",
                 null,
                 padded
             ); // Include padding to make sprites look neat!
