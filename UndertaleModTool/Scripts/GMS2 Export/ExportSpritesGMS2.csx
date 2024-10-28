@@ -165,7 +165,7 @@ void DumpSprite(UndertaleSprite sprite)
         }
         else if (sprite.SepMasks == UndertaleSprite.SepMaskType.AxisAlignedRect)
         {
-            writer.WriteLine("  \"collisionKind\": 0,");
+            writer.WriteLine("  \"collisionKind\": 1,");
         }
         else if (sprite.SepMasks == UndertaleSprite.SepMaskType.RotatedRect)
         {
@@ -173,7 +173,7 @@ void DumpSprite(UndertaleSprite sprite)
         }
         else
         {
-            writer.WriteLine("  \"collisionKind\": 1,");
+            writer.WriteLine("  \"collisionKind\": 0,");
         }
         writer.WriteLine("  \"collisionTolerance\": 0,");
         writer.WriteLine("  \"DynamicTexturePage\": false,");
