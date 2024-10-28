@@ -31,6 +31,7 @@ SetProgressBar(null, "Shaders", 0, Data.Shaders.Count);
 StartProgressBarUpdater();
 
 await DumpShaders();
+
 // worker.Cleanup();
 
 await StopProgressBarUpdater();
@@ -66,13 +67,36 @@ async Task DumpShaders()
     await Task.Run(() => Parallel.ForEach(Data.Shaders, DumpShader));
 }
 
+void extractShaderString(String shader_path, String shader_content)
+{
+    bool flag_defined = false;
+    string vertex_final_string = "";
+    foreach (var myString in shader_content.Split("\n"))
+    {
+        if (flag_defined)
+        {
+            vertex_final_string += myString;
+            vertex_final_string += "\n";
+        }
+        if (myString.Contains("#define _YY_GLSLES_ 1"))
+        {
+            flag_defined = true;
+        }
+    }
+    File.WriteAllText(shader_path, vertex_final_string);
+}
+
 void DumpShader(UndertaleShader shader)
 {
     Directory.CreateDirectory(shaderPaths + shader.Name.Content);
 
     using (
         StreamWriter writer = new StreamWriter(
-            shaderPaths + shader.Name.Content + Path.DirectorySeparatorChar + shader.Name.Content + ".yy"
+            shaderPaths
+                + shader.Name.Content
+                + Path.DirectorySeparatorChar
+                + shader.Name.Content
+                + ".yy"
         )
     )
     {
@@ -93,12 +117,23 @@ void DumpShader(UndertaleShader shader)
         case UndertaleShader.ShaderType.GLSL_ES:
             // Vertex Source
             string path_vsh =
-                shaderPaths + shader.Name.Content + Path.DirectorySeparatorChar + shader.Name.Content + ".vsh";
-            File.WriteAllText(path_vsh, shader.GLSL_ES_Vertex.Content);
+                shaderPaths
+                + shader.Name.Content
+                + Path.DirectorySeparatorChar
+                + shader.Name.Content
+                + ".vsh";
+
+            extractShaderString(path_vsh, shader.GLSL_ES_Vertex.Content);
+
             // Fragment Source
             string path_fsh =
-                shaderPaths + shader.Name.Content + Path.DirectorySeparatorChar + shader.Name.Content + ".fsh";
-            File.WriteAllText(path_fsh, shader.GLSL_ES_Fragment.Content);
+                shaderPaths
+                + shader.Name.Content
+                + Path.DirectorySeparatorChar
+                + shader.Name.Content
+                + ".fsh";
+
+            extractShaderString(path_fsh, shader.GLSL_ES_Fragment.Content);
             break;
 
         default:
