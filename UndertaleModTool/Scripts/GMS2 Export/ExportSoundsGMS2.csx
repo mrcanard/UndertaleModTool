@@ -180,7 +180,14 @@ void DumpSound(UndertaleSound sound)
         process = false;
         audioExt = ".ogg";
         string source = externalOGG_Folder + soundName + audioExt;
-        string dest = winFolder + "sounds" + Path.DirectorySeparatorChar + soundName + Path.DirectorySeparatorChar + soundName + audioExt;
+        string dest =
+            winFolder
+            + "sounds"
+            + Path.DirectorySeparatorChar
+            + soundName
+            + Path.DirectorySeparatorChar
+            + soundName
+            + audioExt;
         if (externalOGG_Copy == 1)
         {
             System.IO.File.Copy(source, dest, false);
@@ -197,8 +204,21 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
         writer.WriteLine("  \"name\": \"" + sound.Name.Content + "\",");
         writer.WriteLine("  \"audioGroupId\": {");
-        writer.WriteLine("    \"name\": \"audiogroup_default\",");
-        writer.WriteLine("    \"path\": \"audiogroups/audiogroup_default\",");
+        if (
+            sound.Flags.HasFlag(UndertaleSound.AudioEntryFlags.Regular)
+            && Data.GeneralInfo.BytecodeVersion >= 14
+        )
+        {
+            writer.WriteLine("    \"name\": \"audiogroup_default\",");
+            writer.WriteLine("    \"path\": \"audiogroups/audiogroup_default\",");
+        }
+        else
+        {
+            writer.WriteLine("    \"name\": \"" + sound.AudioGroup.Name.Content + "\",");
+            writer.WriteLine(
+                "    \"path\": \"audiogroups/" + sound.AudioGroup.Name.Content + "\","
+            );
+        }
         writer.WriteLine("  },");
         writer.WriteLine("  \"bitDepth\": 1,");
         writer.WriteLine("  \"bitRate\": 128,");
@@ -211,7 +231,7 @@ void DumpSound(UndertaleSound sound)
         writer.WriteLine("  \"preload\": " + (sound.Preload ? "true" : "false") + ",");
         writer.WriteLine("  \"sampleRate\": 44100,");
         writer.WriteLine("  \"soundFile\": \"" + sound.Name.Content + audioExt + "\",");
-        writer.WriteLine("  \"type\": "+ (sound.Type == null ? "0" : sound.Type) +",");
+        writer.WriteLine("  \"type\": " + (sound.Type == null ? "0" : sound.Type) + ",");
         writer.WriteLine("  \"volume\": " + sound.Volume.ToString("0.0") + ",");
         writer.Write("}");
     }

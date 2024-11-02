@@ -1,12 +1,12 @@
 ﻿// Made by mono21400
-
-using System.Text;
 using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UndertaleModLib.Util;
-using System.Linq;
+
 // using System.Windows.Forms;
 
 EnsureDataLoaded();
@@ -25,6 +25,7 @@ SetProgressBar(null, "Fonts", 0, Data.Fonts.Count);
 StartProgressBarUpdater();
 
 await DumpFonts();
+
 // worker.Cleanup();
 
 await StopProgressBarUpdater();
@@ -36,12 +37,19 @@ using (StreamWriter writer = new StreamWriter(fntFolder + "asset_order.txt"))
     for (int i = 0; i < Data.Fonts.Count; i++)
     {
         UndertaleFont font = Data.Fonts[i];
-        writer.WriteLine("    {\"id\":{\"name\":\"" + font.Name.Content + "\",\"path\":\"fonts/" + font.Name.Content + "/" + font.Name.Content + ".yy\",},},");
+        writer.WriteLine(
+            "    {\"id\":{\"name\":\""
+                + font.Name.Content
+                + "\",\"path\":\"fonts/"
+                + font.Name.Content
+                + "/"
+                + font.Name.Content
+                + ".yy\",},},"
+        );
     }
 }
 
 ScriptMessage("Export Complete.\n\nLocation: " + fntFolder);
-
 
 string GetFolder(string path)
 {
@@ -58,8 +66,15 @@ void DumpFont(UndertaleFont font)
     //if (arrayString.Contains(font.Name.ToString().Replace("\"", "")))
     //{
     System.IO.Directory.CreateDirectory(fntFolder + font.Name.Content);
-    worker.ExportAsPNG(font.Texture, fntFolder + font.Name.Content + Path.DirectorySeparatorChar + font.Name.Content + ".png");
-    using (StreamWriter writer = new StreamWriter(fntFolder + font.Name.Content + Path.DirectorySeparatorChar + font.Name.Content + ".yy"))
+    worker.ExportAsPNG(
+        font.Texture,
+        fntFolder + font.Name.Content + Path.DirectorySeparatorChar + font.Name.Content + ".png"
+    );
+    using (
+        StreamWriter writer = new StreamWriter(
+            fntFolder + font.Name.Content + Path.DirectorySeparatorChar + font.Name.Content + ".yy"
+        )
+    )
     {
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMFont\",");
@@ -78,7 +93,25 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  \"glyphs\": {");
         foreach (var g in font.Glyphs)
         {
-            writer.WriteLine("    \"" + g.Character + "\": {\"character\":" + g.Character + ",\"h\":" + g.SourceHeight + ",\"offset\":" + g.Offset + ",\"shift\":" + g.Shift + ",\"w\":" + g.SourceWidth + ",\"x\":" + g.SourceX + ",\"y\":" + g.SourceY + ",},");
+            writer.WriteLine(
+                "    \""
+                    + g.Character
+                    + "\": {\"character\":"
+                    + g.Character
+                    + ",\"h\":"
+                    + g.SourceHeight
+                    + ",\"offset\":"
+                    + g.Offset
+                    + ",\"shift\":"
+                    + g.Shift
+                    + ",\"w\":"
+                    + g.SourceWidth
+                    + ",\"x\":"
+                    + g.SourceX
+                    + ",\"y\":"
+                    + g.SourceY
+                    + ",},"
+            );
         }
         writer.WriteLine("  },");
         writer.WriteLine("  \"hinting\": 0,");
@@ -87,7 +120,8 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  \"italic\": " + (font.Italic ? "true" : "false") + ",");
         writer.WriteLine("  \"kerningPairs\": [],");
         writer.WriteLine("  \"last\": 0,");
-        if(Data.IsVersionAtLeast(2023, 6)) {
+        if (Data.IsVersionAtLeast(2023, 6))
+        {
             writer.WriteLine("  \"lineHeight\": " + font.LineHeight + ",");
         }
         writer.WriteLine("  \"maintainGms1Font\": false,");
@@ -97,11 +131,16 @@ void DumpFont(UndertaleFont font)
         writer.WriteLine("  },");
         writer.WriteLine("  \"pointRounding\": 0,");
         writer.WriteLine("  \"ranges\": [");
-        writer.WriteLine("    {\"lower\":" + font.RangeStart + ",\"upper\":" + font.RangeEnd + ",},");
+        writer.WriteLine(
+            "    {\"lower\":" + font.RangeStart + ",\"upper\":" + font.RangeEnd + ",},"
+        );
         writer.WriteLine("  ],");
         writer.WriteLine("  \"regenerateBitmap\": false,");
-        writer.WriteLine("  \"sampleText\": \"abcdef ABCDEF\\n0123456789 .,<>\\\"'&!?\\nthe quick brown fox jumps over the lazy dog\\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\\nDefault character: ▯ (9647)\",");
-        if(Data.IsNonLTSVersionAtLeast(2023, 2)) {
+        writer.WriteLine(
+            "  \"sampleText\": \"abcdef ABCDEF\\n0123456789 .,<>\\\"'&!?\\nthe quick brown fox jumps over the lazy dog\\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\\nDefault character: ▯ (9647)\","
+        );
+        if (Data.IsNonLTSVersionAtLeast(2023, 2))
+        {
             writer.WriteLine("  \"sdfSpread\": " + font.SDFSpread + ",");
         }
         writer.WriteLine("  \"size\": " + (font.EmSize + 0.0f) + ".0,");
