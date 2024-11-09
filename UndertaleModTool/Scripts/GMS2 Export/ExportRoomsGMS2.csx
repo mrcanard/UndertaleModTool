@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using UndertaleModLib.Models;
+
 EnsureDataLoaded();
 
 // Pour avoir un "." au lieu d'une "," dans les conversion en décimal
@@ -116,7 +118,11 @@ void DumpRoom(UndertaleRoom room)
     SetProgressBar(null, "Room Entries : " + room.Name.Content, 0, 1);
     using (
         StreamWriter writer = new StreamWriter(
-            roomsFolder + room.Name.Content + Path.DirectorySeparatorChar + room.Name.Content + ".yy"
+            roomsFolder
+                + room.Name.Content
+                + Path.DirectorySeparatorChar
+                + room.Name.Content
+                + ".yy"
         )
     )
     {
@@ -135,7 +141,10 @@ void DumpRoom(UndertaleRoom room)
                 "  \"creationCodeFile\": \"rooms/" + room.Name.Content + "/RoomCreationCode.gml\","
             );
             File.WriteAllText(
-                roomsFolder + room.Name.Content + Path.DirectorySeparatorChar + "RoomCreationCode.gml",
+                roomsFolder
+                    + room.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + "RoomCreationCode.gml",
                 Decompiler.Decompile(room.CreationCodeId, DECOMPILE_CONTEXT.Value)
             );
         }
@@ -159,173 +168,39 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("  ],");
         writer.WriteLine("  \"isDnd\": false,");
         writer.WriteLine("  \"layers\": [");
-
-        // Composition depth
-        var depthList = new SortedSet<int>();
-        // Depth des objets
-        foreach (var g in room.GameObjects)
+        foreach (var layer in room.Layers)
         {
-            depthList.Add(g.ObjectDefinition.Depth);
-        }
-        // Depth des Tiles
-        foreach (var t in room.Tiles)
-        {
-            depthList.Add(t.TileDepth);
-        }
-        // Création des Layers
-        foreach (var depth in depthList)
-        {
-            // depth pour Tile ou Instance ?
-            var isTileLayer = false;
-
-            foreach (var tile in room.Tiles)
+            writer.WriteLine("  (" + layer.LayerName.Content + "," + layer.LayerType + ", " + layer.LayerDepth + ")");
+            if (layer.LayerType == UndertaleRoom.LayerType.Assets)
             {
-                if (tile.TileDepth == depth)
+                if (layer.LayerName.Content == "Sequence")
                 {
-                    isTileLayer = true;
-                }
-            }
-
-            if (isTileLayer)
-            {
-                writer.WriteLine(
-                    "    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Tiles_Depth_"
-                        + depth
-                        + "\",\"assets\":["
-                );
-                // Tiles
-                foreach (var t in room.Tiles)
-                {
-                    if (t.TileDepth == depth)
+                    writer.WriteLine("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Sequence\",\"assets\":[");
+                    foreach (var sequence in layer.AssetsData.Sequences)
                     {
-                        var resource_name = (
-                            t.spriteMode
-                                ? t.SpriteDefinition.Name.Content
-                                : t.BackgroundDefinition.Name.Content
-                        );
-                        writer.WriteLine(
-                            "        {\"resourceType\":\"GMRGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"inst_"
-                                + t.InstanceID
-                                + "\",\"colour\":"
-                                + t.Color
-                                + ",\"frozen\":false,\"h\":"
-                                + t.Height
-                                + ",\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"spriteId\":{\"name\":\""
-                                + resource_name
-                                + "\",\"path\":\"sprites/"
-                                + resource_name
-                                + "/"
-                                + resource_name
-                                + ".yy\",},\"u0\":"
-                                + t.SourceX
-                                + ",\"u1\":"
-                                + (t.SourceX + t.Width)
-                                + ",\"v0\":"
-                                + t.SourceY
-                                + ",\"v1\":"
-                                + (t.SourceY + t.Height)
-                                + ",\"w\":"
-                                + t.Width
-                                + ",\"x\":"
-                                + t.X.ToString("0.0")
-                                + ",\"y\":"
-                                + t.Y.ToString("0.0")
-                                + ",},"
-                        );
+                        writer.WriteLine("        {\"resourceType\":\"GMRSequenceGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"" + sequence.Name.Content + "\",\"animationSpeed\":1.0,\"colour\":" + sequence.Color + ",\"frozen\":false,\"headPosition\":0.0,\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"rotation\":0.0,\"scaleX\":" + sequence.ScaleX.ToString("0.0") + ",\"scaleY\":" + sequence.ScaleY.ToString("0.0") + ",\"sequenceId\":{\"name\":\"" + sequence.Sequence.Name.Content + "\",\"path\":\"sequences/" + sequence.Sequence.Name.Content + "/" + sequence.Sequence.Name.Content + ".yy\",},\"x\":" + sequence.X.ToString("0.0") + ",\"y\":" + sequence.Y.ToString("0.0") + ",},");
                     }
+                    writer.WriteLine("      ],\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
                 }
-                // End Tiles
-                writer.WriteLine(
-                    "    ],\"depth\":"
-                        + depth
-                        + ",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},"
-                );
+                // else
+                // {
+                //     throw new InvalidOperationException("Asset Layer Content (" + layer.LayerName.Content + ") Unknown");
+                // }
             }
-            else
+            else if (layer.LayerType == UndertaleRoom.LayerType.Instances)
             {
-                writer.WriteLine(
-                    "    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Instances_Depth_"
-                        + depth
-                        + "\",\"depth\":"
-                        + depth
-                        + ",\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":["
-                );
-                // Instances
-                foreach (var g in room.GameObjects)
+                writer.WriteLine("    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"" + layer.LayerName.Content + "\",\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":[");
+                foreach (var instance in layer.InstancesData.Instances)
                 {
-                    if (g.ObjectDefinition.Depth == depth)
-                    {
-                        var resource_name = g.ObjectDefinition.Name.Content;
-                        writer.WriteLine(
-                            "        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_"
-                                + g.InstanceID
-                                + "\",\"colour\":"
-                                + g.Color
-                                + ",\"frozen\":false,\"hasCreationCode\":false,\"ignore\":false,\"imageIndex\":"
-                                + g.ImageIndex
-                                + ",\"imageSpeed\":"
-                                + g.ImageSpeed
-                                + ",\"inheritCode\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"isDnd\":false,\"objectId\":{\"name\":\""
-                                + resource_name
-                                + "\",\"path\":\"objects/"
-                                + resource_name
-                                + "/"
-                                + resource_name
-                                + ".yy\",},\"properties\":[],\"rotation\":"
-                                + g.Rotation.ToString("0.0")
-                                + ",\"scaleX\":"
-                                + g.ScaleX.ToString("0.0")
-                                + ",\"scaleY\":"
-                                + g.ScaleY.ToString("0.0")
-                                + ",\"x\":"
-                                + g.X.ToString("0.0")
-                                + ",\"y\":"
-                                + g.Y.ToString("0.0")
-                                + ",},"
-                        );
-                    }
+                    writer.WriteLine("        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_" + instance.InstanceID + "\",\"colour\":" + instance.Color + ",\"frozen\":false,\"hasCreationCode\":" + (instance.CreationCode == null ? "false" : "true") + ",\"ignore\":false,\"imageIndex\":" + instance.ImageIndex + ",\"imageSpeed\":" + instance.ImageSpeed.ToString("0.0") + ",\"inheritCode\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"isDnd\":false,\"objectId\":{\"name\":\"" + instance.ObjectDefinition.Name.Content + "\",\"path\":\"objects/" + instance.ObjectDefinition.Name.Content + "/" + instance.ObjectDefinition.Name.Content + ".yy\",},\"properties\":[],\"rotation\":" + instance.Rotation.ToString("0.0") + ",\"scaleX\":" + instance.ScaleX.ToString("0.0") + ",\"scaleY\":" + instance.ScaleY.ToString("0.0") + ",\"x\":" + instance.X.ToString("0.0") + ",\"y\":" + instance.Y.ToString("0.0") + ",},");
                 }
-                // End Instances
-                writer.WriteLine(
-                    "      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},"
-                );
+                writer.WriteLine("      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
             }
+            // else
+            // {
+            //     throw new InvalidOperationException("Asset Layer (" + layer.LayerType + ") Unknown");
+            // }
         }
-
-        // Background
-        foreach (var b in room.Backgrounds)
-        {
-            if (b.BackgroundDefinition != null)
-            {
-                var resource_name = b.BackgroundDefinition.Name.Content;
-                writer.WriteLine(
-                    "    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Compatibility_Colour\",\"animationFPS\":1.0,\"animationSpeedType\":1,\"colour\":4294967295,\"depth\":2147483600,\"effectEnabled\":true,\"effectType\":null,\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"hspeed\":"
-                        + b.SpeedX
-                        + ",\"htiled\":"
-                        + (b.TiledHorizontally ? "true" : "false")
-                        + ",\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\""
-                        + resource_name
-                        + "\",\"path\":\"sprites/"
-                        + resource_name
-                        + "/"
-                        + resource_name
-                        + ".yy\",},\"stretch\":"
-                        + (b.Stretch ? "true" : "false")
-                        + ",\"userdefinedAnimFPS\":false,\"userdefinedDepth\":true,\"visible\":"
-                        + (b.Enabled ? "true" : "false")
-                        + ",\"vspeed\":"
-                        + b.SpeedY
-                        + ",\"vtiled\":"
-                        + (b.TiledVertically ? "true" : "false")
-                        + ",\"x\":"
-                        + b.X
-                        + ",\"y\":"
-                        + b.Y
-                        + ",},"
-                );
-            }
-        }
-
         writer.WriteLine("  ],");
         writer.WriteLine("  \"parent\": {");
         writer.WriteLine("    \"name\": \"Rooms\",");
