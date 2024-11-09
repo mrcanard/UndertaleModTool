@@ -173,28 +173,57 @@ void DumpRoom(UndertaleRoom room)
             // writer.WriteLine("  (" + layer.LayerName.Content + "," + layer.LayerType + ", " + layer.LayerDepth + ")");
             if (layer.LayerType == UndertaleRoom.LayerType.Assets)
             {
-                if (layer.LayerName.Content == "Sequence")
+                writer.Write("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"" + layer.LayerName.Content + "\",\"assets\":[");
+
+                foreach (var tile in layer.AssetsData.LegacyTiles)
                 {
-                    writer.WriteLine("    {\"resourceType\":\"GMRAssetLayer\",\"resourceVersion\":\"1.0\",\"name\":\"Sequence\",\"assets\":[");
+                    throw new InvalidOperationException("No Tile Support yet...");
+
+                }
+                foreach (var sprite in layer.AssetsData.Sprites)
+                {
+                    writer.Write(Environment.NewLine + "        {\"resourceType\":\"GMRSpriteGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"graphic_1501C35E\",\"animationSpeed\":1.0,\"colour\":4294967295,\"frozen\":false,\"headPosition\":0.0,\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"rotation\":0.0,\"scaleX\":1.0,\"scaleY\":1.0,\"spriteId\":{\"name\":\"spr_path_horizontal\",\"path\":\"sprites/spr_path_horizontal/spr_path_horizontal.yy\",},\"x\":608.0,\"y\":287.0,},");
+                }
+                if (layer.AssetsData.Sequences.Count > 0)
+                {
+                    writer.WriteLine("");
                     foreach (var sequence in layer.AssetsData.Sequences)
                     {
                         writer.WriteLine("        {\"resourceType\":\"GMRSequenceGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"" + sequence.Name.Content + "\",\"animationSpeed\":1.0,\"colour\":" + sequence.Color + ",\"frozen\":false,\"headPosition\":0.0,\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"rotation\":0.0,\"scaleX\":" + sequence.ScaleX.ToString("0.0") + ",\"scaleY\":" + sequence.ScaleY.ToString("0.0") + ",\"sequenceId\":{\"name\":\"" + sequence.Sequence.Name.Content + "\",\"path\":\"sequences/" + sequence.Sequence.Name.Content + "/" + sequence.Sequence.Name.Content + ".yy\",},\"x\":" + sequence.X.ToString("0.0") + ",\"y\":" + sequence.Y.ToString("0.0") + ",},");
                     }
-                    writer.WriteLine("      ],\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
+                    writer.Write("      ");
                 }
-                else
+                if (layer.AssetsData.NineSlices != null)
                 {
-                    throw new InvalidOperationException("Asset Layer Content (" + layer.LayerName.Content + ") Unknown");
+                    foreach (var sprite in layer.AssetsData.NineSlices)
+                    {
+                        throw new InvalidOperationException("No NineSlice Support yet...");
+                    }
                 }
+                foreach (var particle in layer.AssetsData.ParticleSystems)
+                {
+                    throw new InvalidOperationException("No ParticleSystem Support yet...");
+                }
+                if (layer.AssetsData.TextItems != null)
+                {
+                    foreach (var textitem in layer.AssetsData.TextItems)
+                    {
+                        throw new InvalidOperationException("No TextItem Support yet...");
+                    }
+                }
+                writer.WriteLine("],\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":true,\"visible\":true,},");
             }
             else if (layer.LayerType == UndertaleRoom.LayerType.Instances)
             {
-                writer.WriteLine("    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"" + layer.LayerName.Content + "\",\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":[");
-                foreach (var instance in layer.InstancesData.Instances)
+                writer.Write("    {\"resourceType\":\"GMRInstanceLayer\",\"resourceVersion\":\"1.0\",\"name\":\"" + layer.LayerName.Content + "\",\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"instances\":[");
+                if (layer.InstancesData.Instances != null)
                 {
-                    writer.WriteLine("        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_" + instance.InstanceID + "\",\"colour\":" + instance.Color + ",\"frozen\":false,\"hasCreationCode\":" + (instance.CreationCode == null ? "false" : "true") + ",\"ignore\":false,\"imageIndex\":" + instance.ImageIndex + ",\"imageSpeed\":" + instance.ImageSpeed.ToString("0.0") + ",\"inheritCode\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"isDnd\":false,\"objectId\":{\"name\":\"" + instance.ObjectDefinition.Name.Content + "\",\"path\":\"objects/" + instance.ObjectDefinition.Name.Content + "/" + instance.ObjectDefinition.Name.Content + ".yy\",},\"properties\":[],\"rotation\":" + instance.Rotation.ToString("0.0") + ",\"scaleX\":" + instance.ScaleX.ToString("0.0") + ",\"scaleY\":" + instance.ScaleY.ToString("0.0") + ",\"x\":" + instance.X.ToString("0.0") + ",\"y\":" + instance.Y.ToString("0.0") + ",},");
+                    foreach (var instance in layer.InstancesData.Instances)
+                    {
+                        writer.Write(Environment.NewLine + "        {\"resourceType\":\"GMRInstance\",\"resourceVersion\":\"1.0\",\"name\":\"inst_" + instance.InstanceID + "\",\"colour\":" + instance.Color + ",\"frozen\":false,\"hasCreationCode\":" + (instance.CreationCode == null ? "false" : "true") + ",\"ignore\":false,\"imageIndex\":" + instance.ImageIndex + ",\"imageSpeed\":" + instance.ImageSpeed.ToString("0.0") + ",\"inheritCode\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"isDnd\":false,\"objectId\":{\"name\":\"" + instance.ObjectDefinition.Name.Content + "\",\"path\":\"objects/" + instance.ObjectDefinition.Name.Content + "/" + instance.ObjectDefinition.Name.Content + ".yy\",},\"properties\":[],\"rotation\":" + instance.Rotation.ToString("0.0") + ",\"scaleX\":" + instance.ScaleX.ToString("0.0") + ",\"scaleY\":" + instance.ScaleY.ToString("0.0") + ",\"x\":" + instance.X.ToString("0.0") + ",\"y\":" + instance.Y.ToString("0.0") + ",},");
+                    }
                 }
-                writer.WriteLine("      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
+                writer.WriteLine("],\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
             }
             else if (layer.LayerType == UndertaleRoom.LayerType.Background)
             {
