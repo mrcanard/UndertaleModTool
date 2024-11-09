@@ -170,7 +170,7 @@ void DumpRoom(UndertaleRoom room)
         writer.WriteLine("  \"layers\": [");
         foreach (var layer in room.Layers)
         {
-            writer.WriteLine("  (" + layer.LayerName.Content + "," + layer.LayerType + ", " + layer.LayerDepth + ")");
+            // writer.WriteLine("  (" + layer.LayerName.Content + "," + layer.LayerType + ", " + layer.LayerDepth + ")");
             if (layer.LayerType == UndertaleRoom.LayerType.Assets)
             {
                 if (layer.LayerName.Content == "Sequence")
@@ -182,10 +182,10 @@ void DumpRoom(UndertaleRoom room)
                     }
                     writer.WriteLine("      ],\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
                 }
-                // else
-                // {
-                //     throw new InvalidOperationException("Asset Layer Content (" + layer.LayerName.Content + ") Unknown");
-                // }
+                else
+                {
+                    throw new InvalidOperationException("Asset Layer Content (" + layer.LayerName.Content + ") Unknown");
+                }
             }
             else if (layer.LayerType == UndertaleRoom.LayerType.Instances)
             {
@@ -196,10 +196,16 @@ void DumpRoom(UndertaleRoom room)
                 }
                 writer.WriteLine("      ],\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},");
             }
-            // else
-            // {
-            //     throw new InvalidOperationException("Asset Layer (" + layer.LayerType + ") Unknown");
-            // }
+            else if (layer.LayerType == UndertaleRoom.LayerType.Background)
+            {
+                UndertaleRoom.Layer.LayerBackgroundData background = layer.BackgroundData;
+
+                writer.WriteLine("    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\"" + layer.LayerName.Content + "\",\"animationFPS\":" + background.AnimationSpeed.ToString("0.0") + ",\"animationSpeedType\":" + (int)background.AnimationSpeedType + ",\"colour\":" + background.Color + ",\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":null,\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"hspeed\":" + layer.HSpeed.ToString("0.0") + ",\"htiled\":" + (background.TiledHorizontally ? "true" : "false") + ",\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\"" + background.Sprite.Name.Content + "\",\"path\":\"sprites/" + background.Sprite.Name.Content + "/" + background.Sprite.Name.Content + ".yy\",},\"stretch\":" + (background.Stretch ? "true" : "false") + ",\"userdefinedAnimFPS\":false,\"userdefinedDepth\":false,\"visible\":" + (background.Visible ? "true" : "false") + ",\"vspeed\":" + layer.VSpeed.ToString("0.0") + ",\"vtiled\":" + (background.TiledVertically ? "true" : "false") + ",\"x\":" + layer.XOffset + ",\"y\":" + layer.YOffset + ",},");
+            }
+            else
+            {
+                throw new InvalidOperationException("Asset Layer (" + layer.LayerType + ") Unknown");
+            }
         }
         writer.WriteLine("  ],");
         writer.WriteLine("  \"parent\": {");
