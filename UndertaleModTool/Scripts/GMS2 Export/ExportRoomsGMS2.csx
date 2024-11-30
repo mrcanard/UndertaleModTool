@@ -182,7 +182,8 @@ void DumpRoom(UndertaleRoom room)
                 }
                 foreach (var sprite in layer.AssetsData.Sprites)
                 {
-                    writer.Write(Environment.NewLine + "        {\"resourceType\":\"GMRSpriteGraphic\",\"resourceVersion\":\"1.0\",\"name\":\"graphic_1501C35E\",\"animationSpeed\":1.0,\"colour\":4294967295,\"frozen\":false,\"headPosition\":0.0,\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"rotation\":0.0,\"scaleX\":1.0,\"scaleY\":1.0,\"spriteId\":{\"name\":\"spr_path_horizontal\",\"path\":\"sprites/spr_path_horizontal/spr_path_horizontal.yy\",},\"x\":608.0,\"y\":287.0,},");
+                    // TODO GMRSpriteGraphic
+                    writer.Write(Environment.NewLine + "        {\"resourceType\":\"GMRSpriteGraphic\",\"resourceVersion\":\"1.0\",\"name\":\""+sprite.Name.Content+"\",\"animationSpeed\":"+sprite.AnimationSpeed.ToString("0.0")+",\"colour\":"+sprite.Color+",\"frozen\":false,\"headPosition\":0.0,\"ignore\":false,\"inheritedItemId\":null,\"inheritItemSettings\":false,\"rotation\":"+sprite.Rotation.ToString("0.0")+",\"scaleX\":"+sprite.ScaleX.ToString("0.0")+",\"scaleY\":"+sprite.ScaleY.ToString("0.0")+",\"spriteId\":{\"name\":\""+sprite.Sprite.Name.Content+"\",\"path\":\"sprites/"+sprite.Sprite.Name.Content+"/"+sprite.Sprite.Name.Content+".yy\",},\"x\":"+sprite.X.ToString("0.0")+",\"y\":"+sprite.Y.ToString("0.0")+",},");
                 }
                 if (layer.AssetsData.Sequences.Count > 0)
                 {
