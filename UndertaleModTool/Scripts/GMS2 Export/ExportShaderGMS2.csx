@@ -38,20 +38,24 @@ await StopProgressBarUpdater();
 HideProgressBar();
 
 // Export asset
-using (StreamWriter writer = new StreamWriter(shaderPaths + "asset_order.txt"))
-{
-    for (int i = 0; i < Data.Shaders.Count; i++)
+if(Data.Shaders.Count > 0) {
+    using (StreamWriter writer = new StreamWriter(shaderPaths + "asset_order.txt"))
     {
-        UndertaleShader shader = Data.Shaders[i];
-        writer.WriteLine(
-            "    {\"id\":{\"name\":\""
-                + shader.Name.Content
-                + "\",\"path\":\"shaders/"
-                + shader.Name.Content
-                + "/"
-                + shader.Name.Content
-                + ".yy\",},},"
-        );
+        for (int i = 0; i < Data.Shaders.Count; i++)
+        {
+            UndertaleShader shader = Data.Shaders[i];
+            if(!(shader.Name.Content.StartsWith("_"))) {
+                writer.WriteLine(
+                    "    {\"id\":{\"name\":\""
+                    + shader.Name.Content
+                    + "\",\"path\":\"shaders/"
+                    + shader.Name.Content
+                    + "/"
+                    + shader.Name.Content
+                    + ".yy\",},},"
+                );
+            }
+        }
     }
 }
 
@@ -88,57 +92,61 @@ void extractShaderString(String shader_path, String shader_content)
 
 void DumpShader(UndertaleShader shader)
 {
-    Directory.CreateDirectory(shaderPaths + shader.Name.Content);
+    if(!(shader.Name.Content.StartsWith("_"))) {
+        Directory.CreateDirectory(shaderPaths + shader.Name.Content);
 
-    using (
-        StreamWriter writer = new StreamWriter(
-            shaderPaths
+        using (
+            StreamWriter writer = new StreamWriter(
+                shaderPaths
                 + shader.Name.Content
                 + Path.DirectorySeparatorChar
                 + shader.Name.Content
                 + ".yy"
+            )
         )
-    )
-    {
-        writer.WriteLine("{");
-        writer.WriteLine("  \"resourceType\": \"GMShader\",");
-        writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-        writer.WriteLine("  \"name\": \"" + shader.Name.Content + "\",");
-        writer.WriteLine("  \"parent\": {");
-        writer.WriteLine("    \"name\": \"Shaders\",");
-        writer.WriteLine("    \"path\": \"folders/Shaders.yy\",");
-        writer.WriteLine("  },");
-        writer.WriteLine("  \"type\": " + (int)shader.Type + ",");
-        writer.WriteLine("}");
+              {
+                  writer.WriteLine("{");
+                  writer.WriteLine("  \"resourceType\": \"GMShader\",");
+                  writer.WriteLine("  \"resourceVersion\": \"1.0\",");
+                  writer.WriteLine("  \"name\": \"" + shader.Name.Content + "\",");
+                  writer.WriteLine("  \"parent\": {");
+                  writer.WriteLine("    \"name\": \"Shaders\",");
+                  writer.WriteLine("    \"path\": \"folders/Shaders.yy\",");
+                  writer.WriteLine("  },");
+                  writer.WriteLine("  \"type\": " + (int)shader.Type + ",");
+                  writer.WriteLine("}");
+              }
+
+        switch (shader.Type)
+        {
+            case UndertaleShader.ShaderType.GLSL_ES:
+                // Vertex Source
+                string path_vsh =
+                    shaderPaths
+                    + shader.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + shader.Name.Content
+                    + ".vsh";
+
+                extractShaderString(path_vsh, shader.GLSL_ES_Vertex.Content);
+
+                // Fragment Source
+                string path_fsh =
+                    shaderPaths
+                    + shader.Name.Content
+                    + Path.DirectorySeparatorChar
+                    + shader.Name.Content
+                    + ".fsh";
+
+                extractShaderString(path_fsh, shader.GLSL_ES_Fragment.Content);
+                break;
+
+            default:
+                throw new InvalidOperationException("Type de shader non supporté");
+        }
+        
     }
 
-    switch (shader.Type)
-    {
-        case UndertaleShader.ShaderType.GLSL_ES:
-            // Vertex Source
-            string path_vsh =
-                shaderPaths
-                + shader.Name.Content
-                + Path.DirectorySeparatorChar
-                + shader.Name.Content
-                + ".vsh";
-
-            extractShaderString(path_vsh, shader.GLSL_ES_Vertex.Content);
-
-            // Fragment Source
-            string path_fsh =
-                shaderPaths
-                + shader.Name.Content
-                + Path.DirectorySeparatorChar
-                + shader.Name.Content
-                + ".fsh";
-
-            extractShaderString(path_fsh, shader.GLSL_ES_Fragment.Content);
-            break;
-
-        default:
-            throw new InvalidOperationException("Type de shader non supporté");
-    }
 
     IncrementProgressParallel();
 }
