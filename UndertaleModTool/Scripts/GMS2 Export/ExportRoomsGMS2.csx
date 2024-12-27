@@ -336,51 +336,20 @@ void DumpRoom(UndertaleRoom room)
             }
             else if (layer.LayerType == UndertaleRoom.LayerType.Tiles)
             {
-                UndertaleRoom.Layer.LayerTilesData tiles = layer.LayerTilesData;
+
+                // From Match 3 Example
+                writer.WriteLine("    {\"resourceType\":\"GMRTileLayer\",\"resourceVersion\":\"1.1\",\"name\":\"" + layer.Name.Content + "\",\"depth\":" + layer.LayerDepth + ",\"effectEnabled\":" + (layer.EffectEnabled ? "true" : "false") + ",\"effectType\":" + (layer.EffectType is null ? "null" : layer.EffectType) + ",\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"tiles\":{\"SerialiseHeight\":30,\"SerialiseWidth\":20,\"TileCompressedData\":[");
+                writer.WriteLine("-5,-2147483648,-9,29,-10,-2147483648,1,25,-9,0,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,");
+                writer.WriteLine("-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,");
+                writer.WriteLine("-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,");
+                writer.WriteLine("-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,3,");
+                writer.Write("-9,21,1,2,-385,-2147483648,],");
+                writer.WriteLine("\"TileDataFormat\":1,},\"tilesetId\":{\"name\":\"tileset_board\",\"path\":\"tilesets/tileset_board/tileset_board.yy\",},\"userdefinedDepth\":false,\"visible\":true,\"x\":0,\"y\":710,},");
 
                 throw new InvalidOperationException(
-                    "Asset Layer (" + layer.LayerType + ") Non Gérée";
+                    "Asset Layer (" + layer.LayerType + ") Non Gérée"
                 );
 
-                writer.WriteLine(
-                    "    {\"resourceType\":\"GMRBackgroundLayer\",\"resourceVersion\":\"1.0\",\"name\":\""
-                        + layer.LayerName.Content
-                        + "\",\"animationFPS\":"
-                        + background.AnimationSpeed.ToString("0.0")
-                        + ",\"animationSpeedType\":"
-                        + (int)background.AnimationSpeedType
-                        + ",\"colour\":"
-                        + background.Color
-                        + ",\"depth\":"
-                        + layer.LayerDepth
-                        + ",\"effectEnabled\":"
-                        + (layer.EffectEnabled ? "true" : "false")
-                        + ",\"effectType\":"
-                        + (layer.EffectType is null ? "null" : layer.EffectType)
-                        + ",\"gridX\":20,\"gridY\":20,\"hierarchyFrozen\":false,\"hspeed\":"
-                        + layer.HSpeed.ToString("0.0")
-                        + ",\"htiled\":"
-                        + (background.TiledHorizontally ? "true" : "false")
-                        + ",\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"spriteId\":{\"name\":\""
-                        + background.Sprite.Name.Content
-                        + "\",\"path\":\"sprites/"
-                        + background.Sprite.Name.Content
-                        + "/"
-                        + background.Sprite.Name.Content
-                        + ".yy\",},\"stretch\":"
-                        + (background.Stretch ? "true" : "false")
-                        + ",\"userdefinedAnimFPS\":false,\"userdefinedDepth\":false,\"visible\":"
-                        + (background.Visible ? "true" : "false")
-                        + ",\"vspeed\":"
-                        + layer.VSpeed.ToString("0.0")
-                        + ",\"vtiled\":"
-                        + (background.TiledVertically ? "true" : "false")
-                        + ",\"x\":"
-                        + layer.XOffset
-                        + ",\"y\":"
-                        + layer.YOffset
-                        + ",},"
-                );
             }
             else if (layer.LayerType == UndertaleRoom.LayerType.Background)
             {
