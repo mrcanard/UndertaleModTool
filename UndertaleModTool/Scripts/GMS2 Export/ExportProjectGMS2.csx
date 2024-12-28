@@ -12,12 +12,12 @@ ThreadLocal<GlobalDecompileContext> DECOMPILE_CONTEXT = new ThreadLocal<GlobalDe
 
 
 // Export Project yyp
-using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
+using (StreamWriter writer = new StreamWriter(rootFolder + Data.GeneralInfo.FileName.Content + ".yyp"))
 {
     writer.WriteLine("{");
     writer.WriteLine("  \"resourceType\": \"GMProject\",");
     writer.WriteLine("  \"resourceVersion\": \"1.7\",");
-    writer.WriteLine("  \"name\": \"projectA\",");
+    writer.WriteLine("  \"name\": \""+Data.GeneralInfo.FileName.Content+"\",");
     writer.WriteLine("  \"AudioGroups\": [");
     writer.WriteLine("    {\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"1.3\",\"name\":\"audiogroup_default\",\"targets\":-1,},");
     writer.WriteLine("  ],");
@@ -27,28 +27,31 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
     writer.WriteLine("  },");
     writer.WriteLine("  \"defaultScriptType\": 1,");
     writer.WriteLine("  \"Folders\": [");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Extensions\",\"folderPath\":\"folders/Extensions.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Extensions\",\"folderPath\":\"folders/Extensions.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Fonts\",\"folderPath\":\"folders/Fonts.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Notes\",\"folderPath\":\"folders/Notes.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Objects\",\"folderPath\":\"folders/Objects.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Paths\",\"folderPath\":\"folders/Paths.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Rooms\",\"folderPath\":\"folders/Rooms.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Scripts\",\"folderPath\":\"folders/Scripts.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"compatibility\",\"folderPath\":\"folders/Scripts/compatibility.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"action\",\"folderPath\":\"folders/Scripts/compatibility/action.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"background\",\"folderPath\":\"folders/Scripts/compatibility/background.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"instance\",\"folderPath\":\"folders/Scripts/compatibility/instance.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"joystick\",\"folderPath\":\"folders/Scripts/compatibility/joystick.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"object\",\"folderPath\":\"folders/Scripts/compatibility/object.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"tile\",\"folderPath\":\"folders/Scripts/compatibility/tile.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"view\",\"folderPath\":\"folders/Scripts/compatibility/view.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"compatibility\",\"folderPath\":\"folders/Scripts/compatibility.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"action\",\"folderPath\":\"folders/Scripts/compatibility/action.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"background\",\"folderPath\":\"folders/Scripts/compatibility/background.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"instance\",\"folderPath\":\"folders/Scripts/compatibility/instance.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"joystick\",\"folderPath\":\"folders/Scripts/compatibility/joystick.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"object\",\"folderPath\":\"folders/Scripts/compatibility/object.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"tile\",\"folderPath\":\"folders/Scripts/compatibility/tile.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"view\",\"folderPath\":\"folders/Scripts/compatibility/view.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Sequences\",\"folderPath\":\"folders/Sequences.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Shaders\",\"folderPath\":\"folders/Shaders.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Sounds\",\"folderPath\":\"folders/Sounds.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Sprites\",\"folderPath\":\"folders/Sprites.yy\",},");
-    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"tilesets\",\"folderPath\":\"folders/Sprites/tilesets.yy\",},");
+    // writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"tilesets\",\"folderPath\":\"folders/Sprites/tilesets.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Tile Sets\",\"folderPath\":\"folders/Tile Sets.yy\",},");
     writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Timelines\",\"folderPath\":\"folders/Timelines.yy\",},");
+    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Animation Curves\",\"folderPath\":\"folders/Animation Curves.yy\",},");
+    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Extensions\",\"folderPath\":\"folders/Extensions.yy\",},");
+    writer.WriteLine("    {\"resourceType\":\"GMFolder\",\"resourceVersion\":\"1.0\",\"name\":\"Particle Systems\",\"folderPath\":\"folders/Particle Systems.yy\",},");
     writer.WriteLine("  ],");
     writer.WriteLine("  \"IncludedFiles\": [],");
     writer.WriteLine("  \"isEcma\": false,");
@@ -87,6 +90,10 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
         var game_object_name = Data.GameObjects[i].Name.Content;
         writer.WriteLine("    {\"id\":{\"name\":\""+ game_object_name +"\",\"path\":\"objects/"+ game_object_name +"/"+ game_object_name +".yy\",},},");
     }
+    // sequences
+    // TODO Inclure les sequences
+    // paths
+    // TODO Inclure les sequences
     // rooms
     for(int i=0; i < Data.Rooms.Count; i++) {
         var room_name = Data.Rooms[i].Name.Content;
@@ -104,18 +111,18 @@ using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.yyp"))
     writer.WriteLine("  ],");
     writer.WriteLine("  \"templateType\": null,");
     writer.WriteLine("  \"TextureGroups\": [");
-    writer.WriteLine("    {\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"1.3\",\"name\":\"Default\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":false,\"loadType\":\"default\",\"mipsToGenerate\":0,\"targets\":-1,},");
-    // for(int i=0; i < Data.TextureGroupInfo.Count; i++) {
-    //     var tgroup = Data.TextureGroupInfo[i];
-    //     writer.WriteLine("    {\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"1.3\",\"name\":\""+tgroup.Name.Content+"\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":false,\"loadType\":\"default\",\"mipsToGenerate\":0,\"targets\":-1,},");
-    // }
+    // writer.WriteLine("    {\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"1.3\",\"name\":\"Default\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":false,\"loadType\":\"default\",\"mipsToGenerate\":0,\"targets\":-1,},");
+    for(int i=0; i < Data.TextureGroupInfo.Count; i++) {
+        var tgroup = Data.TextureGroupInfo[i];
+        writer.WriteLine("    {\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"1.3\",\"name\":\""+tgroup.Name.Content+"\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":false,\"loadType\":\"default\",\"mipsToGenerate\":0,\"targets\":-1,},");
+    }
     writer.WriteLine("  ],");
     writer.WriteLine("}");
 
 }
 
 // Export Project Resource Order
-using (StreamWriter writer = new StreamWriter(rootFolder + "projectA.resource_order"))
+using (StreamWriter writer = new StreamWriter(rootFolder + Data.GeneralInfo.FileName.Content + ".resource_order"))
 {
     writer.WriteLine("{");
     writer.WriteLine("  \"FolderOrderSettings\": [");

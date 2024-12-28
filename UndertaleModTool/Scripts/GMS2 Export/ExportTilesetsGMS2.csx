@@ -46,7 +46,7 @@ void DumpTileset(UndertaleBackground tileset)
         writer.WriteLine("{");
         writer.WriteLine("  \"resourceType\": \"GMTileSet\",");
         writer.WriteLine("  \"resourceVersion\": \"1.0\",");
-        writer.WriteLine("  \"name\": \""+tileset.Name.Content+"\",");
+        writer.WriteLine("  \"name\": \"" + tileset.Name.Content + "\",");
         writer.WriteLine("  \"autoTileSets\": [],");
         writer.WriteLine("  \"macroPageTiles\": {");
         writer.WriteLine("    \"SerialiseHeight\": 0,");
@@ -60,6 +60,9 @@ void DumpTileset(UndertaleBackground tileset)
         writer.WriteLine("    \"name\": \"Tile Sets\",");
         writer.WriteLine("    \"path\": \"folders/Tile Sets.yy\",");
         writer.WriteLine("  },");
+        // TODO Create Sprite Tileset
+
+        // END Create Sprite Tileset
         writer.WriteLine("  \"spriteId\": {");
         writer.WriteLine("    \"name\": \"spr_tileset_water\",");
         writer.WriteLine("    \"path\": \"sprites/spr_tileset_water/spr_tileset_water.yy\",");
@@ -69,21 +72,22 @@ void DumpTileset(UndertaleBackground tileset)
         writer.WriteLine("    \"name\": \"tg_game\",");
         writer.WriteLine("    \"path\": \"texturegroups/tg_game\",");
         writer.WriteLine("  },");
-        writer.WriteLine("  \"tile_count\": "+tileset.GMS2TileIds.Count+",");
+        writer.WriteLine("  \"tile_count\": " + tileset.GMS2TileIds.Count + ",");
         writer.WriteLine("  \"tileAnimation\": {");
         writer.WriteLine("    \"FrameData\": [");
-        foreach(var tile_id in tileset.GMS2TileIds) {
-            writer.WriteLine("      "+tile_id.ID+",");
+        foreach (var tile_id in tileset.GMS2TileIds)
+        {
+            writer.WriteLine("      " + tile_id.ID + ",");
         }
         writer.WriteLine("    ],");
         writer.WriteLine("    \"SerialiseFrameCount\": 1,");
         writer.WriteLine("  },");
         writer.WriteLine("  \"tileAnimationFrames\": [],");
         writer.WriteLine("  \"tileAnimationSpeed\": 15.0,");
-        writer.WriteLine("  \"tileHeight\": "+tileset.GMS2TileHeight+",");
+        writer.WriteLine("  \"tileHeight\": " + tileset.GMS2TileHeight + ",");
         writer.WriteLine("  \"tilehsep\": 0,");
         writer.WriteLine("  \"tilevsep\": 0,");
-        writer.WriteLine("  \"tileWidth\": "+tileset.GMS2TileWidth+",");
+        writer.WriteLine("  \"tileWidth\": " + tileset.GMS2TileWidth + ",");
         writer.WriteLine("  \"tilexoff\": 0,");
         writer.WriteLine("  \"tileyoff\": 0,");
         writer.WriteLine("}");
