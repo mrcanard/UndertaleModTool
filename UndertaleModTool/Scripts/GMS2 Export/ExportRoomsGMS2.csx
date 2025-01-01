@@ -346,6 +346,47 @@ void DumpRoom(UndertaleRoom room)
                         + (layer.EffectType is null ? "null" : layer.EffectType)
                         + ",\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":[],\"tiles\":{\"SerialiseHeight\":30,\"SerialiseWidth\":20,\"TileCompressedData\":["
                 );
+
+                // Algorithme compression
+                uint i = 0;
+                uint next_line_count = 20;
+                uint lastTile = layer.TilesData.TileData[0][0];
+                foreach (var row in layer.TilesData.TileData)
+                {
+                    foreach (var tile in row)
+                    {
+                        if (tile == lastTile)
+                        {
+                            i += 1;
+                        }
+                        else
+                        {
+                            writer.Write(
+                                (i == 1 ? 1 : -i)
+                                    + ","
+                                    + (lastTile == 0 ? -2147483648 : lastTile)
+                                    + ","
+                            );
+                            lastTile = tile;
+                            i = 1;
+                            next_line_count -= 2;
+                            if (next_line_count <= 0)
+                            {
+                                writer.WriteLine();
+                                next_line_count = 20;
+                            }
+                        }
+                    }
+                }
+                if (i > 1)
+                {
+                    writer.Write(
+                        (i == 1 ? 1 : -i) + "," + (lastTile == 0 ? -2147483648 : lastTile) + ","
+                    );
+                }
+                writer.WriteLine("],");
+                writer.WriteLine();
+                writer.WriteLine();
                 writer.WriteLine(
                     "-5,-2147483648,-9,29,-10,-2147483648,1,25,-9,0,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,"
                 );
@@ -359,6 +400,18 @@ void DumpRoom(UndertaleRoom room)
                     "-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,3,"
                 );
                 writer.Write("-9,21,1,2,-385,-2147483648,],");
+                writer.WriteLine();
+                writer.WriteLine();
+
+                foreach (var row in layer.TilesData.TileData)
+                {
+                    foreach (var tile in row)
+                    {
+                        writer.Write(tile + ",");
+                    }
+                    writer.WriteLine();
+                }
+
                 writer.WriteLine(
                     "\"TileDataFormat\":1,},\"tilesetId\":{\"name\":\"tileset_board\",\"path\":\"tilesets/tileset_board/tileset_board.yy\",},\"userdefinedDepth\":false,\"visible\":true,\"x\":0,\"y\":710,},"
                 );
