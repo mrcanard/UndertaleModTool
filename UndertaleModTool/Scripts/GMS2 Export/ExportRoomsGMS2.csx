@@ -337,7 +337,7 @@ void DumpRoom(UndertaleRoom room)
                 // From Match 3 Example
                 writer.WriteLine(
                     "    {\"resourceType\":\"GMRTileLayer\",\"resourceVersion\":\"1.1\",\"name\":\""
-                        + layer.Name.Content
+                        + layer.LayerName.Content
                         + "\",\"depth\":"
                         + layer.LayerDepth
                         + ",\"effectEnabled\":"
