@@ -384,40 +384,50 @@ void DumpRoom(UndertaleRoom room)
                         (i == 1 ? 1 : -i) + "," + (lastTile == 0 ? -2147483648 : lastTile) + ","
                     );
                 }
-                writer.WriteLine("],");
-                writer.WriteLine();
-                writer.WriteLine();
-                writer.WriteLine(
-                    "-5,-2147483648,-9,29,-10,-2147483648,1,25,-9,0,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,"
-                );
-                writer.WriteLine(
-                    "-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,"
-                );
-                writer.WriteLine(
-                    "-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,"
-                );
-                writer.WriteLine(
-                    "-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,3,"
-                );
-                writer.Write("-9,21,1,2,-385,-2147483648,],");
-                writer.WriteLine();
-                writer.WriteLine();
+                writer.Write("],");
 
-                foreach (var row in layer.TilesData.TileData)
-                {
-                    foreach (var tile in row)
-                    {
-                        writer.Write(tile + ",");
-                    }
-                    writer.WriteLine();
-                }
+                /* writer.WriteLine(); */
+                /* writer.WriteLine(); */
+                /* writer.WriteLine( */
+                /*     "-5,-2147483648,-9,29,-10,-2147483648,1,25,-9,0,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17," */
+                /* ); */
+                /* writer.WriteLine( */
+                /*     "-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25," */
+                /* ); */
+                /* writer.WriteLine( */
+                /*     "-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17," */
+                /* ); */
+                /* writer.WriteLine( */
+                /*     "-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,25,-9,-2147483648,1,17,-9,-2147483648,1,3," */
+                /* ); */
+                /* writer.Write("-9,21,1,2,-385,-2147483648,],"); */
+                /* writer.WriteLine(); */
+                /* writer.WriteLine(); */
 
+                /* foreach (var row in layer.TilesData.TileData) */
+                /* { */
+                /*     foreach (var tile in row) */
+                /*     { */
+                /*         writer.Write(tile + ","); */
+                /*     } */
+                /*     writer.WriteLine(); */
+                /* } */
+
+                String tileset_name = layer.TilesData.Background.Name.Content;
                 writer.WriteLine(
-                    "\"TileDataFormat\":1,},\"tilesetId\":{\"name\":\"tileset_board\",\"path\":\"tilesets/tileset_board/tileset_board.yy\",},\"userdefinedDepth\":false,\"visible\":true,\"x\":0,\"y\":710,},"
-                );
-
-                throw new InvalidOperationException(
-                    "Asset Layer (" + layer.LayerType + ") Non Gérée"
+                    "\"TileDataFormat\":1,},\"tilesetId\":{\"name\":\""
+                        + tileset_name
+                        + "\",\"path\":\"tilesets/"
+                        + tileset_name
+                        + "/"
+                        + tileset_name
+                        + ".yy\",},\"userdefinedDepth\":false,\"visible\":"
+                        + (layer.IsVisible ? "true" : "false")
+                        + ",\"x\":"
+                        + layer.XOffset
+                        + ",\"y\":"
+                        + layer.YOffset
+                        + ",},"
                 );
             }
             else if (layer.LayerType == UndertaleRoom.LayerType.Background)
@@ -461,6 +471,46 @@ void DumpRoom(UndertaleRoom room)
                         + layer.XOffset
                         + ",\"y\":"
                         + layer.YOffset
+                        + ",},"
+                );
+            }
+            else if (layer.LayerType == UndertaleRoom.LayerType.Effect)
+            {
+                writer.WriteLine(
+                    "    {\"resourceType\":\"GMREffectLayer\",\"resourceVersion\":\"1.0\",\"name\":\""
+                        + layer.LayerName.Content
+                        + "\",\"depth\":"
+                        + layer.LayerDepth
+                        + ",\"effectEnabled\":"
+                        + (layer.EffectEnabled ? "true" : "false")
+                        + ",\"effectType\":\""
+                        + layer.EffectData.EffectType.Content
+                        + "\",\"gridX\":32,\"gridY\":32,\"hierarchyFrozen\":false,\"inheritLayerDepth\":false,\"inheritLayerSettings\":false,\"inheritSubLayers\":true,\"inheritVisibility\":true,\"layers\":[],\"properties\":["
+                );
+                foreach (var property in layer.EffectData.Properties)
+                {
+                    writer.WriteLine(
+                        "        {\"name\":\""
+                            + property.Name.Content
+                            + "\",\"type\":"
+                            + (int)property.Kind
+                            + ",\"value\":\""
+                            + property.Value.Content
+                            + "\",},"
+                    );
+                }
+                /* writer.WriteLine( */
+                /*     "        {\"name\":\"g_LinearBlurVector\",\"type\":0,\"value\":\"0\",}," */
+                /* ); */
+                /* writer.WriteLine( */
+                /*     "        {\"name\":\"g_LinearBlurVector\",\"type\":0,\"value\":\"15\",}," */
+                /* ); */
+                /* writer.WriteLine( */
+                /*     "        {\"name\":\"g_NoiseTexture\",\"type\":2,\"value\":\"_filter_linear_blur_noise\",}," */
+                /* ); */
+                writer.WriteLine(
+                    "      ],\"userdefinedDepth\":false,\"visible\":"
+                        + (layer.IsVisible ? "true" : "false")
                         + ",},"
                 );
             }
