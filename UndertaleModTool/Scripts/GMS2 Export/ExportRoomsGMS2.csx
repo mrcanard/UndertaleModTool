@@ -327,9 +327,9 @@ void DumpRoom(UndertaleRoom room)
                                 + ",},"
                         );
                     }
+		    writer.WriteLine();
                 }
-                writer.WriteLine();
-                writer.WriteLine(
+		writer.WriteLine(
                     "],\"layers\":[],\"properties\":[],\"userdefinedDepth\":false,\"visible\":true,},"
                 );
             }
