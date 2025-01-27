@@ -363,6 +363,7 @@ void DumpRoom(UndertaleRoom room)
 				      + ",},"
 				  );
 			      }
+            writer.Write(Environment.NewLine+"      ");
 			  }
 		      }
 		      writer.WriteLine(
